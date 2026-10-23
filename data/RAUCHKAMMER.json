@@ -1,0 +1,36 @@
+{
+    "id": 61079356,
+    "name": "RAUCHKAMMER",
+    "subtitle": "Lloré al pasarme este nivel después de un año y medio. Una pena que no hubo nadie para verlo.",
+    "author": "Neigefeu",
+    "verifier": "Ninjedu",
+    "verificationDate": "2025-10-26",
+    "tags": [
+        "extreme_demon"
+    ],
+    "skills": [
+    { "name": "cube", "value": 75 },
+    { "name": "timings", "value": 70 },
+    { "name": "fast-paced", "value": 60 }
+    ],
+    "verification": "https://youtu.be/_gu-TLyKjKY",
+    "percentToQualify": "60",
+    "positionHistory": [
+        {
+            "date": "23-10-2026",
+            "change": null,
+            "position": 2,
+            "reason": "Created the ESIList"
+        }
+    ],
+    "records": [
+        {
+            "user": "Juliponcio",
+            "date": "2025-10-27",
+            "phrase": "harder than time machine",
+            "link": "No video",
+            "percent": 100,
+            "hz": 144
+        }
+    ]
+}
