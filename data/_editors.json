@@ -1,0 +1,27 @@
+[
+    {
+        "role": "owner",
+        "name": "List Owner - Ninjedu",
+        "link": "https://www.youtube.com/@ninjeduXd"
+    },
+    {
+        "role": "admin",
+        "name": "List Admin - Lolencio",
+        "link": "https://www.youtube.com/@lolencio0458"
+    },
+    {
+        "role": "helper",
+        "name": "List Helper - Juliponcio",
+        "link": "https://www.youtube.com/@juliogarciaibanez6212"
+    },
+    {
+        "role": "trial",
+        "name": "Trial List Helper - Scalextrikx",
+        "link": "https://www.youtube.com/@scalextrikx1978"
+    },
+    {
+        "role": "dev",
+        "name": "List Coder - Ninjedu",
+        "link": "https://www.youtube.com/@ninjeduxd"
+    }
+]
