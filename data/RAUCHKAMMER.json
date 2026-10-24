@@ -1,8 +1,8 @@
 {
-    "id": 61079356,
+    "id": 1,
     "name": "RAUCHKAMMER",
     "subtitle": "Farmeo puntos de lista como PLeviii 🗣️🗣️🗣️",
-    "author": "Neigefeu",
+    "author": "-",
     "verifier": "Ninjedu",
     "aredl": "#1603",
     "verificationDate": "2026-10-23",
@@ -10,43 +10,19 @@
         "extreme_demon"
     ],
     "skills": [
-        {
-            "name": "cube",
-            "value": 75
-        },
-        {
-            "name": "timings",
-            "value": 70
-        },
-        {
-            "name": "fast-paced",
-            "value": 60
-        }
+
     ],
     "verification": "https://youtu.be/-ge89eZ9_5M?si=lWrN775JrZxUtJbN",
-    "percentToQualify": "63",
+    "percentToQualify": "-",
     "positionHistory": [
         {
             "date": "23-10-2026",
             "change": null,
             "position": 1,
             "reason": "Release of the ESIList"
-        },
-        {
-            "date": "24-10-2026",
-            "change": -1,
-            "position": 3,
-            "reason": "Placed CONGREGATION at #2."
         }
     ],
     "records": [
-        {
-            "user": "Juliponcio",
-            "date": "2026-10-23",
-            "phrase": "harder than time machine",
-            "link": "No video",
-            "percent": 100,
-            "hz": 144
-        }
+
     ]
 }

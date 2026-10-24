@@ -1,46 +1,27 @@
 {
-    "id": 61079365,
+    "id": 1,
     "name": "CONGREGATION",
-    "subtitle": "Lloré al pasarme este nivel después de un año y medio. Una pena que no hubo nadie para verlo.",
-    "author": "Neigefeu",
+    "subtitle": "-",
+    "author": "-",
     "verifier": "cauri",
-    "aredl": "#90",
+    "aredl": "-",
     "verificationDate": "2026-10-23",
     "tags": [
         "extreme_demon"
     ],
     "skills": [
-        {
-            "name": "cube",
-            "value": 75
-        },
-        {
-            "name": "timings",
-            "value": 70
-        },
-        {
-            "name": "fast-paced",
-            "value": 60
-        }
     ],
-    "verification": "https://youtu.be/LxnSxGGtsU0?si=xX1O12t0ozc6S3c-",
-    "percentToQualify": "60",
+    "verification": "-",
+    "percentToQualify": "-",
     "positionHistory": [
         {
-            "date": "24-10-2026",
+            "date": "23-10-2026",
             "change": null,
-            "position": 2,
-            "reason": "Added to list"
+            "position": 1,
+            "reason": "Release of the ESIList"
         }
     ],
     "records": [
-        {
-            "user": "Ninjedu",
-            "date": "2026-10-23",
-            "phrase": "harder than time machine",
-            "link": "No video",
-            "percent": 100,
-            "hz": 144
-        }
+
     ]
 }
