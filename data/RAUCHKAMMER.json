@@ -4,7 +4,7 @@
     "subtitle": "Farmeo puntos de lista como PLeviii 🗣️🗣️🗣️",
     "author": "Neigefeu",
     "verifier": "Ninjedu",
-    "aredl":"#1603",
+    "aredl": "#1603",
     "verificationDate": "2026-10-23",
     "tags": [
         "extreme_demon"
@@ -31,6 +31,12 @@
             "change": null,
             "position": 1,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "24-10-2026",
+            "change": -1,
+            "position": 3,
+            "reason": "Placed CONGREGATION at #2."
         }
     ],
     "records": [
