@@ -1,0 +1,45 @@
+{
+  "snapshots": [
+    {
+      "date": "2026-10-24",
+      "players": {
+        "cauri": {
+          "total": 200,
+          "levelCount": 1,
+          "levels": {
+            "NOMAD": {
+              "points": 200,
+              "type": "verified"
+            }
+          }
+        },
+        "Juliponcio": {
+          "total": 375.003,
+          "levelCount": 2,
+          "levels": {
+            "NOMAD": {
+              "points": 200,
+              "type": "completed",
+              "percent": 100
+            },
+            "RAUCHKAMMER": {
+              "points": 175.003,
+              "type": "completed",
+              "percent": 100
+            }
+          }
+        },
+        "Ninjedu": {
+          "total": 175.003,
+          "levelCount": 1,
+          "levels": {
+            "RAUCHKAMMER": {
+              "points": 175.003,
+              "type": "verified"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
