@@ -91,6 +91,10 @@ export default {
                             <div class="type-title-sm">ID</div>
                             <p>{{ level.id }}</p>
                         </li>
+                        <li>
+                            <div class="type-title-sm">AREDL Placement (on verification)</div>
+                            <p>{{ level.aredl }}</p>
+                        </li>
                     </ul>
                     
                     <hr class="section-separator" />
