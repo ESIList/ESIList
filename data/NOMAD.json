@@ -9,9 +9,18 @@
         "extreme_demon"
     ],
     "skills": [
-    { "name": "cube", "value": 75 },
-    { "name": "timings", "value": 70 },
-    { "name": "fast-paced", "value": 60 }
+        {
+            "name": "cube",
+            "value": 75
+        },
+        {
+            "name": "timings",
+            "value": 70
+        },
+        {
+            "name": "fast-paced",
+            "value": 60
+        }
     ],
     "verification": "https://youtu.be/_gu-TLyKjKY",
     "percentToQualify": "60",
