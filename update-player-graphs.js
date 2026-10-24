@@ -1,3 +1,9 @@
+// cd C:\Users\User\Documents\GitHub\ESIList
+// node update-player-graphs.js
+// git add -A
+// git commit -m "Snapshot inicial de puntos"
+// git push
+
 const fs = require('fs');
 const path = require('path');
 
