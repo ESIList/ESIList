@@ -5,19 +5,20 @@
     "author": "-",
     "verifier": "cauri",
     "aredl": "-",
-    "verificationDate": "2026-10-23",
+    "verificationDate": "2026-10-25",
     "tags": [
         "extreme_demon"
     ],
     "skills": [
+        
     ],
     "verification": "-",
     "percentToQualify": "-",
     "positionHistory": [
         {
-            "date": "23-10-2026",
+            "date": "25-10-2026",
             "change": null,
-            "position": 1,
+            "position": 13,
             "reason": "Release of the ESIList"
         }
     ],
