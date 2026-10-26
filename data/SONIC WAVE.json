@@ -1,6 +1,6 @@
 {
     "id": 12,
-    "name": "SONIC WAVE REBIRTH",
+    "name": "SONIC WAVE",
     "subtitle": "-",
     "author": "-",
     "verifier": "cauri",
@@ -18,7 +18,7 @@
         {
             "date": "26-10-2026",
             "change": null,
-            "position": 18,
+            "position": 17,
             "reason": "Release of the ESIList"
         }
     ],
