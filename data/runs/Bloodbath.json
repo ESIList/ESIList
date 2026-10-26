@@ -1,19 +1,13 @@
 {
-    "id": 10565740,
-    "name": "Bloodbath 50%",
-    "author": "Riot",
+    "id": 68654380,
+    "name": "OMEGA INTERFACE 68%",
+    "author": "Platnuu",
     "creators": ["-"],
-    "expectedplacement": "Top 1",
-    "verifier": "Lolencio04",
-    "verification": "https://youtu.be/Xzb7apPvDos?si=B2BI_ZM-03AixvOM",
+    "expectedplacement": "Top 10",
+    "verifier": "itzniw",
+    "verification": "https://youtu.be/2-M9-KtHdRs?si=cs2voXrDO7VVVRXj",
     "percentToQualify": "0",
-    "password": "-",
     "records": [
-        {
-            "user": "Ninjedu",
-            "link": "No video",
-            "percent": 30,
-            "hz": 240
-        }
+
     ]
 }

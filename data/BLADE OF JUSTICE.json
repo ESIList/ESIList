@@ -20,5 +20,14 @@
             "reason": "Release of the ESIList"
         }
     ],
-    "records": []
+    "records": [
+        {
+            "user": "Ninjedu",
+            "date": "2026-10-26",
+            "phrase": "Os voy a matar a todos",
+            "link": "No video",
+            "percent": 94,
+            "hz": 240
+        }
+    ]
 }
