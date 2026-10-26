@@ -17,13 +17,12 @@ export default {
         err: [],
         allLevels: [],
         playerColors: {
-            'Lolencio04': '#30ff30',
-            'Ninjedu': '#4921db',
-            'Juliponcio': '#FFCE56',
-            'PapafritaVixtor': '#00ccff',
-            'alex77onlineeeYT': '#000000',
-            'Scalextrikx': '#ff0000',
-            'CorteVIII': '#ff00f2'
+            'Lolencio04': '#ff0000',
+            'Ninjedu': '#580072',
+            'itzniw': '#ffaa00',
+            'ExoRK28': '#00ff51',
+            'cauri': '#8ba9ef',
+            'Raullm5555': '#eaff00'
         }
     }),
     template: `
