@@ -20,5 +20,13 @@
             "reason": "Release of the ESIList"
         }
     ],
-    "records": []
+    "records": [
+        {
+            "user": "itzniw",
+            "date": "2026-10-26",
+            "link": "No video",
+            "percent": 100,
+            "hz": 60
+        }
+    ]
 }
