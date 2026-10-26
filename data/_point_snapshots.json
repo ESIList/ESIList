@@ -4,7 +4,7 @@
       "date": "2026-10-26",
       "players": {
         "cauri": {
-          "total": 5966.521,
+          "total": 5962.856,
           "levelCount": 66,
           "levels": {
             "NOMAD": {
@@ -256,26 +256,26 @@
               "type": "verified"
             },
             "NIWA": {
-              "points": 41.022,
+              "points": 40.401,
               "type": "verified"
             },
             "ACU": {
-              "points": 39.783,
-              "type": "verified"
-            },
-            "PRECIPITANCE": {
               "points": 39.168,
               "type": "verified"
             },
+            "PRECIPITANCE": {
+              "points": 37.95,
+              "type": "verified"
+            },
             "GLISTEN": {
-              "points": 38.557,
+              "points": 37.346,
               "type": "verified"
             }
           }
         },
         "itzniw": {
-          "total": 2786.532,
-          "levelCount": 39,
+          "total": 2827.564,
+          "levelCount": 40,
           "levels": {
             "FIREPOWER": {
               "points": 118.83,
@@ -439,15 +439,19 @@
               "points": 42.276,
               "type": "verified"
             },
+            "BUNNIES I GUESS": {
+              "points": 41.647,
+              "type": "verified"
+            },
             "ACU": {
-              "points": 39.783,
+              "points": 39.168,
               "type": "completed",
               "percent": 100
             }
           }
         },
         "ExoRK28": {
-          "total": 1136.849,
+          "total": 1135.613,
           "levelCount": 15,
           "levels": {
             "QUANTUM PROCESSING": {
@@ -510,20 +514,20 @@
               "percent": 100
             },
             "NIWA": {
-              "points": 41.022,
+              "points": 40.401,
               "type": "completed",
               "percent": 100
             },
             "ACU": {
-              "points": 39.783,
+              "points": 39.168,
               "type": "completed",
               "percent": 100
             }
           }
         },
         "Ninjedu": {
-          "total": 459.063,
-          "levelCount": 8,
+          "total": 495.141,
+          "levelCount": 9,
           "levels": {
             "REVERENCE": {
               "points": 76.731,
@@ -543,27 +547,31 @@
               "type": "verified"
             },
             "MIZURETA": {
-              "points": 41.647,
+              "points": 41.022,
               "type": "verified"
             },
             "NIWA": {
-              "points": 41.022,
+              "points": 40.401,
               "type": "completed",
               "percent": 100
             },
             "TROLL LEVEL": {
-              "points": 40.401,
+              "points": 39.783,
               "type": "verified"
             },
             "ACU": {
-              "points": 39.783,
+              "points": 39.168,
               "type": "completed",
               "percent": 100
+            },
+            "RAUCHKAMMER": {
+              "points": 38.557,
+              "type": "verified"
             }
           }
         },
         "Lolencio04": {
-          "total": 188.744,
+          "total": 188.129,
           "levelCount": 3,
           "levels": {
             "FALLING UP": {
@@ -575,7 +583,7 @@
               "type": "verified"
             },
             "ACU": {
-              "points": 39.783,
+              "points": 39.168,
               "type": "completed",
               "percent": 100
             }
