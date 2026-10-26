@@ -40,6 +40,406 @@
           }
         }
       }
+    },
+    {
+      "date": "2026-10-26",
+      "players": {
+        "cauri": {
+          "total": null,
+          "levelCount": 65,
+          "levels": {
+            "NOMAD": {
+              "points": null,
+              "type": "verified"
+            },
+            "TARTARUS": {
+              "points": null,
+              "type": "verified"
+            },
+            "ORDINARY": {
+              "points": null,
+              "type": "verified"
+            },
+            "VERDANT LANDSCAPE": {
+              "points": null,
+              "type": "verified"
+            },
+            "BPATA MPAKA": {
+              "points": null,
+              "type": "verified"
+            },
+            "IN THIS": {
+              "points": null,
+              "type": "verified"
+            },
+            "LEVIGO": {
+              "points": null,
+              "type": "verified"
+            },
+            "ZODIAC": {
+              "points": null,
+              "type": "verified"
+            },
+            "RUST": {
+              "points": null,
+              "type": "verified"
+            },
+            "NHELV": {
+              "points": null,
+              "type": "verified"
+            },
+            "SHARDSCAPES": {
+              "points": null,
+              "type": "verified"
+            },
+            "SPECTRUM CYCLONE": {
+              "points": null,
+              "type": "verified"
+            },
+            "CONGREGATION": {
+              "points": null,
+              "type": "verified"
+            },
+            "YATAGARASU": {
+              "points": null,
+              "type": "verified"
+            },
+            "LUMINA": {
+              "points": null,
+              "type": "verified"
+            },
+            "XO": {
+              "points": null,
+              "type": "verified"
+            },
+            "SONIC WAVE REBIRTH": {
+              "points": null,
+              "type": "verified"
+            },
+            "SUNSET SANDSTORM": {
+              "points": null,
+              "type": "verified"
+            },
+            "KILLBOT": {
+              "points": null,
+              "type": "verified"
+            },
+            "BLACK BLIZZARD": {
+              "points": null,
+              "type": "verified"
+            },
+            "DELTA INTERFACE": {
+              "points": null,
+              "type": "verified"
+            },
+            "ARTIFICIAL ASCENT": {
+              "points": null,
+              "type": "verified"
+            },
+            "STATIC IGNITION": {
+              "points": null,
+              "type": "verified"
+            },
+            "BLOODBATH": {
+              "points": null,
+              "type": "verified"
+            },
+            "AUDITORY BREAKER": {
+              "points": null,
+              "type": "verified"
+            },
+            "BETRAYAL OF FATE": {
+              "points": null,
+              "type": "verified"
+            },
+            "SNOWFALL STORM": {
+              "points": null,
+              "type": "verified"
+            },
+            "OVERTIME": {
+              "points": null,
+              "type": "verified"
+            },
+            "AFTERMATH": {
+              "points": null,
+              "type": "verified"
+            },
+            "IDOLS": {
+              "points": null,
+              "type": "verified"
+            },
+            "MAYBE POSSIBLY THING": {
+              "points": null,
+              "type": "verified"
+            },
+            "GLIDE": {
+              "points": null,
+              "type": "verified"
+            },
+            "THE ULTIMATE PHASE": {
+              "points": null,
+              "type": "verified"
+            },
+            "BROKEN SIGNAL": {
+              "points": null,
+              "type": "verified"
+            },
+            "DISMAL DUSTSTORM": {
+              "points": null,
+              "type": "verified"
+            },
+            "BREAKOUT": {
+              "points": null,
+              "type": "verified"
+            },
+            "REANIMATE": {
+              "points": null,
+              "type": "verified"
+            },
+            "TROLLMACHINE": {
+              "points": null,
+              "type": "verified"
+            },
+            "I NEVER DREAM": {
+              "points": null,
+              "type": "verified"
+            },
+            "VOIDED": {
+              "points": null,
+              "type": "verified"
+            },
+            "THE FLAWLESS": {
+              "points": null,
+              "type": "verified"
+            },
+            "ALLEGIANCE": {
+              "points": null,
+              "type": "verified"
+            },
+            "HYPERSONIC": {
+              "points": null,
+              "type": "verified"
+            },
+            "HYDRATIC": {
+              "points": null,
+              "type": "verified"
+            },
+            "MELTDOWN": {
+              "points": null,
+              "type": "verified"
+            },
+            "HELIOS": {
+              "points": null,
+              "type": "verified"
+            },
+            "ROBOTCHIEF EXPOSAL": {
+              "points": null,
+              "type": "verified"
+            },
+            "MAKE IT DROP": {
+              "points": null,
+              "type": "verified"
+            },
+            "PROTEUS": {
+              "points": null,
+              "type": "verified"
+            },
+            "JRJRJR": {
+              "points": null,
+              "type": "verified"
+            },
+            "FINKOR": {
+              "points": null,
+              "type": "verified"
+            },
+            "DARK ODYSSEY": {
+              "points": null,
+              "type": "verified"
+            },
+            "FORBIDDEN ISLE": {
+              "points": null,
+              "type": "verified"
+            },
+            "VERISIMILITUDE": {
+              "points": null,
+              "type": "verified"
+            },
+            "PHANTASMAGORIA": {
+              "points": null,
+              "type": "verified"
+            },
+            "COSMIC WAR": {
+              "points": null,
+              "type": "verified"
+            },
+            "CATACLYSM": {
+              "points": null,
+              "type": "verified"
+            },
+            "TANTRUM": {
+              "points": null,
+              "type": "verified"
+            },
+            "MISTY MOUNTAINS": {
+              "points": null,
+              "type": "verified"
+            },
+            "BRIMTANIC PARADISE": {
+              "points": null,
+              "type": "verified"
+            },
+            "AZURITE": {
+              "points": null,
+              "type": "verified"
+            },
+            "ACU": {
+              "points": null,
+              "type": "verified"
+            },
+            "NIWA": {
+              "points": null,
+              "type": "verified"
+            },
+            "PRECIPITANCE": {
+              "points": null,
+              "type": "verified"
+            },
+            "GLISTEN": {
+              "points": null,
+              "type": "verified"
+            }
+          }
+        },
+        "ExoRK28": {
+          "total": null,
+          "levelCount": 9,
+          "levels": {
+            "BLOODBATH": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "AUDITORY BREAKER": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "AFTERMATH": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "BROKEN SIGNAL": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "THE FLAWLESS": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "CATACLYSM": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "AZURITE": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "ACU": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "NIWA": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            }
+          }
+        },
+        "itzniw": {
+          "total": null,
+          "levelCount": 9,
+          "levels": {
+            "BLOODBATH": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "ALLEGIANCE": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "HELIOS": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "MAKE IT DROP": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "FORBIDDEN ISLE": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "CATACLYSM": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "TANTRUM": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "AZURITE": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "ACU": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            }
+          }
+        },
+        "Ninjedu": {
+          "total": null,
+          "levelCount": 2,
+          "levels": {
+            "ACU": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            },
+            "NIWA": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            }
+          }
+        },
+        "Lolencio04": {
+          "total": null,
+          "levelCount": 1,
+          "levels": {
+            "ACU": {
+              "points": null,
+              "type": "completed",
+              "percent": 100
+            }
+          }
+        }
+      }
     }
   ]
 }
