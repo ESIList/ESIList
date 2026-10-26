@@ -1,0 +1,24 @@
+{
+    "id": 12,
+    "name": "RAFF X",
+    "subtitle": "-",
+    "author": "-",
+    "verifier": "ExoRK28",
+    "aredl": "-",
+    "verificationDate": "2026-10-26",
+    "tags": [
+        "extreme_demon"
+    ],
+    "skills": [],
+    "verification": "https://youtu.be/HO1CcToHH2w",
+    "percentToQualify": "0",
+    "positionHistory": [
+        {
+            "date": "26-10-2026",
+            "change": null,
+            "position": 31,
+            "reason": "Release of the ESIList"
+        }
+    ],
+    "records": []
+}
