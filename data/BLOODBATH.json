@@ -23,6 +23,19 @@
         }
     ],
     "records": [
-
+        {
+            "user": "ExoRK28",
+            "date": "2025-10-26",
+            "link": "https://youtu.be/7qwg_e7I5iY?si=7wiArLKv_7Sp6wwx",
+            "percent": 100,
+            "hz": 240
+        },
+        {
+            "user": "itzniw",
+            "date": "2025-10-26",
+            "link": "No video",
+            "percent": 100,
+            "hz": 240
+        }
     ]
 }
