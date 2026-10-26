@@ -7,11 +7,10 @@
     "aredl": "-",
     "verificationDate": "2026-10-26",
     "tags": [
-        "extreme_demon", "unrated"
+        "extreme_demon",
+        "unrated"
     ],
-    "skills": [
-        
-    ],
+    "skills": [],
     "verification": "https://www.youtube.com/watch?v=FBALXMoJoGA",
     "percentToQualify": "0",
     "positionHistory": [
@@ -22,7 +21,5 @@
             "reason": "Release of the ESIList"
         }
     ],
-    "records": [
-
-    ]
+    "records": []
 }
