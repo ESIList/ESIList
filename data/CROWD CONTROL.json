@@ -1,0 +1,34 @@
+{
+    "id": 12,
+    "name": "CROWD CONTROL",
+    "subtitle": "-",
+    "author": "-",
+    "verifier": "Ninjedu",
+    "aredl": "-",
+    "verificationDate": "2026-10-26",
+    "tags": [
+        "extreme_demon"
+    ],
+    "skills": [
+        
+    ],
+    "verification": "https://youtu.be/JTAyQzYkzrc?si=-g4y4rRI13baXnfz",
+    "percentToQualify": "-",
+    "positionHistory": [
+        {
+            "date": "26-10-2026",
+            "change": null,
+            "position": 31,
+            "reason": "Release of the ESIList"
+        }
+    ],
+    "records": [
+        {
+            "user": "itzniw",
+            "date": "2025-10-26",
+            "link": "No video",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}

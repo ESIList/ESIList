@@ -1,0 +1,35 @@
+{
+    "id": 12,
+    "name": "DORADURA",
+    "subtitle": "-",
+    "author": "-",
+    "verifier": "Lolencio04",
+    "aredl": "-",
+    "verificationDate": "2026-10-26",
+    "tags": [
+        "extreme_demon"
+    ],
+    "skills": [
+        
+    ],
+    "verification": "https://youtu.be/GE0y_Yv-fTU?si=kEOlaJ5Y3d8BVy4Q",
+    "percentToQualify": "-",
+    "positionHistory": [
+        {
+            "date": "26-10-2026",
+            "change": null,
+            "position": 31,
+            "reason": "Release of the ESIList"
+        }
+    ],
+    "records": [
+        {
+            "user": "Ninjedu",
+            "date": "2026-10-26",
+            "phrase": "Jamas igualaré el hardest de Lolencio04",
+            "link": "No video",
+            "percent": 100,
+            "hz": 240
+        }
+    ]
+}
