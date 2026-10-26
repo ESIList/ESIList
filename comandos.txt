@@ -1,0 +1,16 @@
+UPDATE PLAYER GRAPHS:
+
+cd C:\Users\User\Documents\GitHub\ESIList
+node update-player-graphs.js
+git add -A
+git commit -m "Snapshot inicial de puntos"
+git push
+
+
+UPDATE POSITION HISTORY:
+
+cd C:\Users\User\Documents\GitHub\ESIList
+node updatePositionHistory.js "reason"
+git add -A
+git commit -m "Update list positions"
+git push

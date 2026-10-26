@@ -1,11 +1,3 @@
-//  PROCEDIMIENTO
-
-// cd C:\Users\User\Documents\GitHub\ESIList
-// node updatePositionHistory.js "reason"
-// git add -A
-// git commit -m "Update list positions"
-// git push
-
 const fs = require("fs");
 const path = require("path");
 
