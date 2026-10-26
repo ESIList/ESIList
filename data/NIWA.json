@@ -23,6 +23,20 @@
         }
     ],
     "records": [
-
+        {
+            "user": "Ninjedu",
+            "date": "2025-10-26",
+            "phrase": "En movil es harder than acu",
+            "link": "https://youtu.be/O_5J0T06mSk?si=HdK44DkHTLGa4IhR",
+            "percent": 100,
+            "hz": 240
+        },
+        {
+            "user": "ExoRK28",
+            "date": "2025-10-26",
+            "link": "https://youtu.be/wRLI9RssZR8?si=lEcoeSuTMX9KNUXT",
+            "percent": 100,
+            "hz": 240
+        }
     ]
 }
