@@ -19,9 +19,9 @@ export default {
         <main v-if="loading">
             <Spinner></Spinner>
         </main>
-        <main v-else class="page-runs">
-            <div class="runs-container">
-                <table class="runs" v-if="runs">
+        <main v-else class="page-list">
+            <div class="list-container">
+                <table class="list" v-if="runs">
                     <tr v-for="([level, err], i) in runs">
                         <td class="rank">
                             <p v-if="i + 1 <= 75" class="type-label-lg">#{{ i + 1 }}</p>
@@ -38,7 +38,15 @@ export default {
 
             <div class="level-container">
                 <div class="level" v-if="level">
-                    <h1>{{ level.name }}</h1>
+                    <h1 class="level-title">
+                        {{ level.name }}
+                    </h1>
+                    <p
+                        v-if="level.subtitle && level.subtitle !== '-'"
+                        class="level-subtitle"
+                    >
+                        – “{{ level.subtitle }}”
+                    </p>
                     <LevelAuthors
                         :author="level.author"
                         :verifier="level.verifier"
@@ -57,15 +65,28 @@ export default {
                         </li>
                     </ul>
 
+                    <hr class="section-separator" />
+
                     <h2>Records</h2>
                     <table class="records">
                         <tr v-for="record in level.records" class="record">
                             <td class="percent">
-                                <p>{{ record.percent }}%</p>
+                                <div class="percent-wrapper">
+                                    <p>{{ record.percent }}%</p>
+                                </div>
                             </td>
+
                             <td class="user">
-                                <a :href="record.link" target="_blank" class="type-label-lg">{{ record.user }}</a>
+                                <a target="_blank" class="type-label-lg">{{ record.user }}</a>
+
+                                <span
+                                    v-if="record.phrase"
+                                    class="record-phrase"
+                                >
+                                    – “{{ record.phrase }}”
+                                </span>
                             </td>
+
                             <td class="mobile">
                                 <img
                                     v-if="record.mobile"
@@ -73,8 +94,25 @@ export default {
                                     alt="Mobile"
                                 >
                             </td>
+
                             <td class="hz">
-                                <p>{{ record.hz }}Hz</p>
+                                <div class="hz-content">
+                                    <a
+                                        v-if="record.link && record.link !== 'No video'"
+                                        :href="record.link"
+                                        target="_blank"
+                                        class="video-link"
+                                        aria-label="Watch video"
+                                    >
+                                        <img
+                                            src="/assets/youtube.png"
+                                            alt="YouTube"
+                                            class="video-icon"
+                                        />
+                                    </a>
+
+                                    <p>{{ record.hz }}Hz</p>
+                                </div>
                             </td>
                         </tr>
                     </table>
