@@ -4,9 +4,10 @@ export default {
     return {
       changelog: [
                 {
-          date: "26-10-2026",
+          date: "27-10-2026",
           message: `
             • Release of ESIList v1.1<br>
+            • Added the position history to all levels.
             • Fixed that clicking on a verifier's name would take you to the global graph instead of their leaderboard page.
             • Fixed that clicking on a record's profile icon would take you to the global graph instead of their leaderboard page.
           `,
