@@ -239,6 +239,7 @@ export default {
             );
             if (index !== -1) {
                 this.selected = index;
+                this.showingGlobalGraph = false;
             }
         }
 
