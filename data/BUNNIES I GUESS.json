@@ -15,7 +15,12 @@
     "verification": "https://youtu.be/bm1te7KWt_c",
     "percentToQualify": "0",
     "positionHistory": [
-
+        {
+            "date": "26-10-2026",
+            "change": null,
+            "position": 103,
+            "reason": "Release of the ESIList"
+        }
     ],
     "records": [
 

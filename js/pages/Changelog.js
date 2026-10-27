@@ -54,78 +54,80 @@ export default {
               (#35) PRISMATIC HAZE<br>
               (#36) BLOODBATH<br>
               (#37) AUDITORY BREAKER<br>
-              (#38) HEARTBEAT<br>
-              (#39) BETRAYAL OF FATE<br>
-              (#40) SNOWFALL STORM<br>
-              (#41) OVERTIME<br>
-              (#42) EVIL INSIDE<br>
-              (#43) GALAXY GAS<br>
-              (#44) CHOPSTEP<br>
-              (#45) AFTERMATH<br>
-              (#46) IDOLS<br>
-              (#47) TORSION<br>
-              (#48) STARBREAKER<br>
-              (#49) MAYBE POSSIBLY THING<br>
-              (#50) MASMECRESCENT<br>
-              (#51) GLIDE<br>
-              (#52) SUBVERSIVE<br>
-              (#53) THE ULTIMATE PHASE<br>
-              (#54) ANOTHER PHASE<br>
-              (#55) REVERENCE<br>
-              (#56) FEXTY<br>
-              (#57) FALLING UP<br>
-              (#58) DORADURA<br>
-              (#59) CROWD CONTROL<br>
-              (#60) FISH FISH GODMODE<br>
-              (#61) BROKEN SIGNAL<br>
-              (#62) DISMAL DUSTSTORM<br>
-              (#63) PUMPED UP KICKS<br>
-              (#64) BREAKOUT<br>
-              (#65) REANIMATE<br>
-              (#66) TROLLMACHINE<br>
-              (#67) I NEVER DREAM<br>
-              (#68) VOIDED<br>
-              (#69) THE FLAWLESS<br>
-              (#70) ALLEGIANCE<br>
-              (#71) HYPERSONIC<br>
-              (#72) HYDRATIC<br>
-              (#73) MELTDOWN<br>
-              (#74) HELIOS<br>
-              (#75) ROBOTCHIEF EXPOSAL<br>
-              (#76) MAKE IT DROP<br>
-              (#77) PROTEUS<br>
-              (#78) JRJRJR<br>
-              (#79) FINKOR<br>
-              (#80) RETENTION<br>
-              (#81) LOST LOVE<br>
-              (#82) DARK ODYSSEY<br>
-              (#83) NAPALM<br>
-              (#84) MYOCARDIA<br>
-              (#85) HURRICANE<br>
-              (#86) FORBIDDEN ISLE<br>
-              (#87) PLASMATIC<br>
-              (#88) REDEMPTION<br>
-              (#89) CYBERSONIC<br>
-              (#90) MY WORST LEVEL<br>
-              (#91) HEATSEEKER<br>
-              (#92) VERISIMILITUDE<br>
-              (#93) PHANTASMAGORIA<br>
-              (#94) COSMIC WAR<br>
-              (#95) CATACLYSM<br>
-              (#96) TANTRUM<br>
-              (#97) THE WINGED SWORD<br>
-              (#98) MISTY MOUNTAINS<br>
-              (#99) BRIMTANIC PARADISE<br>
-              (#100) AZURITE<br>
-              (#101) WITHOUT U<br>
-              (#102) BUNNIES I GUESS<br>
-              (#103) MIZURETA<br>
-              (#104) NIWA<br>
-              (#105) TROLL LEVEL<br>
-              (#106) ACU<br>
-              (#107) RAUCHKAMMER<br>
-              (#108) PRECIPITANCE<br>
-              (#109) GLISTEN<br>
+              (#38) CALLISTO<br>
+              (#39) HEARTBEAT<br>
+              (#40) BETRAYAL OF FATE<br>
+              (#41) SNOWFALL STORM<br>
+              (#42) OVERTIME<br>
+              (#43) EVIL INSIDE<br>
+              (#44) GALAXY GAS<br>
+              (#45) CHOPSTEP<br>
+              (#46) AFTERMATH<br>
+              (#47) IDOLS<br>
+              (#48) TORSION<br>
+              (#49) STARBREAKER<br>
+              (#50) MAYBE POSSIBLY THING<br>
+              (#51) MASMECRESCENT<br>
+              (#52) GLIDE<br>
+              (#53) SUBVERSIVE<br>
+              (#54) THE ULTIMATE PHASE<br>
+              (#55) ANOTHER PHASE<br>
+              (#56) REVERENCE<br>
+              (#57) FEXTY<br>
+              (#58) FALLING UP<br>
+              (#59) DORADURA<br>
+              (#60) CROWD CONTROL<br>
+              (#61) FISH FISH GODMODE<br>
+              (#62) BROKEN SIGNAL<br>
+              (#63) DISMAL DUSTSTORM<br>
+              (#64) PUMPED UP KICKS<br>
+              (#65) BREAKOUT<br>
+              (#66) REANIMATE<br>
+              (#67) TROLLMACHINE<br>
+              (#68) I NEVER DREAM<br>
+              (#69) VOIDED<br>
+              (#70) THE FLAWLESS<br>
+              (#71) ALLEGIANCE<br>
+              (#72) HYPERSONIC<br>
+              (#73) HYDRATIC<br>
+              (#74) MELTDOWN<br>
+              (#75) HELIOS<br>
+              (#76) ROBOTCHIEF EXPOSAL<br>
+              (#77) MAKE IT DROP<br>
+              (#78) PROTEUS<br>
+              (#79) JRJRJR<br>
+              (#80) FINKOR<br>
+              (#81) RETENTION<br>
+              (#82) LOST LOVE<br>
+              (#83) DARK ODYSSEY<br>
+              (#84) NAPALM<br>
+              (#85) MYOCARDIA<br>
+              (#86) HURRICANE<br>
+              (#87) FORBIDDEN ISLE<br>
+              (#88) PLASMATIC<br>
+              (#89) REDEMPTION<br>
+              (#90) CYBERSONIC<br>
+              (#91) MY WORST LEVEL<br>
+              (#92) HEATSEEKER<br>
+              (#93) VERISIMILITUDE<br>
+              (#94) PHANTASMAGORIA<br>
+              (#95) COSMIC WAR<br>
+              (#96) CATACLYSM<br>
+              (#97) TANTRUM<br>
+              (#98) THE WINGED SWORD<br>
+              (#99) MISTY MOUNTAINS<br>
+              (#100) BRIMTANIC PARADISE<br>
+              (#101) AZURITE<br>
+              (#102) WITHOUT U<br>
+              (#103) BUNNIES I GUESS<br>
+              (#104) MIZURETA<br>
+              (#105) NIWA<br>
+              (#106) TROLL LEVEL<br>
+              (#107) ACU<br>
+              (#108) RAFF X<br>
+              (#109) RAUCHKAMMER<br>
+              (#110) PRECIPITANCE<br>
+              (#111) GLISTEN<br>
           `,
           featured: true,
         },
