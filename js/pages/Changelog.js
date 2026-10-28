@@ -3,7 +3,15 @@ export default {
   data() {
     return {
       changelog: [
-                {
+        {
+          date: "28-10-2026",
+          message: `
+            • Release of ESIList v1.2<br>
+            • The domain has been indexed and the page is accesible on Google by the name "ESIList".
+          `,
+          featured: true,
+        },
+        {
           date: "27-10-2026",
           message: `
             • Release of ESIList v1.1<br>
