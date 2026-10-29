@@ -83,6 +83,7 @@ main {
 }
 main > div {
     overflow-y: auto;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
 }
 
 .spinner {
