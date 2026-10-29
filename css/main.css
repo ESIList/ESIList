@@ -7,8 +7,8 @@
     --color-on-primary: white;
     --color-error: #de0000;
     --color-on-error: white;
-    --color-scrollbar-thumb: #505050;
-    --color-scrollbar-track: #8f8f8f;
+    --color-scrollbar-thumb: #a1a1a1;
+    --color-scrollbar-track: #dadada;
 }
 
 main.dark,
