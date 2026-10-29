@@ -173,7 +173,7 @@ export default {
                     Position History
                 </h2>
 
-                <div class="position-history-cards" v-if="level.positionHistory && level.positionHistory.length">
+                <div class="position-history-cards type-label-lg" v-if="level.positionHistory && level.positionHistory.length">
                     
                     <!-- Column headers -->
                     <div class="history-card headers">

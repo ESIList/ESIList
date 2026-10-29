@@ -293,12 +293,10 @@ main.dark .page-list .level-container .tag {
 .history-card.headers {
     background-color: var(--color-background-hover); /* subtle gray */
     color: var(--color-on-background);
-    
-    /* Match the Position History h2 style */
-    font-family: var(--font-heading, "Inter", sans-serif); /* or whatever h2 uses */
+
     font-weight: 700; /* same as h2 */
     font-size: 0.9rem; /* smaller than h2 */
-    
+
     pointer-events: none; /* not clickable */
     border-radius: 0.5rem 0.5rem 0 0; /* optional: round top corners like cards */
     padding: 0.75rem 1rem; /* match the card padding */
