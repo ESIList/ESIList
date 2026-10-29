@@ -42,7 +42,7 @@ export default {
                         </td>
                     </tr>
                 </table>
-                <p v-if="search && filteredList.length === 0" class="no-results">No levels found.</p>
+                <p v-if="search && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1).</p>
             </div>
             <div class="level-container">
                 <div class="level" v-if="level">
