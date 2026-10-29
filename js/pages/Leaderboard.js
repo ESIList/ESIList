@@ -140,7 +140,7 @@ export default {
                             <tr v-for="score in entry.progressed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
                                 <td class="level">
-                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a></td>
                                     <p v-if="getPhrase(score.level)" class="level-phrase">
                                         – “{{ getPhrase(score.level) }}”
                                     </p>
