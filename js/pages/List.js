@@ -25,7 +25,7 @@ export default {
             <div class="list-container">
                 <input
                     v-model="search"
-                    class="level-search"
+                    class="level-search type-label-lg"
                     type="text"
                     placeholder="Search levels..."
                 />

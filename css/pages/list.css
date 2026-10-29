@@ -410,7 +410,6 @@ main.dark .page-list .level-container .tag {
     border-radius: 0.5rem;
     background-color: var(--color-background);
     color: var(--color-on-background);
-    font: inherit;
 }
 .page-list .list-container .level-search:focus {
     outline: none;
