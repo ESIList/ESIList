@@ -6,18 +6,13 @@
     },
     {
         "role": "admin",
-        "name": "List Admin - Lolencio",
+        "name": "List Admin - cauri",
         "link": "https://www.youtube.com/@lolencio0458"
     },
     {
-        "role": "helper",
-        "name": "List Helper - Juliponcio",
+        "role": "admin",
+        "name": "List Admin - itzniw",
         "link": "https://www.youtube.com/@juliogarciaibanez6212"
-    },
-    {
-        "role": "trial",
-        "name": "Trial List Helper - Scalextrikx",
-        "link": "https://www.youtube.com/@scalextrikx1978"
     },
     {
         "role": "dev",

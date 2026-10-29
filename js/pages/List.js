@@ -228,14 +228,14 @@ export default {
                     </template>
 
                     <h3>Submission Requirements</h3>
-                    <p>Achieved the record without using hacks (FPS bypass up to 360fps is allowed).</p>
-                    <p>Record on the level listed on the site – check the level ID before submitting.</p>
+                    <p>Achieved the record without using hacks (FPS bypass is allowed).</p>
+                    <p>Record on the level listed on the site or unchanged SP copy.</p>
                     <p>Video must include source audio or clicks/taps (no edited audio only).</p>
                     <p>Show previous attempt and full death animation unless it's first attempt. Everyplay exempt.</p>
                     <p>Show the endwall hit or record is invalidated.</p>
                     <p>No secret or bug routes allowed.</p>
                     <p>No easy modes – only unmodified level qualifies.</p>
-                    <p>Legacy levels accept records for 24h after falling off, then no more.</p>
+                    <p>Legacy levels are always accepted.</p>
                 </div>
             </div>
         </main>
