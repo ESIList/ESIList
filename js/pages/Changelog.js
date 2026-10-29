@@ -4,6 +4,14 @@ export default {
     return {
       changelog: [
         {
+          date: "29-10-2026",
+          message: `
+            • Release of ESIList v1.3<br>
+            • The leaderboard page now shows the player's phrases under each verification, completion and progress.
+          `,
+          featured: true,
+        },
+        {
           date: "28-10-2026",
           message: `
             • Release of ESIList v1.2<br>
