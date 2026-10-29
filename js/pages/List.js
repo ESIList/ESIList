@@ -27,7 +27,7 @@ export default {
                     v-model="search"
                     class="level-search type-label-lg"
                     type="text"
-                    placeholder="Search levels..."
+                    placeholder="🔍 Search levels..."
                 />
                 <table class="list" v-if="list">
                     <tr v-for="item in filteredList" :key="item.index">
