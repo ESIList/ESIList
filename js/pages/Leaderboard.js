@@ -103,7 +103,12 @@ export default {
                         <table class="table">
                             <tr v-for="score in entry.verified">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a></td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                    <p v-if="getSubtitle(score.level)" class="level-subtitle">
+                                        – “{{ getSubtitle(score.level) }}”
+                                    </p>
+                                </td>
                                 <td class="score"><p>+{{ localize(score.score) }}</p></td>
                             </tr>
                         </table>
@@ -112,7 +117,12 @@ export default {
                         <table class="table">
                             <tr v-for="score in entry.completed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a></td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                    <p v-if="getPhrase(score.level)" class="level-phrase">
+                                        – “{{ getPhrase(score.level) }}”
+                                    </p>
+                                </td>
                                 <td class="score"><p>+{{ localize(score.score) }}</p></td>
                             </tr>
                         </table>
@@ -273,6 +283,36 @@ export default {
 
         showGlobalGraph() {
             this.showingGlobalGraph = true;
+        },
+
+        cleanText(value) {
+            if (typeof value !== 'string') return null;
+            const text = value.trim();
+            if (text === '' || text === '-') return null;
+            return text;
+        },
+
+        getLevelData(levelName) {
+            if (!levelName || !Array.isArray(this.allLevels)) return null;
+            const name = String(levelName).toLowerCase();
+            return this.allLevels.find(
+                l => l && l.level && String(l.level).toLowerCase() === name
+            ) || null;
+        },
+
+        getSubtitle(levelName) {
+            const lvl = this.getLevelData(levelName);
+            return this.cleanText(lvl?.subtitle);
+        },
+
+        getPhrase(levelName) {
+            const lvl = this.getLevelData(levelName);
+            if (!lvl || !Array.isArray(lvl.records) || !this.entry) return null;
+            const user = String(this.entry.user).toLowerCase();
+            const rec = lvl.records.find(
+                r => r && r.user && String(r.user).toLowerCase() === user
+            );
+            return this.cleanText(rec?.phrase);
         },
 
         renderChart() {

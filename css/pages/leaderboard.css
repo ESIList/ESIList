@@ -150,3 +150,19 @@
 .page-leaderboard .skill-value {
     font-weight: 700;
 }
+
+/* ===== Level subtitle / record phrase (LEADERBOARD) ===== */
+.page-leaderboard .player .table .level a {
+    display: block;
+}
+
+.page-leaderboard .player .table .level .level-subtitle,
+.page-leaderboard .player .table .level .level-phrase {
+    padding-block: 0 1rem;
+    margin-top: -0.75rem;
+    font-style: italic;
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.75;
+    line-height: 1.3;
+}
