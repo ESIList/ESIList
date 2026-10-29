@@ -23,21 +23,27 @@ export default {
         </main>
         <main v-else class="page-list">
             <div class="list-container">
+                <input
+                    v-model="search"
+                    class="level-search"
+                    type="text"
+                    placeholder="Search levels..."
+                />
                 <table class="list" v-if="list">
-                    <tr v-for="([level, err], i) in list">
+                    <tr v-for="item in filteredList" :key="item.index">
                         <td class="rank">
-                            <p v-if="i + 1 <= 150" class="type-label-lg">#{{ i + 1 }}</p>
+                            <p v-if="item.index + 1 <= 150" class="type-label-lg">#{{ item.index + 1 }}</p>
                             <p v-else class="type-label-lg">Legacy</p>
                         </td>
-                        <td class="level" :class="{ 'active': selected == i, 'error': !level }">
-                            <button @click="selected = i">
-                                <span class="type-label-lg">{{ level?.name || \`Error (\${err}.json)\` }}</span>
+                        <td class="level" :class="{ 'active': selected == item.index, 'error': !item.level }">
+                            <button @click="selected = item.index">
+                                <span class="type-label-lg">{{ item.level?.name || \`Error (\${item.err}.json)\` }}</span>
                             </button>
                         </td>
                     </tr>
                 </table>
+                <p v-if="search && filteredList.length === 0" class="no-results">No levels found.</p>
             </div>
-
             <div class="level-container">
                 <div class="level" v-if="level">
                     <h1 class="level-title">
@@ -246,10 +252,23 @@ export default {
         loading: true,
         selected: 0,
         errors: [],
+        search: "",
         roleIconMap,
         store,
     }),
     computed: {
+        filteredList() {
+            const all = this.list.map(([level, err], index) => ({ level, err, index }));
+            const q = this.search.trim().toLowerCase();
+            if (!q) return all;
+
+            return all.filter(({ level, err }) => {
+                if (!level) return String(err).toLowerCase().includes(q);
+                return [level.name, level.author, level.verifier, level.id].some(
+                    (v) => v != null && String(v).toLowerCase().includes(q)
+                );
+            });
+        },
         level() {
             return this.list[this.selected][0];
         },

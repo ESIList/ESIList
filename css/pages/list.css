@@ -401,3 +401,22 @@ main.dark .page-list .level-container .tag {
     opacity: 1;
     transform: scale(1.1);
 }
+.page-list .list-container .level-search {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-background-hover);
+    border-radius: 0.5rem;
+    background-color: var(--color-background);
+    color: var(--color-on-background);
+    font: inherit;
+}
+.page-list .list-container .level-search:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+.page-list .list-container .no-results {
+    opacity: 0.75;
+    padding: 1rem;
+}
