@@ -139,7 +139,12 @@ export default {
                         <table class="table">
                             <tr v-for="score in entry.progressed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a></td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                    <p v-if="getPhrase(score.level)" class="level-phrase">
+                                        – “{{ getPhrase(score.level) }}”
+                                    </p>
+                                </td>
                                 <td class="score"><p>+{{ localize(score.score) }}</p></td>
                             </tr>
                         </table>
