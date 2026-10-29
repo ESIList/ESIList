@@ -259,12 +259,17 @@ export default {
     computed: {
         filteredList() {
             const all = this.list.map(([level, err], index) => ({ level, err, index }));
-            const q = this.search.trim().toLowerCase();
+            const q = this.search.trim().toLowerCase().replace(/^#/, "");
             if (!q) return all;
 
-            return all.filter(({ level, err }) => {
+            const isNumber = /^\d+$/.test(q);
+
+            return all.filter(({ level, err, index }) => {
+                // Exact placement match: searching "107" shows the level ranked #107
+                if (isNumber && index + 1 === Number(q)) return true;
+
                 if (!level) return String(err).toLowerCase().includes(q);
-                return [level.name, level.author, level.verifier, level.id].some(
+                return [level.name, level.author, level.verifier].some(
                     (v) => v != null && String(v).toLowerCase().includes(q)
                 );
             });
