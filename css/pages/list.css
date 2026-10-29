@@ -259,6 +259,9 @@ main.dark .page-list .level-container .tag {
     flex-direction: column;
     gap: 0.75rem;
     margin-top: 1rem; /* space between title and first card */
+    max-width: 48rem;
+    padding-right: 2rem;
+    box-sizing: border-box;
 }
 
 .history-card {
