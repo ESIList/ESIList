@@ -1,42 +1,46 @@
-/* Add this to your list page stylesheet (e.g. css/pages/list.css) */
+/* ===== FILTERS ===== */
+/* Add to list.css. If you pasted the previous filters.css, delete it first. */
 
-.search-row {
-    display: flex;
-    gap: 0.5rem;
-    align-items: stretch;
+/* Search bar block: the filter button sits INSIDE it, on the right */
+.page-list .list-container .search-row {
     position: relative;
+    margin-bottom: 1rem;
+}
+.page-list .list-container .search-row .level-search {
+    margin-bottom: 0;          /* spacing now lives on .search-row */
+    padding-right: 7.5rem;     /* room for the button */
 }
 
-.search-row .level-search {
-    flex: 1;
-    min-width: 0;
+.page-list .list-container .filter-wrapper {
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    transform: translateY(-50%);
 }
 
-.filter-wrapper {
-    position: relative;
-}
-
-.filter-button {
-    height: 100%;
+.page-list .list-container .filter-button {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0 0.9rem;
-    border: 1px solid rgba(128, 128, 128, 0.4);
-    border-radius: 0.5rem;
-    background: transparent;
-    color: inherit;
+    padding: 0.4rem 0.8rem;
+    border: none;
+    border-radius: 0.4rem;
+    background-color: var(--color-background-hover);
+    color: var(--color-on-background-hover);
     cursor: pointer;
     white-space: nowrap;
 }
-
-.filter-button.active {
-    border-color: #3b82f6;
+.page-list .list-container .filter-button:hover {
+    filter: brightness(1.15);
+}
+.page-list .list-container .filter-button.active {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
-.filter-count {
-    background: #3b82f6;
-    color: #fff;
+.page-list .list-container .filter-count {
+    background: var(--color-on-primary, #fff);
+    color: var(--color-primary, #3b82f6);
     border-radius: 999px;
     font-size: 0.75rem;
     min-width: 1.2rem;
@@ -46,35 +50,37 @@
     justify-content: center;
 }
 
-.filter-panel {
+/* Dropdown */
+.page-list .list-container .filter-panel {
     position: absolute;
-    top: calc(100% + 0.4rem);
+    top: calc(100% + 0.6rem);
     right: 0;
     z-index: 20;
     width: 18rem;
     max-width: 80vw;
     padding: 0.75rem;
-    border: 1px solid rgba(128, 128, 128, 0.4);
+    border: 2px solid var(--color-background-hover);
     border-radius: 0.5rem;
-    background: var(--color-background, #1e1e1e);
+    background-color: var(--color-background);
+    color: var(--color-on-background);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
 }
 
-.filter-panel-header {
+.page-list .filter-panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0.6rem;
 }
 
-.filter-clear {
+.page-list .filter-clear {
     background: none;
     border: none;
-    color: #3b82f6;
+    color: var(--color-primary);
     cursor: pointer;
 }
 
-.filter-options {
+.page-list .filter-options {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
@@ -82,36 +88,36 @@
     overflow-y: auto;
 }
 
-.filter-chip {
+/* Chips (used in the dropdown and on the level page) */
+.page-list .filter-chip {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.65rem;
-    border: 1px solid rgba(128, 128, 128, 0.5);
+    border: 1px solid var(--color-background-hover);
     border-radius: 999px;
     background: transparent;
     color: inherit;
     cursor: pointer;
 }
-
-.filter-chip.selected {
-    background: #3b82f6;
-    border-color: #3b82f6;
-    color: #fff;
+.page-list .filter-chip:hover {
+    background-color: var(--color-background-hover);
 }
-
-.filter-chip.empty:not(.selected) {
+.page-list .filter-chip.selected {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+.page-list .filter-chip.empty:not(.selected) {
     opacity: 0.45;
 }
-
-.filter-chip-count {
+.page-list .filter-chip-count {
     font-size: 0.75rem;
     opacity: 0.7;
 }
 
-.level-filters {
+.page-list .level-container .level-filters {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
-    margin: 0.75rem 0;
 }
