@@ -1,15 +1,15 @@
 {
     "id": 59075347,
     "name": "TARTARUS",
-    "subtitle": "-",
-    "author": "-",
+    "subtitle": "Pasar la nave del 31 es mas dificil que meterla",
+    "author": "Riot",
     "verifier": "cauri",
     "aredl": "#108",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "long", "timings", "chokepoints", "ship"],
     "verification": "https://youtu.be/yg9KSiuDYgw",
     "percentToQualify": "0",
     "positionHistory": [

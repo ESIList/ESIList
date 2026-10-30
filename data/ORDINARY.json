@@ -1,15 +1,15 @@
 {
     "id": 105593215,
     "name": "ORDINARY",
-    "subtitle": "-",
-    "author": "-",
+    "subtitle": "Pasarse esto es mas judio que hacerse la circuncision",
+    "author": "Vit12",
     "verifier": "cauri",
     "aredl": "#95",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.2", "long", "timings", "cube", "chokepoints", "nerve-control", "unbalanced"],
     "verification": "https://www.youtube.com/watch?v=5TnTYmb9Xs4",
     "percentToQualify": "0",
     "positionHistory": [

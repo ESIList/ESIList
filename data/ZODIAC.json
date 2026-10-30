@@ -1,15 +1,15 @@
 {
     "id": 52374843,
     "name": "ZODIAC",
-    "subtitle": "-",
-    "author": "-",
+    "subtitle": "El zodiac es un juego de cartas que se juega con una baraja de 52 cartas. El objetivo del juego es ser el primero en quedarse sin cartas. Cada jugador recibe 7 cartas y el resto se coloca en un mazo boca abajo. El jugador que comienza debe colocar una carta en el centro de la mesa y decir el nombre del signo zodiacal que corresponde a esa carta. Los demás jugadores deben colocar una carta que corresponda al mismo signo zodiacal o pasar su turno. Si un jugador no puede colocar una carta, debe tomar una carta del mazo. El juego continúa hasta que un jugador se queda sin cartas y gana la partida.",
+    "author": "xander",
     "verifier": "cauri",
     "aredl": "#126",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "xl", "chokepoints", "unbalanced", "nerve-control", "overall"],
     "verification": "https://youtu.be/Epz8KpZGvpc?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [
