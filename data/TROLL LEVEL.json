@@ -2,14 +2,14 @@
     "id": 12,
     "name": "TROLL LEVEL",
     "subtitle": "Llevo 4 completions y uno de ellos fue 189%",
-    "author": "-",
+    "author": "Lexycat",
     "verifier": "Ninjedu",
     "aredl": "-",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "long", "timings", "chokepoints", "memory", "cube"],
     "verification": "https://youtu.be/0sSD7z73mCU?si=ScbvKfg4dkp_BXUO",
     "percentToQualify": "0",
     "positionHistory": [

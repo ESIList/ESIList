@@ -2,14 +2,14 @@
     "id": 12,
     "name": "TROLLMACHINE",
     "subtitle": "-",
-    "author": "-",
+    "author": "TROLLM4CHINE",
     "verifier": "cauri",
     "aredl": "-",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "long", "clicksync", "fast-paced", "chokepoints", "high-cps", "duals"],
     "verification": "https://youtu.be/FgUJfMPJkNk?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [

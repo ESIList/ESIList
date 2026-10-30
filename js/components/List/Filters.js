@@ -19,6 +19,7 @@ const filters = [
     { id: "robot", name: "Robot" },
     { id: "spider", name: "Spider" },
     { id: "swing", name: "Swing" },
+    { id: "duals", name: "Duals" },
     { id: "timings", name: "Timings" },
     { id: "high-cps", name: "High CPS" },
     { id: "slow-paced", name: "Slow Paced" },
@@ -34,6 +35,8 @@ const filters = [
     { id: "memory", name: "Memory" },
     { id: "unbalanced", name: "Unbalanced" },
     { id: "clicksync", name: "Clicksync" },
+    { id: "unrated", name: "Unrated" },
+    { id: "circles", name: "Circles" },
 
     // Game versions
     { id: "pre-2.1", name: "Pre 2.1" },

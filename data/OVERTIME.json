@@ -2,14 +2,14 @@
     "id": 12,
     "name": "OVERTIME",
     "subtitle": "-",
-    "author": "-",
+    "author": "KlaurosssS",
     "verifier": "cauri",
     "aredl": "-",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "long", "chokepoints", "high-cps", "ship", "wave"],
     "verification": "https://youtu.be/9lza9Z8vKXc?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [
