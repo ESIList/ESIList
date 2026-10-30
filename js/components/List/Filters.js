@@ -22,7 +22,16 @@ const filters = [
     { id: "timings", name: "Timings" },
     { id: "high-cps", name: "High CPS" },
     { id: "slow-paced", name: "Slow Paced" },
+    { id: "high-paced", name: "High Paced" },
     { id: "xl", name: "XL" },
+    { id: "medium", name: "Medium" },
+    { id: "long", name: "Long" },
+    { id: "chokepoints", name: "Chokepoints" },
+    { id: "gimmicky", name: "Gimmicky" },
+    { id: "nerve-control", name: "Nerve Control" },
+    { id: "overall", name: "Overall" },
+    { id: "learny", name: "Learny" },
+    { id: "memory", name: "Memory" },
 
     // Game versions
     { id: "pre-2.1", name: "Pre 2.1" },
