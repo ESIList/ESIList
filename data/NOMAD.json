@@ -1,7 +1,7 @@
 {
     "id": 115077305,
     "name": "NOMAD",
-    "subtitle": "-",
+    "subtitle": "RisUveTe judio",
     "author": "reesevt",
     "verifier": "cauri",
     "aredl": "#42",
@@ -9,7 +9,7 @@
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.2", "timings", "ship", "slow-paced"],
     "verification": "https://youtu.be/LxnSxGGtsU0?si=xX1O12t0ozc6S3c-",
     "percentToQualify": "0",
     "positionHistory": [
