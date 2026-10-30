@@ -400,6 +400,7 @@ main.dark .page-list .level-container .tag {
     top: 50%;
     right: 0.5rem;
     transform: translateY(-50%);
+    z-index: 30;               /* keep the dropdown above the list and messages */
 }
 
 .page-list .list-container .filter-button {
