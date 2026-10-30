@@ -33,6 +33,7 @@ const filters = [
     { id: "learny", name: "Learny" },
     { id: "memory", name: "Memory" },
     { id: "unbalanced", name: "Unbalanced" },
+    { id: "clicksync", name: "Clicksync" },
 
     // Game versions
     { id: "pre-2.1", name: "Pre 2.1" },

@@ -2,14 +2,14 @@
     "id": 68353244,
     "name": "NHELV",
     "subtitle": "-",
-    "author": "-",
+    "author": "SrGuillester",
     "verifier": "cauri",
     "aredl": "#270",
     "verificationDate": "2026-10-26",
     "tags": [
         
     ],
-    "filters": ["2.1"],
+    "filters": ["2.1", "xl", "learny", "memory", "gimmicky", "nerve-control", "overall"],
     "verification": "https://youtu.be/7JcdeqxM9L8",
     "percentToQualify": "0",
     "positionHistory": [
