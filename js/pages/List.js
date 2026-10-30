@@ -6,6 +6,7 @@ import { fetchEditors, fetchList } from "../content.js";
 import Spinner from "../components/Spinner.js";
 import LevelAuthors from "../components/List/LevelAuthors.js";
 import tags from "../components/List/Tags.js";
+import filterRegistry, { normalizeFilterId, resolveFilter } from "../components/List/Filters.js";
 
 const roleIconMap = {
     owner: "crown",
@@ -23,12 +24,51 @@ export default {
         </main>
         <main v-else class="page-list">
             <div class="list-container">
-                <input
-                    v-model="search"
-                    class="level-search type-label-lg"
-                    type="text"
-                    placeholder="🔍 Search levels..."
-                />
+                <div class="search-row">
+                    <input
+                        v-model="search"
+                        class="level-search type-label-lg"
+                        type="text"
+                        placeholder="🔍 Search levels..."
+                    />
+                    <div class="filter-wrapper">
+                        <button
+                            class="filter-button type-label-lg"
+                            :class="{ active: selectedFilters.length > 0 }"
+                            @click.stop="showFilters = !showFilters"
+                            aria-label="Filters"
+                            title="Filters"
+                        >
+                            <span>⛃ Filter</span>
+                            <span v-if="selectedFilters.length" class="filter-count">{{ selectedFilters.length }}</span>
+                        </button>
+
+                        <div class="filter-panel" v-if="showFilters" @click.stop>
+                            <div class="filter-panel-header">
+                                <span class="type-title-sm">Filters</span>
+                                <button
+                                    v-if="selectedFilters.length"
+                                    class="filter-clear"
+                                    @click="clearFilters"
+                                >Clear</button>
+                            </div>
+                            <div class="filter-options" v-if="availableFilters.length">
+                                <button
+                                    v-for="f in availableFilters"
+                                    :key="f.id"
+                                    class="filter-chip"
+                                    :class="{ selected: isFilterSelected(f.id), empty: f.count === 0 }"
+                                    @click="toggleFilter(f.id)"
+                                >
+                                    {{ f.name }}
+                                    <span class="filter-chip-count">{{ f.count }}</span>
+                                </button>
+                            </div>
+                            <p v-else class="no-results">No filters available yet.</p>
+                        </div>
+                    </div>
+                </div>
+
                 <table class="list" v-if="list">
                     <tr v-for="item in filteredList" :key="item.index">
                         <td class="rank">
@@ -42,7 +82,7 @@ export default {
                         </td>
                     </tr>
                 </table>
-                <p v-if="search && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1).</p>
+                <p v-if="(search || selectedFilters.length) && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1), or loosen the filters.</p>
             </div>
             <div class="level-container">
                 <div class="level" v-if="level">
@@ -77,15 +117,17 @@ export default {
 
                     <iframe class="video" id="videoframe" :src="video" frameborder="0"></iframe>
 
-                    <div class="skills" v-if="level.skills && level.skills.length">
-                        <div
-                            v-for="skill in level.skills"
-                            :key="skill.name"
-                            class="skill"
+                    <div class="level-filters" v-if="levelFilters.length">
+                        <button
+                            v-for="f in levelFilters"
+                            :key="f.id"
+                            class="filter-chip"
+                            :class="{ selected: isFilterSelected(f.id) }"
+                            @click="toggleFilter(f.id)"
+                            title="Click to filter the list by this"
                         >
-                            <span class="skill-name">{{ skill.name }}</span>
-                            <span class="skill-value">{{ skill.value }}</span>
-                        </div>
+                            {{ f.name }}
+                        </button>
                     </div>
 
                     <ul class="stats">
@@ -253,18 +295,70 @@ export default {
         selected: 0,
         errors: [],
         search: "",
+        selectedFilters: [],
+        showFilters: false,
         roleIconMap,
         store,
     }),
     computed: {
+        // All filters for the menu: registered ones first (in registry order),
+        // then any filter found in level data that isn't registered, sorted A-Z.
+        // `count` = how many levels have that filter.
+        availableFilters() {
+            const counts = new Map();
+            const names = new Map();
+            for (const [level] of this.list) {
+                if (!level || !Array.isArray(level.filters)) continue;
+                const seen = new Set();
+                for (const raw of level.filters) {
+                    const f = resolveFilter(raw);
+                    if (seen.has(f.id)) continue;
+                    seen.add(f.id);
+                    counts.set(f.id, (counts.get(f.id) || 0) + 1);
+                    names.set(f.id, f.name);
+                }
+            }
+
+            const result = filterRegistry.map((f) => ({
+                id: f.id,
+                name: f.name,
+                count: counts.get(f.id) || 0,
+            }));
+
+            const registeredIds = new Set(filterRegistry.map((f) => f.id));
+            const extras = [...counts.keys()]
+                .filter((id) => !registeredIds.has(id))
+                .sort()
+                .map((id) => ({ id, name: names.get(id), count: counts.get(id) }));
+
+            return [...result, ...extras];
+        },
+        levelFilters() {
+            if (!this.level || !Array.isArray(this.level.filters)) return [];
+            const seen = new Set();
+            return this.level.filters
+                .map((raw) => resolveFilter(raw))
+                .filter((f) => (seen.has(f.id) ? false : seen.add(f.id)));
+        },
         filteredList() {
             const all = this.list.map(([level, err], index) => ({ level, err, index }));
             const q = this.search.trim().toLowerCase().replace(/^#/, "");
-            if (!q) return all;
+            const activeFilters = this.selectedFilters;
+
+            if (!q && activeFilters.length === 0) return all;
 
             const isNumber = /^\d+$/.test(q);
 
             return all.filter(({ level, err, index }) => {
+                // Filters: a level must have ALL selected filters
+                if (activeFilters.length) {
+                    if (!level || !Array.isArray(level.filters)) return false;
+                    const ids = level.filters.map(normalizeFilterId);
+                    if (!activeFilters.every((id) => ids.includes(id))) return false;
+                }
+
+                if (!q) return true;
+
                 // Exact placement match: searching "107" shows the level ranked #107
                 if (isNumber && index + 1 === Number(q)) return true;
 
@@ -283,6 +377,8 @@ export default {
         },
     },
     async mounted() {
+        document.addEventListener("click", this.closeFilters);
+
         const tagId = this.$route.params.tagId;
         this.list = await fetchList();
         this.editors = await fetchEditors();
@@ -318,9 +414,29 @@ export default {
             store.selectedLevelId = null; // reset after use
         }
     },
+    beforeUnmount() {
+        document.removeEventListener("click", this.closeFilters);
+    },
     methods: {
         embed,
         score,
+        // filter system methods
+        isFilterSelected(id) {
+            return this.selectedFilters.includes(id);
+        },
+        toggleFilter(id) {
+            if (this.isFilterSelected(id)) {
+                this.selectedFilters = this.selectedFilters.filter((f) => f !== id);
+            } else {
+                this.selectedFilters = [...this.selectedFilters, id];
+            }
+        },
+        clearFilters() {
+            this.selectedFilters = [];
+        },
+        closeFilters() {
+            this.showFilters = false;
+        },
         // tag system methods
         getTag(tagName) {
             return tags.find(
