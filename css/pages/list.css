@@ -183,44 +183,6 @@ main.dark .page-list .level-container .tag {
     filter: brightness(1.2);
 }
 
-/* ===== SKILLS ===== */
-.page-list .level-container .skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.page-list .level-container .skill {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-
-    padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
-
-    background-color: rgba(128, 128, 128, 0.15); /* soft gray */
-    backdrop-filter: blur(2px); /* optional subtle glass feel */
-
-    font-size: 1.2rem;
-    font-weight: 500;
-
-    transition: transform 0.1s ease, background-color 0.15s ease;
-}
-
-.page-list .level-container .skill:hover {
-    transform: translateY(-1px);
-    background-color: rgba(100, 100, 100, 0.5);
-}
-
-.page-list .level-container .skill-name {
-    opacity: 0.8;
-    text-transform: capitalize;
-}
-
-.page-list .level-container .skill-value {
-    font-weight: 700;
-}
-
 .page-list .level-container .position-history {
     width: 100%;
     border-collapse: collapse;
