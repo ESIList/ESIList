@@ -130,8 +130,6 @@ export default {
                         </button>
                     </div>
 
-                    <hr class="section-separator" />
-
                     <ul class="stats">
                         <li>
                             <div class="type-title-sm">Points when completed</div>
