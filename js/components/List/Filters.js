@@ -19,8 +19,13 @@ const filters = [
     { id: "robot", name: "Robot" },
     { id: "spider", name: "Spider" },
     { id: "swing", name: "Swing" },
+    { id: "timings", name: "Timings" },
+    { id: "high-cps", name: "High CPS" },
+    { id: "slow-paced", name: "Slow Paced" },
+    { id: "xl", name: "XL" },
 
     // Game versions
+    { id: "pre-2.1", name: "Pre 2.1" },
     { id: "2.1", name: "2.1" },
     { id: "2.2", name: "2.2" },
 ];
