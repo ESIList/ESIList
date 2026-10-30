@@ -9,7 +9,7 @@
     "tags": [
         
     ],
-    "filters": ["2.2", "long", "timings", "ship", "ufo", "cube", "slow-paced", "chokepoints", "gimmicky"],
+    "filters": ["2.2", "medium", "timings", "ship", "ufo", "cube", "slow-paced", "chokepoints", "gimmicky"],
     "verification": "https://youtu.be/LxnSxGGtsU0?si=xX1O12t0ozc6S3c-",
     "percentToQualify": "0",
     "positionHistory": [
