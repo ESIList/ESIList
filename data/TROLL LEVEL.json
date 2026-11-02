@@ -6,10 +6,15 @@
     "verifier": "Ninjedu",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "long",
+        "timings",
+        "chokepoints",
+        "memory",
+        "cube"
     ],
-    "filters": ["2.1", "long", "timings", "chokepoints", "memory", "cube"],
     "verification": "https://youtu.be/0sSD7z73mCU?si=ScbvKfg4dkp_BXUO",
     "percentToQualify": "0",
     "positionHistory": [
@@ -18,6 +23,12 @@
             "change": null,
             "position": 106,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "02-11-2026",
+            "change": -1,
+            "position": 107,
+            "reason": "Placed KISMET at #102"
         }
     ],
     "records": [

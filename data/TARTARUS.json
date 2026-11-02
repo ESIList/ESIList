@@ -6,10 +6,14 @@
     "verifier": "cauri",
     "aredl": "#108",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "long",
+        "timings",
+        "chokepoints",
+        "ship"
     ],
-    "filters": ["2.1", "long", "timings", "chokepoints", "ship"],
     "verification": "https://youtu.be/yg9KSiuDYgw",
     "percentToQualify": "0",
     "positionHistory": [

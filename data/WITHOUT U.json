@@ -6,10 +6,16 @@
     "verifier": "itzniw",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.2",
+        "xl",
+        "fast-paced",
+        "learny",
+        "gimmicky",
+        "nerve-control",
+        "duals"
     ],
-    "filters": ["2.2", "xl", "fast-paced", "learny", "gimmicky", "nerve-control", "duals"],
     "verification": "https://www.youtube.com/watch?v=v4z27qM8wxs&pp=ygUebmV3bHkgcmF0ZWQgZXh0cmVtZXMgd2l0aG91dCB1",
     "percentToQualify": "0",
     "positionHistory": [
@@ -18,6 +24,12 @@
             "change": null,
             "position": 102,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "02-11-2026",
+            "change": -1,
+            "position": 103,
+            "reason": "Placed KISMET at #102"
         }
     ],
     "records": []

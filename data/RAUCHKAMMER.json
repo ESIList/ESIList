@@ -6,10 +6,10 @@
     "verifier": "Ninjedu",
     "aredl": "#1603",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/-ge89eZ9_5M?si=lWrN775JrZxUtJbN",
     "percentToQualify": "0",
     "positionHistory": [
@@ -18,6 +18,12 @@
             "change": null,
             "position": 109,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "02-11-2026",
+            "change": -1,
+            "position": 110,
+            "reason": "Placed KISMET at #102"
         }
     ],
     "records": []

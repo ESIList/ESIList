@@ -6,10 +6,10 @@
     "verifier": "Lolencio04",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/gHHqPIvZXeM?si=SkmucgKSMgAHxgHr",
     "percentToQualify": "0",
     "positionHistory": [

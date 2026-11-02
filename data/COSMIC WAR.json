@@ -9,7 +9,9 @@
     "tags": [
         "unrated"
     ],
-    "filters": ["2.1"],
+    "filters": [
+        "2.1"
+    ],
     "verification": "https://www.youtube.com/watch?v=FBALXMoJoGA",
     "percentToQualify": "0",
     "positionHistory": [

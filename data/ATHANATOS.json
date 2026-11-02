@@ -6,10 +6,10 @@
     "verifier": "ExoRK28",
     "aredl": "#707",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/3UOdXes8GpM?si=4ANxP8A12m0edupi",
     "percentToQualify": "0",
     "positionHistory": [

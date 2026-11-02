@@ -6,10 +6,10 @@
     "verifier": "Ninjedu",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/Fz8RadeSDV4?si=kdreBwpnIiS-LKnx",
     "percentToQualify": "0",
     "positionHistory": [

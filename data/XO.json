@@ -6,10 +6,21 @@
     "verifier": "cauri",
     "aredl": "#325",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "xl",
+        "clicksync",
+        "timings",
+        "chokepoints",
+        "unbalanced",
+        "learny",
+        "slow-paced",
+        "nerve-control",
+        "cube",
+        "ship",
+        "wave"
     ],
-    "filters": ["2.1", "xl", "clicksync", "timings", "chokepoints", "unbalanced", "learny", "slow-paced", "nerve-control", "cube", "ship", "wave"],
     "verification": "https://youtu.be/0EM5PYD0rX0?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [

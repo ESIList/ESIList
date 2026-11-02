@@ -6,10 +6,15 @@
     "verifier": "itzniw",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.2",
+        "long",
+        "timings",
+        "chokepoints",
+        "ship",
+        "duals"
     ],
-    "filters": ["2.2", "long", "timings", "chokepoints", "ship", "duals"],
     "verification": "https://www.youtube.com/watch?v=Xy1k98qL_Jg&pp=ygUlbmV3bHkgcmF0ZWQgZXh0cmVtZXMgdGhlIHdpbmdlZCBzd29yZA%3D%3D",
     "percentToQualify": "0",
     "positionHistory": [

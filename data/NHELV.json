@@ -6,10 +6,16 @@
     "verifier": "cauri",
     "aredl": "#270",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "xl",
+        "learny",
+        "memory",
+        "gimmicky",
+        "nerve-control",
+        "overall"
     ],
-    "filters": ["2.1", "xl", "learny", "memory", "gimmicky", "nerve-control", "overall"],
     "verification": "https://youtu.be/7JcdeqxM9L8",
     "percentToQualify": "0",
     "positionHistory": [

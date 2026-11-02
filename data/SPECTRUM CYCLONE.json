@@ -6,10 +6,17 @@
     "verifier": "cauri",
     "aredl": "#111",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "xl",
+        "timings",
+        "chokepoints",
+        "learny",
+        "nerve-control",
+        "ship",
+        "duals"
     ],
-    "filters": ["2.1", "xl", "timings", "chokepoints", "learny", "nerve-control", "ship", "duals"],
     "verification": "https://youtu.be/gAlNyCuQfBw?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [

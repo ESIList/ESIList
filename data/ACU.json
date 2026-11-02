@@ -6,10 +6,10 @@
     "verifier": "cauri",
     "aredl": "#1608",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/tGqc1qExorI?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "63",
     "positionHistory": [
@@ -18,6 +18,12 @@
             "change": null,
             "position": 107,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "02-11-2026",
+            "change": -1,
+            "position": 108,
+            "reason": "Placed KISMET at #102"
         }
     ],
     "records": [

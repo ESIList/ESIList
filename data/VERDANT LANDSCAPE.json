@@ -6,10 +6,14 @@
     "verifier": "cauri",
     "aredl": "#113",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1",
+        "xl",
+        "fast-paced",
+        "learny",
+        "overall"
     ],
-    "filters": ["2.1", "xl", "fast-paced", "learny", "overall"],
     "verification": "https://youtu.be/HSbXn0u38RQ?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
     "positionHistory": [

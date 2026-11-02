@@ -9,7 +9,9 @@
     "tags": [
         "unrated"
     ],
-    "filters": ["2.1"],
+    "filters": [
+        "2.1"
+    ],
     "verification": "https://youtu.be/HO1CcToHH2w",
     "percentToQualify": "100",
     "positionHistory": [
@@ -18,6 +20,12 @@
             "change": null,
             "position": 108,
             "reason": "Release of the ESIList"
+        },
+        {
+            "date": "02-11-2026",
+            "change": -1,
+            "position": 109,
+            "reason": "Placed KISMET at #102"
         }
     ],
     "records": []

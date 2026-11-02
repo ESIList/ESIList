@@ -6,10 +6,10 @@
     "verifier": "cauri",
     "aredl": "#196",
     "verificationDate": "2026-10-26",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.1"
     ],
-    "filters": ["2.1"],
     "verification": "https://youtu.be/mRQIfFcAqZc",
     "percentToQualify": "0",
     "positionHistory": [
