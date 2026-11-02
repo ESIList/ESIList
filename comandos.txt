@@ -14,3 +14,11 @@ node updatePositionHistory.js "reason"
 git add -A
 git commit -m "Update list positions"
 git push
+
+
+TERMINOLOGY:
+
+Placement: "Placed LEVEL at #X"
+Swap: "Swapped LEVEL and LEVEL"
+Raise: "Raised LEVEL to #X"
+Lower: "Lowered LEVEL to #X"
