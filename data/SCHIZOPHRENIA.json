@@ -6,15 +6,19 @@
     "verifier": "itzniw",
     "aredl": "#1428",
     "verificationDate": "2026-10-31",
-    "tags": [
-        
+    "tags": [],
+    "filters": [
+        "2.2"
     ],
-    "filters": ["2.2"],
     "verification": "https://youtu.be/UUZXVsADIt8",
     "percentToQualify": "100",
     "positionHistory": [
+        {
+            "date": "02-11-2026",
+            "change": null,
+            "position": 87,
+            "reason": "Added to list"
+        }
     ],
-    "records": [
-        
-    ]
+    "records": []
 }
