@@ -6,6 +6,14 @@ export default {
         {
           date: "1-11-2026",
           message: `
+            • Release of ESIList v2.0.1<br>
+            • Made some visual updates for the changelog and leaderboard.<br>
+          `,
+          featured: true,
+        },
+        {
+          date: "1-11-2026",
+          message: `
             • Placed PSYCHO KILLER at (#87), above SCHIZOPHRENIA and below HURRICANE.<br>
             • Placed ASMODEUS at (#34), above TURBULENT VALLEY and below BLADE OF JUSTICE.<br>
           `,
@@ -29,7 +37,7 @@ export default {
         {
           date: "30-10-2026",
           message: `
-            • Release of ESIList v2.0<br>
+            • Release of ESIList v2.0.0<br>
             • Removed skills (unused).<br>
             • Added the searchbar on the list.<br>
             • Added filters for the searchbar.<br>
@@ -39,7 +47,7 @@ export default {
         {
           date: "29-10-2026",
           message: `
-            • Release of ESIList v1.3<br>
+            • Release of ESIList v1.3.0<br>
             • The leaderboard page now shows the player's phrases under each verification, completion and progress.<br>
           `,
           featured: true,
@@ -47,7 +55,7 @@ export default {
         {
           date: "28-10-2026",
           message: `
-            • Release of ESIList v1.2<br>
+            • Release of ESIList v1.2.0<br>
             • The domain has been indexed and the page is accesible on Google by the name "ESIList".<br>
           `,
           featured: true,
@@ -55,7 +63,7 @@ export default {
         {
           date: "27-10-2026",
           message: `
-            • Release of ESIList v1.1<br>
+            • Release of ESIList v1.1.0<br>
             • Added the position history to all levels.<br>
             • Fixed that clicking on a verifier's name would take you to the global graph instead of their leaderboard page.<br>
             • Fixed that clicking on a record's profile icon would take you to the global graph instead of their leaderboard page.<br>
@@ -183,7 +191,7 @@ export default {
         {
           date: "26-10-2026",
           message: `
-          • Initial release of ESIList v1.0<br>
+          • Initial release of ESIList v1.0.0<br>
           `,
           featured: true,
         },
