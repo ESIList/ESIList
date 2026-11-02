@@ -4,7 +4,14 @@ export default {
     return {
       changelog: [
         {
-          date: "1-11-2026",
+          date: "2-11-2026",
+          message: `
+            • Placed MOMENT at (#35), above TURBULENT VALLEY and below ASMODEUS.<br>
+          `,
+          featured: false,
+        },
+        {
+          date: "2-11-2026",
           message: `
             • Release of ESIList v2.0.1<br>
             • Made some visual updates for the changelog and leaderboard.<br>
