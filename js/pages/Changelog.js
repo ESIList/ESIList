@@ -17,6 +17,14 @@ export default {
             • Placed SCHIZOPHRENIA at (#87), above FORBIDDEN ISLE and below HURRICANE.<br>
           `,
           featured: false,
+          
+        },
+        {
+          date: "30-10-2026",
+          message: `
+            • Placed KISMET at (#102), above WITHOUT U and below AZURITE.<br>
+          `,
+          featured: false,
         },
         {
           date: "30-10-2026",
@@ -25,7 +33,6 @@ export default {
             • Removed skills (unused).<br>
             • Added the searchbar on the list.<br>
             • Added filters for the searchbar.<br>
-            • Placed KISMET at (#102), above WITHOUT U and below AZURITE.<br>
           `,
           featured: true,
         },
@@ -58,7 +65,6 @@ export default {
         {
           date: "26-10-2026",
           message: `
-            • Initial release of ESIList v1.0<br>
             • Added levels to the list:<br>
               (#1) NOMAD<br>
               (#2) TARTARUS<br>
@@ -171,6 +177,13 @@ export default {
               (#109) RAUCHKAMMER<br>
               (#110) PRECIPITANCE<br>
               (#111) GLISTEN<br>
+          `,
+          featured: false,
+        },
+        {
+          date: "26-10-2026",
+          message: `
+          • Initial release of ESIList v1.0<br>
           `,
           featured: true,
         },
