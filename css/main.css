@@ -9,6 +9,10 @@
     --color-on-error: white;
     --color-scrollbar-thumb: #a1a1a1;
     --color-scrollbar-track: #dadada;
+    --color-surface: #f0f0f0;
+    --color-on-surface: black;
+    --color-surface-hover: #e4e4e4;
+    --color-on-surface-hover: black;
 }
 
 main.dark,
@@ -25,6 +29,10 @@ header.dark {
     --color-on-error: white;
     --color-scrollbar-thumb: #5a5960;
     --color-scrollbar-track: #27262c;
+    --color-surface: #2b2a31;
+    --color-on-surface: white;
+    --color-surface-hover: #36353d;
+    --color-on-surface-hover: white;
 }
 
 html,
