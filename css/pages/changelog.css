@@ -12,10 +12,8 @@
     gap: 2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-    .page-changelog {
-        --changelog-entry-bg: #2a2a2a;  /* lighter than a typical dark background */
-    }
+[data-theme="dark"] .page-changelog {
+    --changelog-entry-bg: #2a2a2a;
 }
 
 .page-changelog .error-container .error {
