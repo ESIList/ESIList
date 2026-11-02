@@ -9,9 +9,9 @@
     --color-on-error: white;
     --color-scrollbar-thumb: #a1a1a1;
     --color-scrollbar-track: #dadada;
-    --color-surface: #f0f0f0;
+    --color-surface: #cccbcb;
     --color-on-surface: black;
-    --color-surface-hover: #e4e4e4;
+    --color-surface-hover: #dddddd;
     --color-on-surface-hover: black;
 }
 
