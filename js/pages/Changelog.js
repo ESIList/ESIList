@@ -4,10 +4,36 @@ export default {
     return {
       changelog: [
         {
+          date: "1-11-2026",
+          message: `
+            • Placed PSYCHO KILLER at (#87), above SCHIZOPHRENIA and below HURRICANE.<br>
+            • Placed ASMODEUS at (#34), above TURBULENT VALLEY and below BLADE OF JUSTICE.<br>
+          `,
+          featured: false,
+        },
+        {
+          date: "31-10-2026",
+          message: `
+            • Placed SCHIZOPHRENIA at (#87), above FORBIDDEN ISLE and below HURRICANE.<br>
+          `,
+          featured: false,
+        },
+        {
+          date: "30-10-2026",
+          message: `
+            • Release of ESIList v2.0<br>
+            • Removed skills (unused).<br>
+            • Added the searchbar on the list.<br>
+            • Added filters for the searchbar.<br>
+            • Placed KISMET at (#102), above WITHOUT U and below AZURITE.<br>
+          `,
+          featured: true,
+        },
+        {
           date: "29-10-2026",
           message: `
             • Release of ESIList v1.3<br>
-            • The leaderboard page now shows the player's phrases under each verification, completion and progress.
+            • The leaderboard page now shows the player's phrases under each verification, completion and progress.<br>
           `,
           featured: true,
         },
@@ -15,7 +41,7 @@ export default {
           date: "28-10-2026",
           message: `
             • Release of ESIList v1.2<br>
-            • The domain has been indexed and the page is accesible on Google by the name "ESIList".
+            • The domain has been indexed and the page is accesible on Google by the name "ESIList".<br>
           `,
           featured: true,
         },
@@ -23,9 +49,9 @@ export default {
           date: "27-10-2026",
           message: `
             • Release of ESIList v1.1<br>
-            • Added the position history to all levels.
-            • Fixed that clicking on a verifier's name would take you to the global graph instead of their leaderboard page.
-            • Fixed that clicking on a record's profile icon would take you to the global graph instead of their leaderboard page.
+            • Added the position history to all levels.<br>
+            • Fixed that clicking on a verifier's name would take you to the global graph instead of their leaderboard page.<br>
+            • Fixed that clicking on a record's profile icon would take you to the global graph instead of their leaderboard page.<br>
           `,
           featured: true,
         },
