@@ -129,6 +129,8 @@
     line-height: 1.3;
 }
 
-.page-leaderboard .board .global-graph-row td {
-    border-bottom: 2px solid var(--color-scrollbar-thumb);
+.page-leaderboard .board .board-separator td {
+    padding: 0;
+    height: 2px;
+    background-color: var(--color-scrollbar-thumb);
 }
