@@ -130,7 +130,11 @@
 }
 
 .page-leaderboard .board .board-separator td {
-    padding: 0;
-    height: 2px;
-    background-color: var(--color-scrollbar-thumb);
+    padding: 1rem 0; /* space above and below the line */
+}
+
+.page-leaderboard .board .board-separator hr {
+    margin: 0;
+    border: none;
+    border-top: 2px solid var(--color-scrollbar-thumb);
 }

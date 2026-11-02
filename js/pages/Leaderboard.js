@@ -40,7 +40,7 @@ export default {
                 <div class="board-container">
                     <table class="board">
                         <!-- Global Graph Button (styled like a player row) -->
-                        <tr v-if="hasHistoryData" class="board-separator"><td colspan="3"></td></tr>
+                        <tr v-if="hasHistoryData">
                             <td class="rank"><p class="type-label-lg">📊</p></td>
                             <td class="total"><p class="type-label-lg">GRAPH</p></td>
                             <td class="user" :class="{ 'active': showingGlobalGraph }">
@@ -48,6 +48,10 @@ export default {
                                     <span class="type-label-lg">🌐 All Players Comparison</span>
                                 </button>
                             </td>
+                        </tr>
+                        
+                        <tr v-if="hasHistoryData" class="board-separator">
+                            <td colspan="3"><hr></td>
                         </tr>
 
                         <!-- Player Rows -->
