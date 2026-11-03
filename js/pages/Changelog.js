@@ -8,6 +8,7 @@ export default {
           message: `
             • Release of ESIList v2.0.2<br>
             • Finished adding all the information to levels: ID, creator, aredl placement and filters.<br>
+            • Changed score logic by a bit. Now, levels in extended list (between top 75 and 150) will also give points if progressed, just lighter than a mainlist.<br>
           `,
           featured: true,
         },
