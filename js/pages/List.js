@@ -34,20 +34,20 @@ export default {
                     <div class="filter-wrapper">
                         <button
                             class="filter-button type-label-lg"
-                            :class="{ active: selectedFilters.length > 0 }"
+                            :class="{ active: activeFilterCount > 0 }"
                             @click.stop="showFilters = !showFilters"
                             aria-label="Filters"
                             title="Filters"
                         >
                             <span>⛃ Filter</span>
-                            <span v-if="selectedFilters.length" class="filter-count">{{ selectedFilters.length }}</span>
+                            <span v-if="activeFilterCount" class="filter-count">{{ activeFilterCount }}</span>
                         </button>
 
                         <div class="filter-panel" v-if="showFilters" @click.stop>
                             <div class="filter-panel-header">
                                 <span class="type-title-sm">Filters</span>
                                 <button
-                                    v-if="selectedFilters.length"
+                                    v-if="activeFilterCount"
                                     class="filter-clear"
                                     @click="clearFilters"
                                 >Clear</button>
@@ -57,8 +57,13 @@ export default {
                                     v-for="f in availableFilters"
                                     :key="f.id"
                                     class="filter-chip"
-                                    :class="{ selected: isFilterSelected(f.id), empty: f.count === 0 }"
+                                    :class="{
+                                        selected: isFilterSelected(f.id),
+                                        excluded: isFilterExcluded(f.id),
+                                        empty: f.count === 0
+                                    }"
                                     @click="toggleFilter(f.id)"
+                                    :title="isFilterExcluded(f.id) ? 'Excluded: click to remove' : isFilterSelected(f.id) ? 'Click again to exclude' : 'Click to include'"
                                 >
                                     {{ f.name }}
                                     <span class="filter-chip-count">{{ f.count }}</span>
@@ -82,7 +87,7 @@ export default {
                         </td>
                     </tr>
                 </table>
-                <p v-if="(search || selectedFilters.length) && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1), or loosen the filters.</p>
+                <p v-if="(search || activeFilterCount) && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1), or loosen the filters.</p>
             </div>
             <div class="level-container">
                 <div class="level" v-if="level">
@@ -122,9 +127,9 @@ export default {
                             v-for="f in levelFilters"
                             :key="f.id"
                             class="filter-chip"
-                            :class="{ selected: isFilterSelected(f.id) }"
+                            :class="{ selected: isFilterSelected(f.id), excluded: isFilterExcluded(f.id) }"
                             @click="toggleFilter(f.id)"
-                            title="Click to filter the list by this"
+                            title="Click to include, click again to exclude"
                         >
                             {{ f.name }}
                         </button>
@@ -296,6 +301,7 @@ export default {
         errors: [],
         search: "",
         selectedFilters: [],
+        excludedFilters: [],
         showFilters: false,
         roleIconMap,
         store,
@@ -340,26 +346,32 @@ export default {
                 .map((raw) => resolveFilter(raw))
                 .filter((f) => (seen.has(f.id) ? false : seen.add(f.id)));
         },
+        activeFilterCount() {
+            return this.selectedFilters.length + this.excludedFilters.length;
+        },
         filteredList() {
             const all = this.list.map(([level, err], index) => ({ level, err, index }));
             const q = this.search.trim().toLowerCase().replace(/^#/, "");
-            const activeFilters = this.selectedFilters;
+            const included = this.selectedFilters;
+            const excluded = this.excludedFilters;
 
-            if (!q && activeFilters.length === 0) return all;
+            if (!q && included.length === 0 && excluded.length === 0) return all;
 
             const isNumber = /^\d+$/.test(q);
 
             return all.filter(({ level, err, index }) => {
-                // Filters: a level must have ALL selected filters
-                if (activeFilters.length) {
-                    if (!level || !Array.isArray(level.filters)) return false;
-                    const ids = level.filters.map(normalizeFilterId);
-                    if (!activeFilters.every((id) => ids.includes(id))) return false;
+                if (included.length || excluded.length) {
+                    const ids = Array.isArray(level?.filters)
+                        ? level.filters.map(normalizeFilterId)
+                        : [];
+                    // must have ALL included filters
+                    if (!included.every((id) => ids.includes(id))) return false;
+                    // must have NONE of the excluded filters
+                    if (excluded.some((id) => ids.includes(id))) return false;
                 }
 
                 if (!q) return true;
 
-                // Exact placement match: searching "107" shows the level ranked #107
                 if (isNumber && index + 1 === Number(q)) return true;
 
                 if (!level) return String(err).toLowerCase().includes(q);
@@ -424,15 +436,25 @@ export default {
         isFilterSelected(id) {
             return this.selectedFilters.includes(id);
         },
+        isFilterExcluded(id) {
+            return this.excludedFilters.includes(id);
+        },
         toggleFilter(id) {
-            if (this.isFilterSelected(id)) {
+            if (this.isFilterExcluded(id)) {
+                // 3rd click: off
+                this.excludedFilters = this.excludedFilters.filter((f) => f !== id);
+            } else if (this.isFilterSelected(id)) {
+                // 2nd click: include -> exclude
                 this.selectedFilters = this.selectedFilters.filter((f) => f !== id);
+                this.excludedFilters = [...this.excludedFilters, id];
             } else {
+                // 1st click: include
                 this.selectedFilters = [...this.selectedFilters, id];
             }
         },
         clearFilters() {
             this.selectedFilters = [];
+            this.excludedFilters = [];
         },
         closeFilters() {
             this.showFilters = false;

@@ -493,7 +493,7 @@ main.dark .page-list .level-container .tag {
     border-color: var(--color-primary);
     color: var(--color-on-primary);
 }
-.page-list .filter-chip.empty:not(.selected) {
+.page-list .filter-chip.empty:not(.selected):not(.excluded) {
     opacity: 0.45;
 }
 .page-list .filter-chip-count {
@@ -524,4 +524,23 @@ main.dark .page-list .level-container .tag {
 .page-list .level-container .level-filters .filter-chip.selected {
     background-color: var(--color-primary);
     color: var(--color-on-primary);
+}
+
+/* Excluded filter: red */
+.page-list .filter-chip.excluded {
+    background-color: #d32f2f;
+    border-color: #d32f2f;
+    color: #fff;
+}
+.page-list .filter-chip.excluded:hover {
+    background-color: #b71c1c;
+}
+
+/* Excluded chip on a level's page (bigger chips) */
+.page-list .level-container .level-filters .filter-chip.excluded {
+    background-color: #d32f2f;
+    color: #fff;
+}
+.page-list .level-container .level-filters .filter-chip.excluded:hover {
+    background-color: #b71c1c;
 }
