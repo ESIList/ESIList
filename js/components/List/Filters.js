@@ -60,6 +60,9 @@ const filters = [
     { id: "1.6ps", name: "1.6PS" },
     { id: "1.6", name: "1.6" },
     { id: "1.5", name: "1.5" },
+
+    // Extra
+    { id: "unrated", name: "Unrated" },
 ];
 
 export default filters;
