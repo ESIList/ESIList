@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 189201076,
     "name": "DISMAL DUSTSTORM",
     "subtitle": "-",
-    "author": "-",
+    "author": "Multiverse55",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1318",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "timings",
+        "learny",
+        "nerve-control",
+        "robot"
     ],
     "verification": "https://youtu.be/k5_gyNSYSo4?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

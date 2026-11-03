@@ -1,14 +1,23 @@
 {
-    "id": 12,
+    "id": 8987624,
     "name": "FIREPOWER",
     "subtitle": "-",
     "author": "Sillow",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#483",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xl",
+        "circles",
+        "unbalanced",
+        "learny",
+        "nerve-control",
+        "wave",
+        "old-swing",
+        "duals",
+        "overall"
     ],
     "verification": "https://youtu.be/15_tMJR2bzo?si=ir4bvchW2O7Oz9c-",
     "percentToQualify": "0",

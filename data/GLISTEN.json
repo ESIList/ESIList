@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 74924716,
     "name": "GLISTEN",
     "subtitle": "-",
-    "author": "-",
+    "author": "Squizaaard",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1529",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "medium",
+        "clicksync",
+        "fast-paced",
+        "timings",
+        "learny",
+        "ball",
+        "spider"
     ],
     "verification": "https://youtu.be/SGpYVfEtT7o?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "100",

@@ -1,16 +1,18 @@
 {
-    "id": 12,
+    "id": 129850102,
     "name": "RAFF X",
     "subtitle": "-",
-    "author": "-",
+    "author": "rodrigzz",
     "verifier": "ExoRK28",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        "unrated"
-    ],
+    "tags": [],
     "filters": [
-        "2.1"
+        "unrated",
+        "2.2",
+        "long",
+        "slow-paced",
+        "overall"
     ],
     "verification": "https://youtu.be/HO1CcToHH2w",
     "percentToQualify": "100",

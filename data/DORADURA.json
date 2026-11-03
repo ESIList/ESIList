@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 77114615,
     "name": "DORADURA",
     "subtitle": "-",
-    "author": "-",
+    "author": "IvashkaUA",
     "verifier": "Lolencio04",
-    "aredl": "-",
+    "aredl": "#1333",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "timings",
+        "chokepoints",
+        "flow",
+        "overall"
     ],
     "verification": "https://youtu.be/GE0y_Yv-fTU?si=kEOlaJ5Y3d8BVy4Q",
     "percentToQualify": "0",

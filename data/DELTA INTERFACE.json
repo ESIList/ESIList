@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 45094581,
     "name": "DELTA INTERFACE",
     "subtitle": "-",
-    "author": "-",
+    "author": "Platnuu",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#527",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xl",
+        "nerve-control",
+        "ship",
+        "wave",
+        "overall"
     ],
     "verification": "https://youtu.be/FHBjnzmXqSI?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

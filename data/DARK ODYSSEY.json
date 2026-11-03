@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 69010770,
     "name": "DARK ODYSSEY",
     "subtitle": "-",
-    "author": "-",
+    "author": "JonathanGD",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1461",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xxl+",
+        "gimmicky",
+        "nerve-control",
+        "duals",
+        "overall"
     ],
     "verification": "https://youtu.be/skMnr3hjpzo?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 25449475,
     "name": "FEXTY",
     "subtitle": "-",
-    "author": "-",
+    "author": "SkyJax",
     "verifier": "ExoRK28",
-    "aredl": "-",
+    "aredl": "#1223",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "medium",
+        "chokepoints",
+        "unbalanced",
+        "gimmicky",
+        "wave"
     ],
     "verification": "https://youtu.be/nIei5n-lM4Y?si=1uhaorKzG0itI4sQ",
     "percentToQualify": "0",

@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 24301797,
     "name": "FALLING UP",
     "subtitle": "-",
-    "author": "-",
+    "author": "KrmaL",
     "verifier": "Lolencio04",
-    "aredl": "-",
+    "aredl": "#1288",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "xl",
+        "chokepoints",
+        "nerve-control",
+        "ship",
+        "duals"
     ],
     "verification": "https://youtu.be/gHHqPIvZXeM?si=SkmucgKSMgAHxgHr",
     "percentToQualify": "0",

@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 89807521,
     "name": "FISH FISH GODMODE",
     "subtitle": "No es legal el último click",
-    "author": "-",
+    "author": "whoiskeve",
     "verifier": "Ninjedu",
-    "aredl": "-",
+    "aredl": "#1455",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "timings",
+        "chokepoints",
+        "gimmicky",
+        "ship",
+        "overall"
     ],
     "verification": "https://youtu.be/Fz8RadeSDV4?si=kdreBwpnIiS-LKnx",
     "percentToQualify": "0",

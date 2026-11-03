@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 116401475,
     "name": "GALAXY GAS",
     "subtitle": "-",
-    "author": "-",
+    "author": "xSlendy",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1014",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "learny",
+        "high-cps"
     ],
     "verification": "https://www.youtube.com/watch?v=VQO0Ddxf6x4&pp=ygUfbmV3bHkgcmF0ZWQgZXh0cmVtZXMgZ2FsYXh5IGdhcw%3D%3D",
     "percentToQualify": "0",

@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 119203367,
     "name": "EVIL INSIDE",
     "subtitle": "-",
-    "author": "-",
+    "author": "Sycor",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1312",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "learny",
+        "flow",
+        "overall"
     ],
     "verification": "https://www.youtube.com/watch?v=qt-0dZfMe9A&pp=ygUgbmV3bHkgcmF0ZWQgZXh0cmVtZXMgZXZpbCBpbnNpZGU%3D",
     "percentToQualify": "0",

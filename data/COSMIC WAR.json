@@ -10,7 +10,9 @@
     "filters": [
         "unrated",
         "2.2",
-        "long"
+        "long",
+        "cube",
+        "overall"
     ],
     "verification": "https://www.youtube.com/watch?v=FBALXMoJoGA",
     "percentToQualify": "0",

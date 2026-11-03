@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 55184818,
     "name": "GLIDE",
     "subtitle": "-",
-    "author": "-",
+    "author": "crohn44",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1089",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "timings",
+        "chokepoints",
+        "unbalanced",
+        "gimmicky",
+        "cube"
     ],
     "verification": "https://youtu.be/vx6w7DSQ9kc?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",
