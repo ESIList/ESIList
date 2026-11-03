@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 48175126,
     "name": "IDOLS",
     "subtitle": "-",
-    "author": "-",
+    "author": "Zafkiel7",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#862",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xxl",
+        "fast-paced",
+        "learny",
+        "nerve-control",
+        "old-swing"
     ],
     "verification": "https://youtu.be/ZT6ogYpS0WU?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

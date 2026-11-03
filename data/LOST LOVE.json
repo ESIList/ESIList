@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 85933508,
     "name": "LOST LOVE",
     "subtitle": "-",
-    "author": "-",
+    "author": "TheBlackHell",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1513",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "timings",
+        "learny",
+        "memory",
+        "cube",
+        "ball",
+        "robot"
     ],
     "verification": "https://www.youtube.com/watch?v=O9OQFihHHUg&pp=ygUebmV3bHkgcmF0ZWQgZXh0cmVtZXMgbG9zdCBsb3Zl0gcJCSwMAYcqIYzv",
     "percentToQualify": "0",

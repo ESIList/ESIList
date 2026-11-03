@@ -8,7 +8,12 @@
     "verificationDate": "2026-10-30",
     "tags": [],
     "filters": [
-        "2.2"
+        "2.2",
+        "long",
+        "timings",
+        "chokepoints",
+        "ship",
+        "overall"
     ],
     "verification": "https://youtu.be/pilGCj_Xvfs",
     "percentToQualify": "100",

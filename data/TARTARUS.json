@@ -12,7 +12,8 @@
         "long",
         "timings",
         "chokepoints",
-        "ship"
+        "ship",
+        "old-swing"
     ],
     "verification": "https://youtu.be/yg9KSiuDYgw",
     "percentToQualify": "0",

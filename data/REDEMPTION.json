@@ -1,14 +1,18 @@
 {
-    "id": 12,
+    "id": 66851981,
     "name": "REDEMPTION",
     "subtitle": "-",
-    "author": "-",
+    "author": "Zest",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1427",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xl",
+        "circles",
+        "nerve-control",
+        "wave"
     ],
     "verification": "https://www.youtube.com/watch?v=SXPFkAQlRuI&pp=ygUTa25hcmYgZ2QgcmVkZW1wdGlvbg%3D%3D",
     "percentToQualify": "0",

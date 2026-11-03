@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 48353992,
     "name": "PUMPED UP KICKS",
     "subtitle": "-",
-    "author": "-",
+    "author": "Quiken",
     "verifier": "ExoRK28",
-    "aredl": "-",
+    "aredl": "#1160",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xxl",
+        "timings",
+        "chokepoints",
+        "nerve-control",
+        "ship",
+        "ufo"
     ],
     "verification": "https://youtu.be/wdmxQMldzkM?si=XakUinLbNxnImCDc",
     "percentToQualify": "0",

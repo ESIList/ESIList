@@ -11,12 +11,11 @@
         "2.2",
         "medium",
         "timings",
-        "ship",
-        "ufo",
-        "cube",
-        "slow-paced",
         "chokepoints",
-        "gimmicky"
+        "gimmicky",
+        "cube",
+        "ship",
+        "ufo"
     ],
     "verification": "https://youtu.be/LxnSxGGtsU0?si=xX1O12t0ozc6S3c-",
     "percentToQualify": "0",

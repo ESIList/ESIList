@@ -4,6 +4,14 @@ export default {
     return {
       changelog: [
         {
+          date: "3-11-2026",
+          message: `
+            • Release of ESIList v2.0.2<br>
+            • Finished adding all the information to levels: ID, creator, aredl placement and filters.<br>
+          `,
+          featured: true,
+        },
+        {
           date: "2-11-2026",
           message: `
             • Placed MOMENT at (#35), above TURBULENT VALLEY and below ASMODEUS.<br>

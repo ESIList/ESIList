@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 60708767,
     "name": "MISTY MOUNTAINS",
     "subtitle": "-",
-    "author": "-",
+    "author": "We4therMan",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1567",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xl",
+        "timings",
+        "chokepoints",
+        "unbalanced",
+        "nerve-control",
+        "duals"
     ],
     "verification": "https://youtu.be/wf8HA9KpAV8?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

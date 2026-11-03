@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 75248070,
     "name": "MYOCARDIA",
     "subtitle": "-",
-    "author": "-",
+    "author": "Toughfey",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1121",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "timings",
+        "chokepoints",
+        "gimmicky"
     ],
     "verification": "https://www.youtube.com/watch?v=YM57bl_8zcw&pp=ygUMZ2QgbXlvY2FyZGlh0gcJCSwMAYcqIYzv",
     "percentToQualify": "0",

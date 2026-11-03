@@ -8,13 +8,14 @@
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "pre-2.1",
+        "2.0",
         "xl",
         "timings",
         "chokepoints",
         "unbalanced",
         "nerve-control",
         "ship",
+        "old-swing",
         "overall"
     ],
     "verification": "https://youtu.be/9COOnwm4SNQ?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",

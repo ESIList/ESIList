@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 95565191,
     "name": "PLASMATIC",
     "subtitle": "-",
-    "author": "-",
+    "author": "JumpingTheory",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1467",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "high-cps",
+        "ship",
+        "ufo",
+        "wave"
     ],
     "verification": "https://www.youtube.com/watch?v=e8nTrvY_Av0&pp=ygUSa25hcmYgZ2QgcGxhc21hdGlj",
     "percentToQualify": "0",

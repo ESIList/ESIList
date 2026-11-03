@@ -8,7 +8,10 @@
     "verificationDate": "2026-10-31",
     "tags": [],
     "filters": [
-        "2.2"
+        "2.2",
+        "long",
+        "nerve-control",
+        "overall"
     ],
     "verification": "https://youtu.be/UUZXVsADIt8",
     "percentToQualify": "100",

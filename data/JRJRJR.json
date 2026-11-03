@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 115169829,
     "name": "JRJRJR",
     "subtitle": "-",
-    "author": "-",
+    "author": "ivyteal",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1327",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "long",
+        "nong",
+        "learny",
+        "gimmicky",
+        "wave"
     ],
     "verification": "https://youtu.be/QuuGDZEMXPY?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

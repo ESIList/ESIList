@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 38754426,
     "name": "KILLBOT",
     "subtitle": "-",
-    "author": "-",
+    "author": "Lithifusion",
     "verifier": "cauri",
     "aredl": "#196",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "chokepoints",
+        "memory",
+        "mirror",
+        "ufo",
+        "duals"
     ],
     "verification": "https://youtu.be/mRQIfFcAqZc",
     "percentToQualify": "0",

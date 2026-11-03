@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 95764848,
     "name": "MIZURETA",
     "subtitle": "Pensaba que era Niwa, my bad",
-    "author": "-",
+    "author": "dutchiee",
     "verifier": "Ninjedu",
-    "aredl": "-",
+    "aredl": "#1566",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "learny",
+        "flow",
+        "overall"
     ],
     "verification": "https://youtu.be/F3oc-DEgQrE?si=lLbuEcFa-7qRu3jT",
     "percentToQualify": "0",

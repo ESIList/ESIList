@@ -1,14 +1,20 @@
 {
-    "id": 18,
+    "id": 146399247,
     "name": "RAUCHKAMMER",
     "subtitle": "Farmeo puntos de lista como PLeviii 🗣️🗣️🗣️",
-    "author": "-",
+    "author": "Devilmine",
     "verifier": "Ninjedu",
     "aredl": "#1603",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "medium",
+        "chokepoints",
+        "unbalanced",
+        "high-cps",
+        "ship",
+        "wave"
     ],
     "verification": "https://youtu.be/-ge89eZ9_5M?si=lWrN775JrZxUtJbN",
     "percentToQualify": "0",

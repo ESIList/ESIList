@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 38235367,
     "name": "QUANTUM PROCESSING",
     "subtitle": "-",
-    "author": "-",
+    "author": "Riot",
     "verifier": "ExoRK28",
     "aredl": "-",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "long",
+        "timings",
+        "chokepoints",
+        "slow-paced",
+        "cube",
+        "ufo",
+        "wave"
     ],
     "verification": "https://youtu.be/Gx9V-MAaRHQ?si=i_hzWlLIOlS_DaeA",
     "percentToQualify": "0",

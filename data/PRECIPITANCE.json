@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 60197839,
     "name": "PRECIPITANCE",
     "subtitle": "-",
-    "author": "-",
+    "author": "Extravagon",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1608",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "clicksync",
+        "fast-paced",
+        "timings",
+        "flow",
+        "overall"
     ],
     "verification": "https://youtu.be/KkhvxtGJUiY?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

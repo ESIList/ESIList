@@ -8,7 +8,14 @@
     "verificationDate": "2026-11-02",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "chokepoints",
+        "unbalanced",
+        "flow",
+        "ship",
+        "wave"
     ],
     "verification": "https://youtu.be/60Lq9yew1I4",
     "percentToQualify": "0",

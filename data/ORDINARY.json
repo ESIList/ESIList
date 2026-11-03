@@ -11,10 +11,10 @@
         "2.2",
         "long",
         "timings",
-        "cube",
         "chokepoints",
+        "unbalanced",
         "nerve-control",
-        "unbalanced"
+        "cube"
     ],
     "verification": "https://www.youtube.com/watch?v=5TnTYmb9Xs4",
     "percentToQualify": "0",

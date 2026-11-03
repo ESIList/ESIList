@@ -1,14 +1,19 @@
 {
-    "id": 12,
+    "id": 88943354,
     "name": "PROTEUS",
     "subtitle": "-",
-    "author": "-",
+    "author": "SpergQuos",
     "verifier": "cauri",
-    "aredl": "-",
+    "aredl": "#1538",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "timings",
+        "unbalanced",
+        "nerve-control",
+        "wave"
     ],
     "verification": "-",
     "percentToQualify": "0",
