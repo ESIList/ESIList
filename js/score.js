@@ -11,18 +11,11 @@ const scale = 3;
  * @returns {Number}
  */
 export function score(rank, percent, minPercent) {
-    if (rank > 150) {
-        return 0;
-    }
-    if (rank > 75 && percent < 100) {
+    // Progress (under 100%) on Legacy (151+) gives nothing
+    if (rank > 150 && percent < 100) {
         return 0;
     }
 
-    // Old formula
-    /*
-    let score = (100 / Math.sqrt((rank - 1) / 50 + 0.444444) - 50) *
-        ((percent - (minPercent - 1)) / (100 - (minPercent - 1)));
-    */
     // New formula
     let score = (-24.9975*Math.pow(rank-1, 0.4) + 200) *
         ((percent - (minPercent - 1)) / (100 - (minPercent - 1)));
@@ -30,7 +23,8 @@ export function score(rank, percent, minPercent) {
     score = Math.max(0, score);
 
     if (percent != 100) {
-        return round(score - score / 3);
+        const multiplier = rank > 75 ? 1 / 2 : 2 / 3;
+        return round(score * multiplier);
     }
 
     return Math.max(round(score), 0);
