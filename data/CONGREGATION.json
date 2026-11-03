@@ -2,13 +2,21 @@
     "id": 68668045,
     "name": "CONGREGATION",
     "subtitle": "-",
-    "author": "-",
+    "author": "Presta",
     "verifier": "cauri",
     "aredl": "#83",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xxl",
+        "nong",
+        "clicksync",
+        "timings",
+        "nerve-control",
+        "cube",
+        "ball",
+        "robot"
     ],
     "verification": "https://youtu.be/unpd2QnAqw4?list=PL0qXgC665UEkkkQ1va0NK9KPGEgPHlQF3",
     "percentToQualify": "0",

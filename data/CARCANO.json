@@ -1,14 +1,18 @@
 {
-    "id": 12,
+    "id": 64148732,
     "name": "CARCANO",
     "subtitle": "-",
-    "author": "-",
+    "author": "Asuith",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#811",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "timings",
+        "high-cps"
     ],
     "verification": "https://www.youtube.com/watch?v=y4sQgpniOTA&pp=ygUKZ2QgY2FyY2Fubw%3D%3D",
     "percentToQualify": "0",

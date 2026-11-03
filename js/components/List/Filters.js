@@ -18,15 +18,17 @@ const filters = [
     { id: "wave", name: "Wave" },
     { id: "robot", name: "Robot" },
     { id: "spider", name: "Spider" },
-    { id: "swing", name: "Swing" },
+    { id: "old-swing", name: "Old Swing" },
+    { id: "new-swing", name: "New Swing" },
     { id: "duals", name: "Duals" },
+    { id: "2p", name: "2P" },
+
+    // Gameplay / style
     { id: "timings", name: "Timings" },
     { id: "high-cps", name: "High CPS" },
     { id: "slow-paced", name: "Slow Paced" },
-    { id: "high-paced", name: "High Paced" },
-    { id: "xl", name: "XL" },
-    { id: "medium", name: "Medium" },
-    { id: "long", name: "Long" },
+    { id: "fast-paced", name: "Fast Paced" },
+    { id: "flow", name: "Flow" },
     { id: "chokepoints", name: "Chokepoints" },
     { id: "gimmicky", name: "Gimmicky" },
     { id: "nerve-control", name: "Nerve Control" },
@@ -35,13 +37,29 @@ const filters = [
     { id: "memory", name: "Memory" },
     { id: "unbalanced", name: "Unbalanced" },
     { id: "clicksync", name: "Clicksync" },
-    { id: "unrated", name: "Unrated" },
     { id: "circles", name: "Circles" },
+    { id: "bossfight", name: "Bossfight" },
+    { id: "mirror", name: "Mirror" },
+    { id: "nong", name: "NONG" },
+
+    // Length
+    { id: "medium", name: "Medium" },
+    { id: "long", name: "Long" },
+    { id: "xl", name: "XL" },
+    { id: "xxl", name: "XXL" },
+    { id: "xxl+", name: "XXL+" },
 
     // Game versions
-    { id: "pre-2.1", name: "Pre 2.1" },
-    { id: "2.1", name: "2.1" },
     { id: "2.2", name: "2.2" },
+    { id: "2.1", name: "2.1" },
+    { id: "2.0", name: "2.0" },
+    { id: "1.9ps", name: "1.9PS" },
+    { id: "1.9", name: "1.9" },
+    { id: "1.8", name: "1.8" },
+    { id: "1.7", name: "1.7" },
+    { id: "1.6ps", name: "1.6PS" },
+    { id: "1.6", name: "1.6" },
+    { id: "1.5", name: "1.5" },
 ];
 
 export default filters;

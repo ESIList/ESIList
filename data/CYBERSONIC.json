@@ -1,14 +1,17 @@
 {
-    "id": 12,
+    "id": 124483358,
     "name": "CYBERSONIC",
     "subtitle": "-",
-    "author": "-",
+    "author": "iMinaY",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1311",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.2",
+        "long",
+        "fast-paced",
+        "overall"
     ],
     "verification": "https://www.youtube.com/watch?v=5v1th7rtAt0&pp=ygUfbmV3bHkgcmF0ZWQgZXh0cmVtZXMgY3liZXJzb25pYw%3D%3D",
     "percentToQualify": "0",

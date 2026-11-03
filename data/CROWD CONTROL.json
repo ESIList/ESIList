@@ -1,14 +1,21 @@
 {
-    "id": 12,
+    "id": 69491632,
     "name": "CROWD CONTROL",
     "subtitle": "Aquellos que controlamos las masas:",
-    "author": "-",
+    "author": "Deadlox",
     "verifier": "Ninjedu",
-    "aredl": "-",
+    "aredl": "#1340",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "timings",
+        "cube",
+        "ship",
+        "wave",
+        "overall"
     ],
     "verification": "https://youtu.be/JTAyQzYkzrc?si=-g4y4rRI13baXnfz",
     "percentToQualify": "0",

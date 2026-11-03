@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 35448603,
     "name": "BLADE OF JUSTICE",
     "subtitle": "-",
-    "author": "-",
+    "author": "Manix648",
     "verifier": "ExoRK28",
-    "aredl": "-",
+    "aredl": "#762",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "xl",
+        "nerve-control",
+        "ufo",
+        "old-swing",
+        "duals",
+        "overall"
     ],
     "verification": "https://youtu.be/ZHr2SK1ua4Q?si=Memq_3O7G3k2B2FJ",
     "percentToQualify": "63",

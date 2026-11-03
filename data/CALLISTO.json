@@ -1,14 +1,18 @@
 {
-    "id": 12,
+    "id": 86069819,
     "name": "CALLISTO",
     "subtitle": "-",
-    "author": "-",
+    "author": "l4tezk",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#930",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "long",
+        "fast-paced",
+        "learny",
+        "overall"
     ],
     "verification": "https://www.youtube.com/watch?v=B8rCKxR_HgA&pp=ygUdbmV3bHkgcmF0ZWQgZXh0cmVtZXMgY2FsbGlzdG8%3D",
     "percentToQualify": "0",

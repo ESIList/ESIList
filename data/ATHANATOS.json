@@ -8,7 +8,13 @@
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "long",
+        "fast-paced",
+        "chokepoints",
+        "ship",
+        "wave",
+        "overall"
     ],
     "verification": "https://youtu.be/3UOdXes8GpM?si=4ANxP8A12m0edupi",
     "percentToQualify": "0",

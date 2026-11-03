@@ -1,14 +1,20 @@
 {
-    "id": 12,
+    "id": 147758609,
     "name": "BUNNIES I GUESS",
     "subtitle": "-",
-    "author": "-",
+    "author": "ciibule",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#1554",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.2"
+        "2.2",
+        "long",
+        "fast-paced",
+        "timings",
+        "chokepoints",
+        "ship",
+        "wave"
     ],
     "verification": "https://youtu.be/bm1te7KWt_c",
     "percentToQualify": "0",

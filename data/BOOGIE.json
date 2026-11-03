@@ -1,14 +1,18 @@
 {
-    "id": 12,
+    "id": 72873416,
     "name": "BOOGIE",
     "subtitle": "-",
-    "author": "-",
+    "author": "DigitalZero",
     "verifier": "itzniw",
-    "aredl": "-",
+    "aredl": "#676",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.1",
+        "xxl+",
+        "chokepoints",
+        "nerve-control",
+        "overall"
     ],
     "verification": "https://www.youtube.com/watch?v=ZzKsFOVAF6c&pp=ygUXZ2QgYm9vZ2llIGV4dHJlbWUgZGVtb24%3D",
     "percentToQualify": "0",

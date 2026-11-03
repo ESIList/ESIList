@@ -1,16 +1,16 @@
 {
-    "id": 12,
+    "id": 128858177,
     "name": "COSMIC WAR",
     "subtitle": "-",
-    "author": "-",
+    "author": "SantiXgh",
     "verifier": "cauri",
     "aredl": "-",
     "verificationDate": "2026-10-26",
-    "tags": [
-        "unrated"
-    ],
+    "tags": [],
     "filters": [
-        "2.1"
+        "unrated",
+        "2.2",
+        "long"
     ],
     "verification": "https://www.youtube.com/watch?v=FBALXMoJoGA",
     "percentToQualify": "0",
