@@ -1,14 +1,23 @@
 {
-    "id": 12,
+    "id": 20321297,
     "name": "HEARTBEAT",
     "subtitle": "-",
-    "author": "-",
+    "author": "KrmaL",
     "verifier": "ExoRK28",
-    "aredl": "-",
+    "aredl": "#1096",
     "verificationDate": "2026-10-26",
     "tags": [],
     "filters": [
-        "2.1"
+        "2.0",
+        "long",
+        "timings",
+        "chokepoints",
+        "learny",
+        "gimmicky",
+        "cube",
+        "ball",
+        "ufo",
+        "robot"
     ],
     "verification": "https://youtu.be/viuT31QQQDE?si=AMNfjehcFRThLMLK",
     "percentToQualify": "0",
