@@ -12,17 +12,17 @@ export default {
         <main v-else class="page-comparator">
             <section class="comparator-content">
                 <div class="comparator-heading">
-                    <h1>Level comparison</h1>
-                    <p>Compare rankings, requirements, records, and gameplay filters side by side.</p>
+                    <h1>{{ $t('Level comparison') }}</h1>
+                    <p>{{ $t('Compare rankings, requirements, records, and gameplay filters side by side.') }}</p>
                 </div>
 
                 <p v-if="loadError" class="comparator-message" role="alert">
-                    The level list could not be loaded. Please try again later.
+                    {{ $t('The level list could not be loaded. Please try again later.') }}
                 </p>
                 <template v-else>
                     <div class="compare-selectors">
                         <label>
-                            First level
+                            {{ $t('First level') }}
                             <select v-model.number="compareLeftIndex">
                                 <option
                                     v-for="option in comparisonOptions"
@@ -35,7 +35,7 @@ export default {
                             </select>
                         </label>
                         <label>
-                            Second level
+                            {{ $t('Second level') }}
                             <select v-model.number="compareRightIndex">
                                 <option
                                     v-for="option in comparisonOptions"
@@ -53,7 +53,7 @@ export default {
                         <table class="compare-table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Statistic</th>
+                                    <th scope="col">{{ $t('Statistic') }}</th>
                                     <th scope="col">
                                         <span class="compare-level-rank">#{{ comparisonLevels[0].rank }}</span>
                                         {{ comparisonLevels[0].level.name }}
@@ -66,43 +66,43 @@ export default {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">ID</th>
+                                    <th scope="row">{{ $t('ID') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.id ?? '—' }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Creator</th>
+                                    <th scope="row">{{ $t('Creator') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.author || '—' }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Verifier</th>
+                                    <th scope="row">{{ $t('Verifier') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.verifier || '—' }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Points</th>
+                                    <th scope="row">{{ $t('Points') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.points }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Qualification</th>
+                                    <th scope="row">{{ $t('Qualification') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.qualification }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">AREDL placement</th>
+                                    <th scope="row">{{ $t('AREDL placement') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.aredl || '—' }}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Records</th>
+                                    <th scope="row">{{ $t('Records') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">
-                                        {{ item.recordCount }} (best: {{ item.bestRecord }})
+                                        {{ item.recordCount }} ({{ $t('Best') }}: {{ item.bestRecord }})
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Gameplay filters</th>
+                                    <th scope="row">{{ $t('Gameplay filters') }}</th>
                                     <td v-for="item in comparisonLevels" :key="item.index">{{ item.filters }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <p v-else class="comparator-message">At least two levels are needed for comparison.</p>
+                    <p v-else class="comparator-message">{{ $t('At least two levels are needed for comparison.') }}</p>
                 </template>
             </section>
         </main>
@@ -140,14 +140,14 @@ export default {
                         level,
                         points: score(rank, 100, Number(level.percentToQualify) || 0),
                         qualification: rank <= 75
-                            ? `${level.percentToQualify ?? 'N/A'}% or better`
+                            ? this.$t('{percent}% or better', { percent: level.percentToQualify ?? this.$t('N/A') })
                             : rank <= 150
-                                ? '100%'
-                                : 'Does not accept new records',
+                                ? this.$t('100% or better')
+                                : this.$t('Does not accept new records'),
                         recordCount: records.length,
                         bestRecord: records[0] ? `${records[0].percent}%` : '—',
                         filters: filters.length
-                            ? filters.map((filter) => resolveFilter(filter).name).join(', ')
+                            ? filters.map((filter) => this.$t(resolveFilter(filter).name)).join(', ')
                             : '—',
                     };
                 })

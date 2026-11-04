@@ -1,4 +1,5 @@
 import routes from './routes.js';
+import { translate } from './i18n.js';
 
 const themes = [
     { id: 'violet', name: 'Violet', hue: 270, shade: 20 },
@@ -13,16 +14,21 @@ const themes = [
     { id: 'custom', name: 'Custom' },
 ];
 
+const keepTheme = localStorage.getItem('keep-theme') === 'true';
 const savedTheme = localStorage.getItem('theme');
 const legacyDark = JSON.parse(localStorage.getItem('dark') || 'false');
-const initialTheme = themes.some(({ id }) => id === savedTheme)
+const randomThemes = themes.filter(({ id }) => id !== 'custom');
+const randomTheme = randomThemes[Math.floor(Math.random() * randomThemes.length)].id;
+const initialTheme = keepTheme && themes.some(({ id }) => id === savedTheme)
     ? savedTheme
-    : legacyDark
+    : keepTheme && legacyDark
         ? 'midnight'
-        : 'violet';
+        : randomTheme;
 const initialThemePreset = themes.find(({ id }) => id === initialTheme);
+const initialLanguage = localStorage.getItem('language') === 'es' ? 'es' : 'en';
 
 document.body.dataset.theme = initialTheme;
+document.documentElement.lang = initialLanguage;
 
 function boundedNumber(value, fallback, min, max) {
     const number = Number(value);
@@ -80,6 +86,8 @@ if (initialTheme === 'custom') applyCustomTheme(initialHue, initialShade);
 export const store = Vue.reactive({
     themes,
     theme: initialTheme,
+    keepTheme,
+    language: initialLanguage,
     customHue: initialHue,
     customShade: initialShade,
     get dark() {
@@ -101,12 +109,29 @@ export const store = Vue.reactive({
             localStorage.setItem('custom-theme-shade', String(this.customShade));
             document.body.dataset.themeDark = String(this.dark);
         }
-        localStorage.setItem('theme', themeId);
+        if (this.keepTheme) {
+            localStorage.setItem('theme', themeId);
+        }
         localStorage.setItem('dark', JSON.stringify(this.dark));
     },
     toggleDark() {
         this.customShade = this.dark ? 5 : 96;
         this.setTheme('custom');
+    },
+    toggleKeepTheme() {
+        this.keepTheme = !this.keepTheme;
+        localStorage.setItem('keep-theme', String(this.keepTheme));
+        if (this.keepTheme) {
+            localStorage.setItem('theme', this.theme);
+        } else {
+            localStorage.removeItem('theme');
+        }
+    },
+    setLanguage(language) {
+        if (!['en', 'es'].includes(language)) return;
+        this.language = language;
+        document.documentElement.lang = language;
+        localStorage.setItem('language', language);
     },
     updateCustomTheme(property, value) {
         if (property === 'hue') {
@@ -129,6 +154,8 @@ export const store = Vue.reactive({
 const app = Vue.createApp({
     data: () => ({ store }),
 });
+app.config.globalProperties.$t = (message, values) =>
+    translate(store.language, message, values);
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),

@@ -25,11 +25,11 @@ export default {
                     <tr v-for="([level, err], i) in runs">
                         <td class="rank">
                             <p v-if="i + 1 <= 75" class="type-label-lg">#{{ i + 1 }}</p>
-                            <p v-else class="type-label-lg">Legacy</p>
+                            <p v-else class="type-label-lg">{{ $t('Legacy') }}</p>
                         </td>
                         <td class="level" :class="{ 'active': selected == i, 'error': !level }">
                             <button @click="selectRun(i)">
-                                <span class="type-label-lg">{{ level?.name || \`Error (\${err}.json)\` }}</span>
+                                <span class="type-label-lg">{{ level?.name || $t('Error ({error}.json)', { error: err }) }}</span>
                             </button>
                         </td>
                     </tr>
@@ -38,7 +38,7 @@ export default {
 
             <div class="level-container">
                 <button class="mobile-back-button" type="button" @click="backToRuns">
-                    <span aria-hidden="true">←</span> Back to verifications
+                    <span aria-hidden="true">←</span> {{ $t('Back to verifications') }}
                 </button>
                 <div class="level" v-if="level">
                     <h1 class="level-title">
@@ -59,18 +59,18 @@ export default {
 
                     <ul class="stats">
                         <li>
-                            <div class="type-title-sm">Expected Placement</div>
-                            <p>{{ level.expectedplacement || 'N/A' }}</p>
+                            <div class="type-title-sm">{{ $t('Expected Placement') }}</div>
+                            <p>{{ level.expectedplacement || $t('N/A') }}</p>
                         </li>
                         <li>
-                            <div class="type-title-sm">ID</div>
+                            <div class="type-title-sm">{{ $t('ID') }}</div>
                             <p>{{ level.id }}</p>
                         </li>
                     </ul>
 
                     <hr class="section-separator" />
 
-                    <h2>Records</h2>
+                    <h2>{{ $t('Records') }}</h2>
                     <table class="records">
                         <tr v-for="record in level.records" class="record">
                             <td class="percent">
@@ -83,7 +83,7 @@ export default {
                                     >
                                         <img
                                             src="/assets/profile.png"
-                                            alt="Profile"
+                                            :alt="$t('Profile')"
                                             class="profile-icon"
                                         />
                                     </router-link>
@@ -105,7 +105,7 @@ export default {
                                 <img
                                     v-if="record.mobile"
                                     :src="\`/assets/phone-landscape\${store.dark ? '-dark' : ''}.svg\`"
-                                    alt="Mobile"
+                                    :alt="$t('Mobile')"
                                 >
                             </td>
 
@@ -116,7 +116,7 @@ export default {
                                         :href="record.link"
                                         target="_blank"
                                         class="video-link"
-                                        aria-label="Watch video"
+                                        :aria-label="$t('Watch video')"
                                     >
                                         <img
                                             src="/assets/youtube.png"
@@ -140,18 +140,18 @@ export default {
             <div class="meta-container">
                 <div class="meta">
                     <div class="errors" v-show="errors.length > 0">
-                        <p class="error" v-for="error of errors">{{ error }}</p>
+                        <p class="error" v-for="error of errors">{{ typeof error === 'string' ? $t(error) : $t(error.message, error.values) }}</p>
                     </div>
 
                     <div class="og">
                         <p class="type-label-md">
-                            Website layout made by
+                            {{ $t('Website layout made by') }}
                             <a href="https://tsl.pages.dev/" target="_blank">TheShittyList</a>
                         </p>
                     </div>
 
                     <template v-if="editors">
-                        <h3>List Editors</h3>
+                        <h3>{{ $t('List Editors') }}</h3>
                         <ol class="editors">
                             <li v-for="editor in editors">
                                 <img
@@ -171,15 +171,15 @@ export default {
                         </ol>
                     </template>
 
-                    <h3>Submission Requirements</h3>
-                    <p>Achieved the record without using hacks (FPS bypass allowed up to 360fps).</p>
-                    <p>Ensure the record is from the correct level ID.</p>
-                    <p>Must have source audio or clicks/taps — edited audio doesn’t count.</p>
-                    <p>Must show a previous attempt or death animation unless first attempt.</p>
-                    <p>Completion must include hitting the endwall to validate.</p>
-                    <p>No secret or bug routes.</p>
-                    <p>No easy modes — only unmodified levels qualify.</p>
-                    <p>Legacy levels only accept new records for 24 hours after delisting.</p>
+                    <h3>{{ $t('Submission Requirements') }}</h3>
+                    <p>{{ $t('Achieved the record without using hacks (FPS bypass allowed up to 360fps).') }}</p>
+                    <p>{{ $t('Ensure the record is from the correct level ID.') }}</p>
+                    <p>{{ $t('Must have source audio or clicks/taps — edited audio doesn’t count.') }}</p>
+                    <p>{{ $t('Must show a previous attempt or death animation unless first attempt.') }}</p>
+                    <p>{{ $t('Completion must include hitting the endwall to validate.') }}</p>
+                    <p>{{ $t('No secret or bug routes.') }}</p>
+                    <p>{{ $t('No easy modes — only unmodified levels qualify.') }}</p>
+                    <p>{{ $t('Legacy levels only accept new records for 24 hours after delisting.') }}</p>
                 </div>
             </div>
         </main>
@@ -220,7 +220,10 @@ export default {
             this.errors.push(
                 ...this.runs
                     .filter(([_, err]) => err)
-                    .map(([_, err]) => `Failed to load run. (${err}.json)`)
+                    .map(([_, err]) => ({
+                        message: "Failed to load run. ({error}.json)",
+                        values: { error: err },
+                    }))
             );
             if (!this.editors) {
                 this.errors.push("Failed to load list editors.");

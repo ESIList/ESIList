@@ -12,7 +12,7 @@ export default {
     template: `
         <div class="level-authors">
             <template v-if="author === verifier">
-                <div class="type-title-sm">Creator & Verifier</div>
+                <div class="type-title-sm">{{ $t('Creator & Verifier') }}</div>
                 <p class="type-body">
                     <router-link
                         :to="{ path: '/leaderboard', query: { player: verifier } }"
@@ -24,12 +24,12 @@ export default {
             </template>
 
             <template v-else>
-                <div class="type-title-sm">Creator</div>
+                <div class="type-title-sm">{{ $t('Creator') }}</div>
                 <p class="type-body">
                     <span>{{ author }}</span>
                 </p>
 
-                <div class="type-title-sm">Verifier</div>
+                <div class="type-title-sm">{{ $t('Verifier') }}</div>
                 <p class="type-body">
                     <router-link
                         :to="{ path: '/leaderboard', query: { player: verifier } }"

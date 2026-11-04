@@ -14,6 +14,7 @@
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+    flex-wrap: wrap;
     gap: 1rem;
     margin: 0 0 1.25rem;
 }
@@ -22,6 +23,32 @@
     font-size: 2rem;
     line-height: 1.1;
     letter-spacing: -0.5px;
+}
+
+.page-list .list-heading-actions {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 0.6rem;
+}
+
+.page-list .list-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.4rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.55rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: filter 120ms ease, transform 120ms ease;
+}
+
+.page-list .list-submit:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
 }
 
 .page-list .list-eyebrow {
@@ -485,6 +512,15 @@ main.dark .page-list .level-container .tag {
         font-size: 1.65rem;
     }
 
+    .page-list .list-heading {
+        flex-wrap: wrap;
+    }
+
+    .page-list .list-heading-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .page-list .mobile-list-hint {
         display: block;
         margin: 0 0 0.75rem;
@@ -615,13 +651,18 @@ main.dark .page-list .level-container .tag {
         transition: none;
     }
 
-    .page-list .list .level button:hover {
+    .page-list .list .level:not(.active) button:hover {
         background-color: var(--color-background-hover);
         transform: none;
     }
 
     .page-list .list .level.active button {
         box-shadow: none;
+    }
+
+    .page-list .list .level.active button:hover {
+        background-color: var(--color-primary);
+        color: var(--color-on-primary);
     }
 
     .page-list .level-row-hint {

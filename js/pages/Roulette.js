@@ -14,30 +14,30 @@ export default {
         <main v-else class="page-roulette" :class="{ 'roulette-playing': isPlaying }">
             <div class="sidebar">
                 <p class="type-label-md" style="color: #aaa">
-                    Shameless copy of the Extreme Demon Roulette by <a href="https://matcool.github.io/extreme-demon-roulette/" target="_blank">matcool</a>.
+                    {{ $t('Shameless copy of the Extreme Demon Roulette by') }} <a href="https://matcool.github.io/extreme-demon-roulette/" target="_blank">matcool</a>.
                 </p>
                 <form class="options">
                     <div class="check">
                         <input type="checkbox" id="main" value="Main List" v-model="useMainList" :disabled="customRange" @change="updateRankRange">
-                        <label for="main">Main List</label>
+                        <label for="main">{{ $t('Main List') }}</label>
                     </div>
                     <div class="check">
                         <input type="checkbox" id="extended" value="Extended List" v-model="useExtendedList" :disabled="customRange" @change="updateRankRange">
-                        <label for="extended">Extended List</label>
+                        <label for="extended">{{ $t('Extended List') }}</label>
                     </div>
                     <div class="check">
                         <input type="checkbox" id="custom-range" v-model="customRange" @change="onCustomRangeChange">
-                        <label for="custom-range">Custom</label>
+                        <label for="custom-range">{{ $t('Custom') }}</label>
                     </div>
                     <div class="roulette-filters">
-                        <label for="roulette-filter">Gameplay filter</label>
+                        <label for="roulette-filter">{{ $t('Gameplay filter') }}</label>
                         <select id="roulette-filter" v-model="selectedFilter">
-                            <option value="">All filters</option>
-                            <option v-for="filter in filterOptions" :key="filter.id" :value="filter.id">{{ filter.name }}</option>
+                            <option value="">{{ $t('All filters') }}</option>
+                            <option v-for="filter in filterOptions" :key="filter.id" :value="filter.id">{{ $t(filter.name) }}</option>
                         </select>
 
                         <div class="rank-range" v-if="customRange">
-                            <label>Custom rank range</label>
+                            <label>{{ $t('Custom rank range') }}</label>
                             <input
                                 v-model="minRank"
                                 type="number"
@@ -45,8 +45,8 @@ export default {
                                 max="150"
                                 step="1"
                                 inputmode="numeric"
-                                aria-label="Minimum rank"
-                                placeholder="From"
+                                :aria-label="$t('Minimum rank')"
+                                :placeholder="$t('From')"
                             >
                             <input
                                 v-model="maxRank"
@@ -55,23 +55,23 @@ export default {
                                 max="150"
                                 step="1"
                                 inputmode="numeric"
-                                aria-label="Maximum rank"
-                                placeholder="To"
+                                :aria-label="$t('Maximum rank')"
+                                :placeholder="$t('To')"
                             >
                         </div>
-                        <p class="type-label-md" v-if="customRange">Custom uses this range instead of Main/Extended.</p>
-                        <p class="type-label-md">The roulette draws up to 100 matching levels.</p>
+                        <p class="type-label-md" v-if="customRange">{{ $t('Custom uses this range instead of Main/Extended.') }}</p>
+                        <p class="type-label-md">{{ $t('The roulette draws up to 100 matching levels.') }}</p>
                     </div>
-                    <Btn @click.native.prevent="onStart">{{ levels.length === 0 ? 'Start' : 'Restart'}}</Btn>
+                    <Btn @click.native.prevent="onStart">{{ levels.length === 0 ? $t('Start') : $t('Restart')}}</Btn>
                 </form>
                 <p class="type-label-md" style="color: #aaa">
-                    The roulette saves automatically.
+                    {{ $t('The roulette saves automatically.') }}
                 </p>
                 <form class="save">
-                    <p>Manual Load/Save</p>
+                    <p>{{ $t('Manual Load/Save') }}</p>
                     <div class="btns">
-                        <Btn @click.native.prevent="onImport">Import</Btn>
-                        <Btn :disabled="!isActive" @click.native.prevent="onExport">Export</Btn>
+                        <Btn @click.native.prevent="onImport">{{ $t('Import') }}</Btn>
+                        <Btn :disabled="!isActive" @click.native.prevent="onExport">{{ $t('Export') }}</Btn>
                     </div>
                 </form>
             </div>
@@ -101,16 +101,16 @@ export default {
                             </div>
                             <form class="actions" v-if="!givenUp">
                                 <input type="number" v-model="percentage" :placeholder="placeholder" :min="currentPercentage + 1" max=100>
-                                <Btn @click.native.prevent="onDone">Done</Btn>
-                                <Btn @click.native.prevent="onGiveUp" style="background-color: #e91e63;">Give Up</Btn>
+                                <Btn @click.native.prevent="onDone">{{ $t('Done') }}</Btn>
+                                <Btn @click.native.prevent="onGiveUp" style="background-color: #e91e63;">{{ $t('Give Up') }}</Btn>
                             </form>
                         </div>
                         <!-- Results -->
                         <div v-if="givenUp || hasCompleted" class="results">
-                            <h1>Results</h1>
-                            <p>Number of levels: {{ progression.length }}</p>
-                            <p>Highest percent: {{ currentPercentage }}%</p>
-                            <Btn v-if="currentPercentage < 99 && !hasCompleted" @click.native.prevent="showRemaining = true">Show remaining levels</Btn>
+                            <h1>{{ $t('Results') }}</h1>
+                            <p>{{ $t('Number of levels: {count}', { count: progression.length }) }}</p>
+                            <p>{{ $t('Highest percent: {percent}%', { percent: currentPercentage }) }}</p>
+                            <Btn v-if="currentPercentage < 99 && !hasCompleted" @click.native.prevent="showRemaining = true">{{ $t('Show remaining levels') }}</Btn>
                         </div>
                         <!-- Remaining Levels -->
                         <template v-if="givenUp && showRemaining">
@@ -188,7 +188,7 @@ export default {
             return this.progression[this.progression.length - 1] || 0;
         },
         placeholder() {
-            return `At least ${this.currentPercentage + 1}%`;
+            return this.$t('At least {percent}%', { percent: this.currentPercentage + 1 });
         },
         hasCompleted() {
             return (
@@ -235,12 +235,12 @@ export default {
         },
         async onStart() {
             if (this.isActive) {
-                this.showToast('Give up before starting a new roulette.');
+                this.showToast(this.$t('Give up before starting a new roulette.'));
                 return;
             }
 
             if (!this.customRange && !this.useMainList && !this.useExtendedList) {
-                this.showToast('Choose at least one list.');
+                this.showToast(this.$t('Choose at least one list.'));
                 return;
             }
 
@@ -253,7 +253,7 @@ export default {
                 maxRank > 150 ||
                 minRank > maxRank
             ) {
-                this.showToast('Enter a valid rank range between 1 and 150.');
+                this.showToast(this.$t('Enter a valid rank range between 1 and 150.'));
                 return;
             }
 
@@ -264,7 +264,7 @@ export default {
             if (!fullList || fullList.some(([_, err]) => err)) {
                 this.loading = false;
                 this.showToast(
-                    'List is currently broken. Wait until it\'s fixed to start a roulette.',
+                    this.$t("List is currently broken. Wait until it's fixed to start a roulette."),
                 );
                 return;
             }
@@ -301,7 +301,7 @@ export default {
 
             if (list.length === 0) {
                 this.loading = false;
-                this.showToast('No levels match the selected options.');
+                this.showToast(this.$t('No levels match the selected options.'));
                 return;
             }
 
@@ -340,7 +340,7 @@ export default {
                 this.percentage <= this.currentPercentage ||
                 this.percentage > 100
             ) {
-                this.showToast('Invalid percentage.');
+                this.showToast(this.$t('Invalid percentage.'));
                 return;
             }
 
@@ -358,7 +358,7 @@ export default {
         onImport() {
             if (
                 this.isActive &&
-                !window.confirm('This will overwrite the currently running roulette. Continue?')
+                !window.confirm(this.$t('This will overwrite the currently running roulette. Continue?'))
             ) {
                 return;
             }
@@ -371,7 +371,7 @@ export default {
             const file = this.fileInput.files[0];
 
             if (file.type !== 'application/json') {
-                this.showToast('Invalid file.');
+                this.showToast(this.$t('Invalid file.'));
                 return;
             }
 
@@ -379,7 +379,7 @@ export default {
                 const roulette = JSON.parse(await file.text());
 
                 if (!roulette.levels || !roulette.progression) {
-                    this.showToast('Invalid file.');
+                    this.showToast(this.$t('Invalid file.'));
                     return;
                 }
 
@@ -398,7 +398,7 @@ export default {
                 this.showRemaining = false;
                 this.percentage = undefined;
             } catch {
-                this.showToast('Invalid file.');
+                this.showToast(this.$t('Invalid file.'));
                 return;
             }
         },

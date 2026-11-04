@@ -55,18 +55,18 @@
                             class="nav__tab nav__menu-trigger"
                             :class="{ 'router-link-active': ['/', '/runs', '/leaderboard'].includes($route.path) }"
                         >
-                            <span class="type-label-lg">List</span>
+                            <span class="type-label-lg">{{ $t('List') }}</span>
                             <span class="nav__menu-chevron" aria-hidden="true">▾</span>
                         </summary>
                         <div class="nav__menu-options">
                             <router-link class="nav__menu-item" to="/" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">List</span>
+                                <span class="type-label-lg">{{ $t('List') }}</span>
                             </router-link>
                             <router-link class="nav__menu-item" to="/leaderboard" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">Leaderboard</span>
+                                <span class="type-label-lg">{{ $t('Leaderboard') }}</span>
                             </router-link>
                             <router-link class="nav__menu-item" to="/runs" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">Verifications</span>
+                                <span class="type-label-lg">{{ $t('Verifications') }}</span>
                             </router-link>
                         </div>
                     </details>
@@ -75,33 +75,46 @@
                             class="nav__tab nav__menu-trigger"
                             :class="{ 'router-link-active': ['/compare', '/roulette', '/tags'].includes($route.path) || $route.path.startsWith('/tags/') }"
                         >
-                            <span class="type-label-lg">Utilities</span>
+                            <span class="type-label-lg">{{ $t('Utilities') }}</span>
                             <span class="nav__menu-chevron" aria-hidden="true">▾</span>
                         </summary>
                         <div class="nav__menu-options">
                             <router-link class="nav__menu-item" to="/compare" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">Compare</span>
+                                <span class="type-label-lg">{{ $t('Compare') }}</span>
                             </router-link>
                             <router-link class="nav__menu-item" to="/roulette" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">Roulette</span>
+                                <span class="type-label-lg">{{ $t('Roulette') }}</span>
                             </router-link>
                             <router-link class="nav__menu-item" to="/tags" @click="$event.currentTarget.closest('details').open = false">
-                                <span class="type-label-lg">Packs</span>
+                                <span class="type-label-lg">{{ $t('Packs') }}</span>
                             </router-link>
                         </div>
                     </details>
                     <router-link class="nav__tab" to="/changelog">
-                        <span class="type-label-lg">Changelog</span>
+                        <span class="type-label-lg">{{ $t('Changelog') }}</span>
                     </router-link>
                 </div>
 
                 <div class="nav__actions">
                     <details class="nav__theme-menu" name="site-navigation">
-                        <summary class="nav__icon nav__theme-button" aria-label="Themes" title="Themes">
-                            <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
-                            <span class="type-label-lg">Themes</span>
+                        <summary class="nav__icon nav__theme-button" :aria-label="$t('Settings')" :title="$t('Settings')">
+                            <svg class="nav__settings-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M19.14 12.94a7.5 7.5 0 0 0 .05-.94 7.5 7.5 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54A.49.49 0 0 0 13.89 2h-3.78a.49.49 0 0 0-.49.42L9.26 4.96c-.59.23-1.14.55-1.63.94l-2.39-.96a.5.5 0 0 0-.61.22L2.71 8.48a.5.5 0 0 0 .12.64l2.03 1.58a7.5 7.5 0 0 0-.05.94c0 .32.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.12.21.37.3.61.22l2.39-.96c.49.39 1.04.71 1.63.94l.36 2.54c.04.24.25.42.49.42h3.78c.24 0 .45-.18.49-.42l.36-2.54c.59-.23 1.14-.55 1.63-.94l2.39.96c.24.09.49 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58ZM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+                            </svg>
+                            <span class="type-label-lg">{{ $t('Settings') }}</span>
                         </summary>
-                        <div class="nav__theme-options" role="group" aria-label="Site themes" :style="{ '--slider-hue': store.customHue }">
+                        <div class="nav__theme-options" role="group" :aria-label="$t('Settings')" :style="{ '--slider-hue': store.customHue }">
+                            <h2 class="nav__settings-heading">{{ $t('Settings') }}</h2>
+                            <label class="nav__settings-label" for="site-language">{{ $t('Language') }}</label>
+                            <select
+                                id="site-language"
+                                class="nav__language-select"
+                                :value="store.language"
+                                @change="store.setLanguage($event.target.value)"
+                            >
+                                <option value="en">{{ $t('English') }}</option>
+                                <option value="es">{{ $t('Spanish') }}</option>
+                            </select>
                             <button
                                 class="nav__theme-mode"
                                 type="button"
@@ -109,11 +122,24 @@
                                 @click="store.toggleDark()"
                             >
                                 <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
-                                {{ store.dark ? 'Switch to light mode' : 'Switch to dark mode' }}
+                                {{ store.dark ? $t('Switch to light mode') : $t('Switch to dark mode') }}
                             </button>
+                            <button
+                                class="nav__theme-mode nav__theme-remember"
+                                type="button"
+                                :aria-pressed="store.keepTheme"
+                                @click="store.toggleKeepTheme()"
+                            >
+                                <span class="nav__theme-check" aria-hidden="true">{{ store.keepTheme ? '✓' : '' }}</span>
+                                {{ store.keepTheme ? $t('Theme preference saved') : $t('Remember this theme') }}
+                            </button>
+                            <p class="nav__theme-hint">
+                                {{ store.keepTheme ? $t('Your selected theme will be used next time you visit.') : $t('A random theme is chosen each time you visit.') }}
+                            </p>
+                            <h3 class="nav__settings-label">{{ $t('Appearance') }}</h3>
                             <div class="nav__theme-sliders">
                                 <label class="nav__theme-slider-label" for="theme-hue">
-                                    <span>Color</span>
+                                    <span>{{ $t('Color') }}</span>
                                     <output>{{ Math.round(store.customHue) }}°</output>
                                 </label>
                                 <input
@@ -125,11 +151,11 @@
                                     step="1"
                                     :value="store.customHue"
                                     :style="{ '--slider-hue': store.customHue }"
-                                    aria-label="Theme color"
+                                    :aria-label="$t('Color')"
                                     @input="store.updateCustomTheme('hue', $event.target.value)"
                                 />
                                 <label class="nav__theme-slider-label" for="theme-shade">
-                                    <span>Light to dark</span>
+                                    <span>{{ $t('Light to dark') }}</span>
                                     <output>{{ store.customShade }}%</output>
                                 </label>
                                 <input
@@ -141,7 +167,7 @@
                                     step="1"
                                     :value="store.customShade"
                                     :style="{ '--slider-hue': store.customHue }"
-                                    aria-label="Theme shade from light to dark"
+                                    :aria-label="$t('Light to dark')"
                                     @input="store.updateCustomTheme('shade', $event.target.value)"
                                 />
                             </div>
@@ -156,22 +182,11 @@
                                     @click="store.setTheme(theme.id)"
                                 >
                                     <span class="nav__theme-swatch" :class="'swatch-' + theme.id" aria-hidden="true"></span>
-                                    {{ theme.name }}
+                                    {{ $t(theme.name) }}
                                 </button>
                             </div>
                         </div>
                     </details>
-                    <!-- Replace the '#' with your discord server's invite-->
-                    <a class="nav__icon" href="https://youtu.be/8IVsNA_o1wE?si=tNU_LWOCUyFKPRho">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
-                    </a>
-                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
-                    <a
-                        class="nav__cta type-label-lg"
-                        href=https://mail.google.com/mail/?view=cm&fs=1&to=deliriosnocturnosteam@gmail.com
-                        target="_blank"
-                        >Submit Record</a
-                    >
                 </div>
             </nav>
         </header>

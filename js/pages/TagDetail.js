@@ -14,26 +14,26 @@ export default {
 
         <main v-else class="page-tag-detail-container">
             <div class="page-tag-detail" :style="{ backgroundColor: tag?.color || 'var(--color-primary)' }">
-                <button @click="goBack" class="back-button">&larr; Back</button>
+                <button @click="goBack" class="back-button">&larr; {{ $t('Back') }}</button>
                 
-                <h1 class="tag-title">{{ tag?.name }}</h1>
+                <h1 class="tag-title">{{ $t(tag?.name || '') }}</h1>
                 
                 <div class="tag-info-cards">
-                    <p class="tag-desc">• Description: {{ tag?.description }}
+                    <p class="tag-desc">• {{ $t('Description') }}: {{ $t(tag?.description || '') }}
                     <p v-if="tag.bonusEnabled && bonusScore > 0" class="tag-bonus">
-                        🏅 Bonus reward for completing all levels with this tag: 
-                        <strong>+{{ bonusScore.toFixed(3) }}</strong> points
+                        🏅 {{ $t('Bonus reward for completing all levels with this tag:') }}
+                        <strong>+{{ bonusScore.toFixed(3) }}</strong> {{ $t('points') }}
                     </p>
                 </div>
 
                 <section class="levels-container">
-                    <h2>• Levels with this tag:</h2>
+                    <h2>• {{ $t('Levels with this tag:') }}</h2>
                     <table class="list tag-detail-list">
                         <tbody>
                             <tr v-for="level in levelsWithTag" :key="level.id">
                                 <td class="level">
                                     <button @click="selectLevel(level)" class="list-level-btn">
-                                        <span v-if="level.rank">#{{ level.rank }} – </span>{{ level.name }} by {{ level.author }}
+                                        <span v-if="level.rank">#{{ level.rank }} – </span>{{ level.name }} {{ $t('by') }} {{ level.author }}
                                     </button>
                                 </td>
                             </tr>

@@ -245,25 +245,27 @@ header {
 }
 @media screen and (min-width: 1366px) and (pointer: fine) {
     header {
-        display: grid;
-        padding-inline: 0;
+        display: flex;
+        padding-inline: 2rem;
     }
 }
 header .logo {
-    justify-self: end;
+    flex: 0 0 auto;
     align-self: center;
     display: flex;
     align-items: flex-end;
     gap: 1rem;
+    margin-right: 1.5rem;
 }
 header .nav {
     flex: 1;
     min-width: 0;
+    align-items: center;
 }
 
 header .nav__links {
     min-width: 0;
-    flex: 1 1 0;
+    flex: 0 1 auto;
     overflow-x: auto;
     scrollbar-width: none;
 }
@@ -274,11 +276,21 @@ header .nav__links::-webkit-scrollbar {
 
 header .nav__actions {
     flex: 0 0 auto;
+    align-items: center;
+    margin-left: auto;
+}
+
+header .nav__theme-menu {
+    align-self: center;
+}
+
+header .nav__theme-menu > summary {
+    align-self: center;
 }
 
 @media screen and (min-width: 901px) and (max-width: 1365px) and (pointer: fine) {
     header {
-        padding-inline: 1rem;
+        padding-inline: 1.5rem;
     }
 }
 

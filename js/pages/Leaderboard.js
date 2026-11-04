@@ -3,6 +3,7 @@ import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
 import tags from "../components/List/Tags.js";
 import { score } from '../score.js';
+import { store } from '../main.js';
 
 let chart = null;
 let globalChart = null;
@@ -10,6 +11,7 @@ let globalChart = null;
 export default {
     components: { Spinner },
     data: () => ({
+        store,
         leaderboard: [],
         loading: true,
         selected: 0,
@@ -33,7 +35,7 @@ export default {
             <div class="page-leaderboard" :class="{ 'player-selected': !showingGlobalGraph }">
                 <div class="error-container">
                     <p class="error" v-if="err.length > 0">
-                        Leaderboard may be incorrect, as the following levels could not be loaded: {{ err.join(', ') }}
+                        {{ $t('Leaderboard may be incorrect, as the following levels could not be loaded: {levels}', { levels: err.join(', ') }) }}
                     </p>
                 </div>
 
@@ -42,10 +44,10 @@ export default {
                         <!-- Global Graph Button (styled like a player row) -->
                         <tr v-if="hasHistoryData">
                             <td class="rank"><p class="type-label-lg">📊</p></td>
-                            <td class="total"><p class="type-label-lg">GRAPH</p></td>
+                            <td class="total"><p class="type-label-lg">{{ $t('GRAPH') }}</p></td>
                             <td class="user" :class="{ 'active': showingGlobalGraph }">
                                 <button @click="showGlobalGraph">
-                                    <span class="type-label-lg">🌐 All Players Comparison</span>
+                                    <span class="type-label-lg">🌐 {{ $t('All Players Comparison') }}</span>
                                 </button>
                             </td>
                         </tr>
@@ -71,7 +73,7 @@ export default {
                 <div class="player-container">
                     <!-- Global Graph View -->
                     <div class="player" v-if="showingGlobalGraph">
-                        <h1>🌐 All Players Comparison</h1>
+                        <h1>🌐 {{ $t('All Players Comparison') }}</h1>
                         <div class="global-graph-container">
                             <canvas id="globalPointsChart"></canvas>
                         </div>
@@ -80,7 +82,7 @@ export default {
                     <!-- Individual Player View -->
                     <div class="player" v-else>
                         <button class="mobile-board-button" type="button" @click="showGlobalGraph">
-                            ← All players
+                            ← {{ $t('All players') }}
                         </button>
                         <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
                         <h3>{{ entry.total }}</h3>
@@ -90,7 +92,7 @@ export default {
                         </div>
 
                         <!-- Rest of player stats tables... -->
-                        <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length }})</h2>
+                        <h2 v-if="entry.verified.length > 0">{{ $t('Verified ({count})', { count: entry.verified.length }) }}</h2>
                         <table class="table">
                             <tr v-for="score in entry.verified">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
@@ -104,7 +106,7 @@ export default {
                             </tr>
                         </table>
 
-                        <h2 v-if="entry.completed.length > 0">Completed ({{ entry.completed.length }})</h2>
+                        <h2 v-if="entry.completed.length > 0">{{ $t('Completed ({count})', { count: entry.completed.length }) }}</h2>
                         <table class="table">
                             <tr v-for="score in entry.completed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
@@ -118,15 +120,15 @@ export default {
                             </tr>
                         </table>
 
-                        <h2 v-if="entry.tagBonuses && entry.tagBonuses.length > 0">Bonus Pack points ({{ entry.tagBonuses.length }})</h2>
+                        <h2 v-if="entry.tagBonuses && entry.tagBonuses.length > 0">{{ $t('Bonus Pack points ({count})', { count: entry.tagBonuses.length }) }}</h2>
                         <table class="table bonus-table" v-if="entry.tagBonuses && entry.tagBonuses.length > 0">
                             <tr v-for="bonus in entry.tagBonuses" :key="bonus.name">
-                                <td class="level"><p>{{ bonus.name }}</p></td>
+                                <td class="level"><p>{{ $t(bonus.name) }}</p></td>
                                 <td class="score"><p>+{{ localize(bonus.bonus) }}</p></td>
                             </tr>
                         </table>
 
-                        <h2 v-if="entry.progressed.length > 0">Progressed ({{ entry.progressed.length }})</h2>
+                        <h2 v-if="entry.progressed.length > 0">{{ $t('Progressed ({count})', { count: entry.progressed.length }) }}</h2>
                         <table class="table">
                             <tr v-for="score in entry.progressed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
@@ -140,7 +142,7 @@ export default {
                             </tr>
                         </table>
 
-                        <h2 v-if="noProgress.length > 0">No Progress ({{ noProgress.length }})</h2>
+                        <h2 v-if="noProgress.length > 0">{{ $t('No Progress ({count})', { count: noProgress.length }) }}</h2>
                         <table class="table" v-if="noProgress.length > 0">
                             <tr v-for="score in noProgress">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
@@ -223,6 +225,16 @@ export default {
             if (!this.showingGlobalGraph) {
                 this.$nextTick(this.renderChart);
             }
+        },
+
+        'store.language'() {
+            this.$nextTick(() => {
+                if (this.showingGlobalGraph) {
+                    this.renderGlobalChart();
+                } else {
+                    this.renderChart();
+                }
+            });
         }
     },
 
@@ -356,10 +368,10 @@ export default {
                             callbacks: {
                                 title: function(context) {
                                     const date = new Date(context[0].parsed.x);
-                                    return date.toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'short', 
-                                        day: 'numeric' 
+                                    return date.toLocaleDateString(document.documentElement.lang || 'en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric'
                                     });
                                 }
                             }
@@ -374,9 +386,17 @@ export default {
                                     month: 'MMM yyyy'
                                 }
                             },
+                            ticks: {
+                                callback: function(value) {
+                                    return new Date(value).toLocaleDateString(
+                                        document.documentElement.lang || 'en-US',
+                                        { year: 'numeric', month: 'short' }
+                                    );
+                                }
+                            },
                             title: {
                                 display: true,
-                                text: 'Date'
+                                text: this.$t('Date')
                             }
                         },
                         y: {
@@ -386,7 +406,7 @@ export default {
                             },
                             title: {
                                 display: true,
-                                text: 'Points'
+                                text: this.$t('Points')
                             }
                         }
                     }
@@ -402,6 +422,7 @@ export default {
                 globalChart.destroy();
             }
 
+            const pointsUnit = this.$t('pts');
             const datasets = this.leaderboard
                 .filter(player => player.history && player.history.length > 0)
                 .map(player => {
@@ -444,14 +465,14 @@ export default {
                             callbacks: {
                                 title: function(context) {
                                     const date = new Date(context[0].parsed.x);
-                                    return date.toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'short', 
-                                        day: 'numeric' 
+                                    return date.toLocaleDateString(document.documentElement.lang || 'en-US', {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric'
                                     });
                                 },
                                 label: function(context) {
-                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(3)} pts`;
+                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(3)} ${pointsUnit}`;
                                 }
                             }
                         }
@@ -465,9 +486,17 @@ export default {
                                     month: 'MMM yyyy'
                                 }
                             },
+                            ticks: {
+                                callback: function(value) {
+                                    return new Date(value).toLocaleDateString(
+                                        document.documentElement.lang || 'en-US',
+                                        { year: 'numeric', month: 'short' }
+                                    );
+                                }
+                            },
                             title: {
                                 display: true,
-                                text: 'Date'
+                                text: this.$t('Date')
                             }
                         },
                         y: {
@@ -477,7 +506,7 @@ export default {
                             },
                             title: {
                                 display: true,
-                                text: 'Points'
+                                text: this.$t('Points')
                             }
                         }
                     }

@@ -7,10 +7,10 @@ export default {
           date: "4-11-2026",
           message: `
             • Release of ESIList v2.1<br>
-            • Added configurable color themes, presets and light/dark mode controls.<br>
-            • Grouped the navigation into List and Utilities menus and improved desktop and mobile layouts.<br>
-            • Added a dedicated level comparison page and improved mobile leaderboard profiles.<br>
-            • Improved the mobile verification list and roulette controls.<br>
+            • Visual Overhaul: New themes, options and colours<br>
+            • Mobile App: Now, you can see the list as it should be on your phone<br>
+            • New Roulette filters<br>
+            • Added Level Comparator<br>
           `,
           featured: true,
         },
@@ -235,10 +235,31 @@ export default {
             :class="['changelog-entry', { featured: entry.featured }]"
           >
             <p class="type-label-lg changelog-date">{{ entry.date }}</p>
-            <p class="changelog-message" v-html="entry.message"></p>
+            <p class="changelog-message" v-html="localizedMessage(entry.message)"></p>
           </div>
         </div>
       </div>
     </main>
   `,
+  methods: {
+    localizedMessage(message) {
+      return message
+        .split(/(<br\s*\/?>)/i)
+        .map((part) => {
+          if (/^<br\s*\/?>$/i.test(part)) return part;
+          const text = part.trim();
+          if (!text) return part;
+          const translated = this.$t(text);
+          if (translated !== text) return translated;
+
+          const placement = text.match(/^• Placed (.+) at \(#(\d+)\), above (.+) and below (.+)\.$/);
+          if (placement && document.documentElement.lang === "es") {
+            return `• ${placement[1]} se colocó en el puesto #${placement[2]}, por encima de ${placement[3]} y por debajo de ${placement[4]}.`;
+          }
+
+          return text;
+        })
+        .join("");
+    },
+  },
 };

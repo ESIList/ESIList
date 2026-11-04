@@ -26,39 +26,47 @@ export default {
             <div class="list-container">
                 <div class="list-heading">
                     <div>
-                        <p class="list-eyebrow">ESILIST RANKING</p>
-                        <h1>Levels</h1>
+                        <p class="list-eyebrow">{{ $t('ESILIST RANKING') }}</p>
+                        <h1>{{ $t('Levels') }}</h1>
                     </div>
-                    <span class="list-count">{{ filteredList.length }} / {{ list.length }}</span>
+                    <div class="list-heading-actions">
+                        <span class="list-count">{{ filteredList.length }} / {{ list.length }}</span>
+                        <a
+                            class="list-submit type-label-lg"
+                            href="https://mail.google.com/mail/?view=cm&fs=1&to=deliriosnocturnosteam@gmail.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >{{ $t('Submit Record') }}</a>
+                    </div>
                 </div>
-                <p class="mobile-list-hint">Scroll the ranking and select a level to see its details.</p>
+                <p class="mobile-list-hint">{{ $t('Scroll the ranking and select a level to see its details.') }}</p>
                 <div class="search-row">
                     <input
                         v-model="search"
                         class="level-search type-label-lg"
                         type="text"
-                        placeholder="🔍 Search levels..."
+                        :placeholder="$t('🔍 Search levels...')"
                     />
                     <div class="filter-wrapper">
                         <button
                             class="filter-button type-label-lg"
                             :class="{ active: activeFilterCount > 0 }"
                             @click.stop="showFilters = !showFilters"
-                            aria-label="Filters"
-                            title="Filters"
+                            :aria-label="$t('Filters')"
+                            :title="$t('Filters')"
                         >
-                            <span>⛃ Filter</span>
+                            <span>⛃ {{ $t('Filter') }}</span>
                             <span v-if="activeFilterCount" class="filter-count">{{ activeFilterCount }}</span>
                         </button>
 
                         <div class="filter-panel" v-if="showFilters" @click.stop>
                             <div class="filter-panel-header">
-                                <span class="type-title-sm">Filters</span>
+                                <span class="type-title-sm">{{ $t('Filters') }}</span>
                                 <button
                                     v-if="activeFilterCount"
                                     class="filter-clear"
                                     @click="clearFilters"
-                                >Clear</button>
+                                >{{ $t('Clear') }}</button>
                             </div>
                             <div class="filter-options" v-if="availableFilters.length">
                                 <button
@@ -71,13 +79,13 @@ export default {
                                         empty: f.count === 0
                                     }"
                                     @click="toggleFilter(f.id)"
-                                    :title="isFilterExcluded(f.id) ? 'Excluded: click to remove' : isFilterSelected(f.id) ? 'Click again to exclude' : 'Click to include'"
+                                    :title="isFilterExcluded(f.id) ? $t('Excluded: click to remove') : isFilterSelected(f.id) ? $t('Click again to exclude') : $t('Click to include')"
                                 >
-                                    {{ f.name }}
+                                    {{ $t(f.name) }}
                                     <span class="filter-chip-count">{{ f.count }}</span>
                                 </button>
                             </div>
-                            <p v-else class="no-results">No filters available yet.</p>
+                            <p v-else class="no-results">{{ $t('No filters available yet.') }}</p>
                         </div>
                     </div>
                 </div>
@@ -86,21 +94,21 @@ export default {
                     <tr v-for="item in filteredList" :key="item.index">
                         <td class="rank">
                             <p v-if="item.index + 1 <= 150" class="type-label-lg">#{{ item.index + 1 }}</p>
-                            <p v-else class="type-label-lg">Legacy</p>
+                            <p v-else class="type-label-lg">{{ $t('Legacy') }}</p>
                         </td>
                         <td class="level" :class="{ 'active': selected == item.index, 'error': !item.level }">
                             <button @click="selectLevel(item.index)">
-                                <span class="type-label-lg">{{ item.level?.name || \`Error (\${item.err}.json)\` }}</span>
-                                <span v-if="item.level" class="level-row-hint">View level details <span aria-hidden="true">→</span></span>
+                                <span class="type-label-lg">{{ item.level?.name || $t('Error ({error}.json)', { error: item.err }) }}</span>
+                                <span v-if="item.level" class="level-row-hint">{{ $t('View level details') }} <span aria-hidden="true">→</span></span>
                             </button>
                         </td>
                     </tr>
                 </table>
-                <p v-if="(search || activeFilterCount) && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1), or loosen the filters.</p>
+                <p v-if="(search || activeFilterCount) && filteredList.length === 0" class="no-results">{{ $t('No levels found. Search by level name or by level placement (1, #1), or loosen the filters.') }}</p>
             </div>
             <div class="level-container">
                 <button class="mobile-back-button" type="button" @click="backToList">
-                    <span aria-hidden="true">←</span> Back to levels
+                    <span aria-hidden="true">←</span> {{ $t('Back to levels') }}
                 </button>
 
                 <div class="level" v-if="level">
@@ -125,10 +133,10 @@ export default {
                             @click="goToTag(tagName)"
                         >
                             <span v-if="getTag(tagName)?.bonusEnabled">
-                                🏅 {{ getTagDisplayName(tagName) }} 🏅
+                                🏅 {{ $t(getTagDisplayName(tagName)) }} 🏅
                             </span>
                             <span v-else>
-                                {{ getTagDisplayName(tagName) }}
+                                {{ $t(getTagDisplayName(tagName)) }}
                             </span>
                         </button>
                     </div>
@@ -142,33 +150,33 @@ export default {
                             class="filter-chip"
                             :class="{ selected: isFilterSelected(f.id), excluded: isFilterExcluded(f.id) }"
                             @click="toggleFilter(f.id)"
-                            title="Click to include, click again to exclude"
+                            :title="$t('Click to include, click again to exclude')"
                         >
-                            {{ f.name }}
+                            {{ $t(f.name) }}
                         </button>
                     </div>
 
                     <ul class="stats">
                         <li>
-                            <div class="type-title-sm">Points when completed</div>
+                            <div class="type-title-sm">{{ $t('Points when completed') }}</div>
                             <p>{{ score(selected + 1, 100, level.percentToQualify) }}</p>
                         </li>
                         <li>
-                            <div class="type-title-sm">ID</div>
+                            <div class="type-title-sm">{{ $t('ID') }}</div>
                             <p>{{ level.id }}</p>
                         </li>
                         <li>
-                            <div class="type-title-sm">AREDL Placement (on verification)</div>
+                            <div class="type-title-sm">{{ $t('AREDL Placement (on verification)') }}</div>
                             <p>{{ level.aredl }}</p>
                         </li>
                     </ul>
                     
                     <hr class="section-separator" />
 
-                    <h2>Records</h2>
-                    <p v-if="selected + 1 <= 75"><strong>{{ level.percentToQualify }}%</strong> or better to qualify</p>
-                    <p v-else-if="selected +1 <= 150"><strong>100%</strong> or better to qualify</p>
-                    <p v-else>This level does not accept new records.</p>
+                    <h2>{{ $t('Records') }}</h2>
+                    <p v-if="selected + 1 <= 75"><strong>{{ level.percentToQualify }}%</strong> {{ $t('or better to qualify') }}</p>
+                    <p v-else-if="selected +1 <= 150">{{ $t('100% or better to qualify') }}</p>
+                    <p v-else>{{ $t('This level does not accept new records.') }}</p>
                     <table class="records">
                         <tr v-for="record in level.records" class="record">
                             <td class="percent">
@@ -181,7 +189,7 @@ export default {
                                     >
                                         <img
                                             src="/assets/profile.png"
-                                            alt="Profile"
+                                            :alt="$t('Profile')"
                                             class="profile-icon"
                                         />
                                     </router-link>
@@ -201,7 +209,7 @@ export default {
                             </td>
 
                             <td class="mobile">
-                                <img v-if="record.mobile" :src="\`/assets/phone-landscape\${store.dark ? '-dark' : ''}.svg\`" alt="Mobile">
+                                <img v-if="record.mobile" :src="\`/assets/phone-landscape\${store.dark ? '-dark' : ''}.svg\`" :alt="$t('Mobile')">
                             </td>
                             <td class="hz">
                                 <div class="hz-content">
@@ -210,7 +218,7 @@ export default {
                                         :href="record.link"
                                         target="_blank"
                                         class="video-link"
-                                        aria-label="Watch video"
+                                        :aria-label="$t('Watch video')"
                                     >
                                         <img
                                             src="/assets/youtube.png"
@@ -230,17 +238,17 @@ export default {
                 <hr class="section-separator" />
 
                 <h2 v-if="level.positionHistory && level.positionHistory.length">
-                    Position History
+                    {{ $t('Position History') }}
                 </h2>
 
                 <div class="position-history-cards type-label-lg" v-if="level.positionHistory && level.positionHistory.length">
                     
                     <!-- Column headers -->
                     <div class="history-card headers">
-                        <div class="history-date">Date</div>
-                        <div class="history-change">Change</div>
-                        <div class="history-position">Position</div>
-                        <div class="history-reason">Reason</div>
+                        <div class="history-date">{{ $t('Date') }}</div>
+                        <div class="history-change">{{ $t('Change') }}</div>
+                        <div class="history-position">{{ $t('Position') }}</div>
+                        <div class="history-reason">{{ $t('Reason') }}</div>
                     </div>
 
                     <!-- History entries -->
@@ -277,13 +285,13 @@ export default {
 
                     <div class="og">
                         <p class="type-label-md">
-                            Website layout made by 
+                            {{ $t('Website layout made by') }}
                             <a href="https://tsl.pages.dev/" target="_blank">TheShittyList</a>
                         </p>
                     </div>
 
                     <template v-if="editors">
-                        <h3>List Editors</h3>
+                        <h3>{{ $t('List Editors') }}</h3>
                         <ol class="editors">
                             <li v-for="editor in editors">
                                 <img :src="\`/assets/\${roleIconMap[editor.role]}\${store.dark ? '-dark' : ''}.svg\`" :alt="editor.role">
@@ -293,15 +301,15 @@ export default {
                         </ol>
                     </template>
 
-                    <h3>Submission Requirements</h3>
-                    <p>Achieved the record without using hacks (FPS bypass is allowed).</p>
-                    <p>Record on the level listed on the site or unchanged SP copy.</p>
-                    <p>Video must include source audio or clicks/taps (no edited audio only).</p>
-                    <p>Show previous attempt and full death animation unless it's first attempt. Everyplay exempt.</p>
-                    <p>Show the endwall hit or record is invalidated.</p>
-                    <p>No secret or bug routes allowed.</p>
-                    <p>No easy modes – only unmodified level qualifies.</p>
-                    <p>Legacy levels are always accepted.</p>
+                    <h3>{{ $t('Submission Requirements') }}</h3>
+                    <p>{{ $t('Achieved the record without using hacks (FPS bypass is allowed).') }}</p>
+                    <p>{{ $t('Record on the level listed on the site or unchanged SP copy.') }}</p>
+                    <p>{{ $t('Video must include source audio or clicks/taps (no edited audio only).') }}</p>
+                    <p>{{ $t("Show previous attempt and full death animation unless it's first attempt. Everyplay exempt.") }}</p>
+                    <p>{{ $t('Show the endwall hit or record is invalidated.') }}</p>
+                    <p>{{ $t('No secret or bug routes allowed.') }}</p>
+                    <p>{{ $t('No easy modes – only unmodified level qualifies.') }}</p>
+                    <p>{{ $t('Legacy levels are always accepted.') }}</p>
                 </div>
             </div>
         </main>

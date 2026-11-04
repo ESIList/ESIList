@@ -11,7 +11,7 @@ export default {
         </main>
         <main v-else class="page-tags">
             <div class="tags-header">
-                <h1>All Tags</h1>
+                <h1>{{ $t('All Tags') }}</h1>
             </div>
             <div class="tags-overview">
                 <div 
@@ -21,9 +21,9 @@ export default {
                     :style="{ backgroundColor: tag.color }"
                     @click="selectTag(tag.id)"
                 >
-                    <h3 v-if="tag.bonusEnabled" class="tag-bonus">🏅{{ tag.name }}🏅</h3>
-                    <h3 v-if="!tag.bonusEnabled" class="tag-bonus">{{ tag.name }}</h3>
-                    <p>{{ tag.description }}</p>
+                    <h3 v-if="tag.bonusEnabled" class="tag-bonus">🏅{{ $t(tag.name) }}🏅</h3>
+                    <h3 v-if="!tag.bonusEnabled" class="tag-bonus">{{ $t(tag.name) }}</h3>
+                    <p>{{ $t(tag.description) }}</p>
                 </div>
             </div>
         </main>
@@ -44,4 +44,3 @@ export default {
         }
     }
 };
-
