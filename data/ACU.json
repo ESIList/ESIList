@@ -85,6 +85,13 @@
             "link": "No video",
             "percent": 100,
             "hz": 240
+        },
+        {
+            "user": "Quino_00",
+            "date": "2026-10-26",
+            "link": "No video",
+            "percent": 100,
+            "hz": 60
         }
     ]
 }
