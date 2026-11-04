@@ -31,12 +31,6 @@ export default {
                     </div>
                     <div class="list-heading-actions">
                         <span class="list-count">{{ filteredList.length }} / {{ list.length }}</span>
-                        <a
-                            class="list-submit type-label-lg"
-                            href="https://mail.google.com/mail/?view=cm&fs=1&to=deliriosnocturnosteam@gmail.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >{{ $t('Submit Record') }}</a>
                     </div>
                 </div>
                 <p class="mobile-list-hint">{{ $t('Scroll the ranking and select a level to see its details.') }}</p>

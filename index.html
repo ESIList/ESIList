@@ -35,6 +35,7 @@
         />
         <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/changelog.css" />
+        <link rel="stylesheet" type="text/css" href="/css/pages/admin-records.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
@@ -96,6 +97,13 @@
                 </div>
 
                 <div class="nav__actions">
+                    <router-link
+                        class="nav__tab nav__admin-tab"
+                        to="/records"
+                        :class="{ 'router-link-active': $route.path === '/records' }"
+                    >
+                        <span class="type-label-lg">{{ $t('Records') }}</span>
+                    </router-link>
                     <details class="nav__theme-menu" name="site-navigation">
                         <summary class="nav__icon nav__theme-button" :aria-label="$t('Settings')" :title="$t('Settings')">
                             <svg class="nav__settings-icon" viewBox="0 0 24 24" aria-hidden="true">

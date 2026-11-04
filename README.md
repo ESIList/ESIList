@@ -38,6 +38,48 @@ What are some common reasons for the website not loading?
   the last lines within list entries. A good way to find the error-causing lines can be found
   by using `Inspect Element` and going to the `Console` tab.
 
+### Records editor setup
+
+The Records tab uses a Cloudflare Worker to authenticate editors and commit level
+JSON files to this repository. The username, password, session signing key, and
+GitHub token must be Cloudflare Worker secrets; do not put them in the website
+JavaScript or commit them to the repository. The provided password is weak; set
+a unique, randomly generated password before making the editor available.
+
+1. Create a fine-grained GitHub token restricted to `ESIList/ESIList` with
+   **Contents: Read and write** permission.
+2. In `worker/wrangler.toml`, set `ADMIN_ALLOWED_ORIGIN` to the exact HTTPS
+   origin serving the website. Do not include a path or trailing slash. Change
+   the rate limiter `namespace_id` to an integer unique to your Cloudflare account.
+3. From the repository root, authenticate Wrangler and set the service secrets:
+
+   ```powershell
+   npx wrangler@latest login
+   npx wrangler@latest secret put ADMIN_USERNAME --config worker/wrangler.toml
+   npx wrangler@latest secret put ADMIN_PASSWORD --config worker/wrangler.toml
+   npx wrangler@latest secret put SESSION_SECRET --config worker/wrangler.toml
+   npx wrangler@latest secret put GITHUB_TOKEN --config worker/wrangler.toml
+   ```
+
+   Set `ADMIN_USERNAME` to `ESILIST`, choose a strong `ADMIN_PASSWORD`, and use
+   at least 32 random characters for `SESSION_SECRET`. Provide the token from
+   step 1 as `GITHUB_TOKEN`.
+4. Deploy the Worker:
+
+   ```powershell
+   npx wrangler@latest deploy --config worker/wrangler.toml
+   ```
+
+5. Copy the deployed `workers.dev` URL into `recordsApiUrl` in
+   `js/admin/config.js`, then publish the website.
+
+The login has an approximate limit of five attempts per IP per minute per
+Cloudflare location; it is not a substitute for a strong password. The editor
+only accepts level JSON files and `data/_list.json`; creating a level commits
+both files together and merges the latest list from GitHub to avoid dropping
+levels during a deployment delay. Each save is written directly to the
+configured GitHub branch.
+
 ---
 
 ## More Coming Soon!

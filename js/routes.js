@@ -6,6 +6,7 @@ import Runs from './pages/Runs.js';
 import Tags from './pages/Tags.js';
 import TagDetail from './pages/TagDetail.js';
 import Comparator from './pages/Comparator.js';
+import AdminRecords from './pages/AdminRecords.js';
 
 export default [
     { path: '/', component: List },
@@ -16,4 +17,5 @@ export default [
     { path: '/changelog', component: Changelog },
     { path: '/tags', component: Tags },
     { path: '/tags/:tagId', component: TagDetail },
+    { path: '/records', component: AdminRecords },
 ];

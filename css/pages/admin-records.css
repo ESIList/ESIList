@@ -1,0 +1,254 @@
+.nav .nav__actions .nav__admin-tab {
+    margin-right: 0.35rem;
+    color: var(--color-on-primary);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.page-admin-records {
+    min-height: calc(100vh - 5rem);
+    padding: 2rem 1rem 4rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+}
+
+.admin-records-content {
+    width: min(64rem, 100%);
+    margin-inline: auto;
+}
+
+.admin-records-heading,
+.admin-records-json-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.admin-records-heading {
+    margin-bottom: 1.5rem;
+}
+
+.admin-records-heading h1 {
+    font-size: 2rem;
+}
+
+.admin-records-eyebrow {
+    margin-bottom: 0.35rem;
+    color: var(--color-primary);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.admin-records-login,
+.admin-records-create {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.admin-records-login {
+    width: min(26rem, 100%);
+    padding: 1.25rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+}
+
+.admin-records-login label,
+.admin-records-controls label {
+    display: grid;
+    gap: 0.4rem;
+    font-weight: 700;
+}
+
+.admin-records-login input,
+.admin-records-controls input,
+.admin-records-controls select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.45rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    font: inherit;
+}
+
+.admin-records-editor {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-records-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+}
+
+.admin-records-create {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+}
+
+.admin-records-create label {
+    grid-column: 1 / -1;
+}
+
+.admin-records-create small {
+    grid-column: 1 / -1;
+    color: var(--color-on-surface);
+    font-weight: 400;
+}
+
+.admin-records-button {
+    min-height: 2.65rem;
+    padding: 0.55rem 0.9rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.admin-records-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.admin-records-button-secondary {
+    border: 1px solid var(--color-background-hover);
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+}
+
+.admin-records-json {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.admin-records-json-heading label {
+    font-weight: 700;
+}
+
+.admin-records-json textarea {
+    width: 100%;
+    min-height: 60vh;
+    padding: 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.6rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    font: 0.9rem/1.5 Consolas, "Courier New", monospace;
+    resize: vertical;
+    tab-size: 4;
+}
+
+.admin-records-records {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.admin-records-records h2 {
+    font-size: 1.15rem;
+}
+
+.admin-records-records ul {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.admin-records-records li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 0.4rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+}
+
+.admin-records-record-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.6rem;
+}
+
+.admin-records-record-form label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.admin-records-record-form input:not([type="checkbox"]) {
+    min-height: 2.5rem;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.4rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    font: inherit;
+}
+
+.admin-records-record-form .admin-records-mobile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-records-record-form .admin-records-mobile input {
+    width: 1rem;
+    height: 1rem;
+}
+
+.admin-records-hint {
+    color: var(--color-on-surface);
+    font-size: 0.9rem;
+}
+
+.admin-records-message {
+    margin-block: 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.55rem;
+    background: var(--color-surface);
+}
+
+.admin-records-error {
+    border-color: var(--color-error);
+    color: var(--color-error);
+}
+
+.admin-records-success {
+    color: var(--color-primary);
+}
+
+@media (max-width: 640px) {
+    .admin-records-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-records-heading h1 {
+        font-size: 1.55rem;
+    }
+
+    .admin-records-create {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-records-record-form {
+        grid-template-columns: 1fr;
+    }
+}
