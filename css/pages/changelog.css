@@ -70,15 +70,19 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .page-changelog-container {
-        padding: 2rem;
+        padding: 1.25rem;
     }
 
     .page-changelog .changelog-entry {
-        padding: 1.5rem;
+        padding: 1.25rem;
         font-size: 1rem;
     }
 
     .page-changelog .changelog-date {
         font-size: 1.25rem;
+    }
+
+    .page-changelog .changelog-container {
+        gap: 1rem;
     }
 }

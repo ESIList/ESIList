@@ -22,8 +22,16 @@ export default {
         <main v-if="loading">
             <Spinner></Spinner>
         </main>
-        <main v-else class="page-list">
+        <main v-else class="page-list" :class="{ 'mobile-details-open': mobileDetailsOpen }">
             <div class="list-container">
+                <div class="list-heading">
+                    <div>
+                        <p class="list-eyebrow">ESILIST RANKING</p>
+                        <h1>Levels</h1>
+                    </div>
+                    <span class="list-count">{{ filteredList.length }} / {{ list.length }}</span>
+                </div>
+                <p class="mobile-list-hint">Scroll the ranking and select a level to see its details.</p>
                 <div class="search-row">
                     <input
                         v-model="search"
@@ -81,8 +89,9 @@ export default {
                             <p v-else class="type-label-lg">Legacy</p>
                         </td>
                         <td class="level" :class="{ 'active': selected == item.index, 'error': !item.level }">
-                            <button @click="selected = item.index">
+                            <button @click="selectLevel(item.index)">
                                 <span class="type-label-lg">{{ item.level?.name || \`Error (\${item.err}.json)\` }}</span>
+                                <span v-if="item.level" class="level-row-hint">View level details <span aria-hidden="true">→</span></span>
                             </button>
                         </td>
                     </tr>
@@ -90,6 +99,10 @@ export default {
                 <p v-if="(search || activeFilterCount) && filteredList.length === 0" class="no-results">No levels found. Search by level name or by level placement (1, #1), or loosen the filters.</p>
             </div>
             <div class="level-container">
+                <button class="mobile-back-button" type="button" @click="backToList">
+                    <span aria-hidden="true">←</span> Back to levels
+                </button>
+
                 <div class="level" v-if="level">
                     <h1 class="level-title">
  
@@ -298,6 +311,7 @@ export default {
         editors: [],
         loading: true,
         selected: 0,
+        mobileDetailsOpen: false,
         errors: [],
         search: "",
         selectedFilters: [],
@@ -422,6 +436,7 @@ export default {
             const index = this.list.findIndex(([level]) => level.id === store.selectedLevelId);
             if (index !== -1) {
                 this.selected = index;
+                this.mobileDetailsOpen = true;
             }
             store.selectedLevelId = null; // reset after use
         }
@@ -432,6 +447,17 @@ export default {
     methods: {
         embed,
         score,
+        selectLevel(index) {
+            this.selected = index;
+            if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
+                this.mobileDetailsOpen = true;
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        },
+        backToList() {
+            this.mobileDetailsOpen = false;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        },
         // filter system methods
         isFilterSelected(id) {
             return this.selectedFilters.includes(id);

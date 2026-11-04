@@ -10,26 +10,79 @@
     padding-right: 2rem;
 }
 
+.page-list .list-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 1.25rem;
+}
+
+.page-list .list-heading h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+}
+
+.page-list .list-eyebrow {
+    margin-bottom: 0.4rem;
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.page-list .list-count {
+    flex: 0 0 auto;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.page-list .mobile-list-hint {
+    display: none;
+}
+
 .page-list .list {
+    width: 100%;
     table-layout: auto;
+    border-collapse: separate;
+    border-spacing: 0 0.35rem;
 }
 .page-list .list .rank {
+    width: 3.75rem;
     text-align: end;
     padding-right: 1rem;
+}
+.page-list .list .rank p {
+    color: var(--color-primary);
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 .page-list .list .level {
     width: 100%;
 }
 .page-list .list .level button {
-    background-color: var(--color-background);
+    display: flex;
+    width: 100%;
+    min-height: 3.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    background-color: var(--color-surface);
     color: var(--color-on-background);
     border: none;
     border-radius: 0.5rem;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     text-align: start;
     word-break: normal;
     overflow-wrap: anywhere;
     cursor: pointer;
+    transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
 }
 .page-list .list .level.error button {
     color: var(--color-error);
@@ -37,19 +90,37 @@
     text-decoration: line-through;
 }
 .page-list .list .level button:hover {
-    background-color: var(--color-background-hover);
+    background-color: var(--color-surface-hover);
     color: var(--color-on-background-hover);
+    transform: translateX(2px);
 }
 .page-list .list .level.active button {
     background-color: var(--color-primary);
     color: var(--color-on-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+.page-list .level-row-hint {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    opacity: 0.68;
+}
+.page-list .list .level.active .level-row-hint {
+    opacity: 0.9;
 }
 .page-list .level-container .level {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    padding-right: 2rem;
+    padding: 1.5rem;
     max-width: 48rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 1rem;
+    background: var(--color-background);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.page-list .mobile-back-button {
+    display: none;
 }
 
 .page-list .level-container .level .level-title {
@@ -124,6 +195,11 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
 }
 .page-list .meta .errors {
     display: flex;
@@ -364,6 +440,129 @@ main.dark .page-list .level-container .tag {
     opacity: 1;
     transform: scale(1.1);
 }
+
+@media screen and (max-width: 900px), screen and (pointer: coarse) {
+    .page-list .list-container {
+        height: calc(100dvh - 10rem);
+        max-height: calc(100dvh - 10rem);
+        min-height: 20rem;
+        overflow-y: auto;
+        padding: 1rem;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .page-list .level-container,
+    .page-list .meta-container {
+        padding: 1.25rem 1rem;
+        display: none;
+    }
+
+    .page-list.mobile-details-open .list-container {
+        display: none;
+    }
+
+    .page-list.mobile-details-open .level-container,
+    .page-list.mobile-details-open .meta-container {
+        display: block;
+    }
+
+    .page-list .mobile-back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding: 0.65rem 0.9rem;
+        border: 1px solid var(--color-background-hover);
+        border-radius: 999px;
+        background: var(--color-surface);
+        color: var(--color-on-surface);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .page-list .list-heading h1 {
+        font-size: 1.65rem;
+    }
+
+    .page-list .mobile-list-hint {
+        display: block;
+        margin: 0 0 0.75rem;
+        color: var(--color-on-background);
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    .page-list .level-container .level {
+        max-width: none;
+        padding: 1.25rem;
+        gap: 1.25rem;
+    }
+
+    .page-list .level-container .level .stats {
+        flex-wrap: wrap;
+        gap: 1.25rem;
+    }
+
+    .page-list .level-container .level .records {
+        width: 100%;
+    }
+
+    .page-list .level-container .level .video {
+        width: 100%;
+        height: auto;
+    }
+
+    .page-list .level-container .level .records .user {
+        overflow-wrap: anywhere;
+    }
+
+    .page-list .level-container .level .records .record-phrase {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .position-history-cards {
+        max-width: none;
+        padding-right: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .page-list .level-container .level .level-subtitle {
+        font-size: 1.05rem;
+    }
+
+    .page-list .list-container {
+        height: calc(100dvh - 9rem);
+        max-height: calc(100dvh - 9rem);
+        min-height: 18rem;
+    }
+
+    .page-list:not(.mobile-details-open) .list .level.active button {
+        background: var(--color-surface);
+        color: var(--color-on-background);
+        box-shadow: none;
+    }
+
+    .page-list .level-row-hint {
+        font-size: 0;
+    }
+
+    .page-list .level-row-hint span {
+        font-size: 1.1rem;
+    }
+
+    .history-card {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .history-card .history-reason {
+        grid-column: 1 / -1;
+    }
+}
+
 .page-list .list-container .level-search {
     width: 100%;
     box-sizing: border-box;
@@ -381,6 +580,53 @@ main.dark .page-list .level-container .tag {
 .page-list .list-container .no-results {
     opacity: 0.75;
     padding: 1rem;
+}
+
+@media screen and (min-width: 901px) and (pointer: fine) {
+    .page-list .list-heading {
+        display: none;
+    }
+
+    .page-list .list {
+        width: auto;
+        table-layout: auto;
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+
+    .page-list .list .rank {
+        width: auto;
+        text-align: end;
+        padding-right: 1rem;
+    }
+
+    .page-list .list .rank p {
+        color: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+    }
+
+    .page-list .list .level button {
+        display: inline-block;
+        width: auto;
+        min-height: 0;
+        background-color: var(--color-background);
+        padding: 1rem;
+        transition: none;
+    }
+
+    .page-list .list .level button:hover {
+        background-color: var(--color-background-hover);
+        transform: none;
+    }
+
+    .page-list .list .level.active button {
+        box-shadow: none;
+    }
+
+    .page-list .level-row-hint {
+        display: none;
+    }
 }
 
 /* ===== FILTERS ===== */

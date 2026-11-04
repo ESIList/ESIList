@@ -116,7 +116,7 @@
     border-radius: 0.5rem;
 }
 
-@media screen and (min-width: 1366px) {
+@media screen and (min-width: 1366px) and (pointer: fine) {
     .page-roulette .levels-container {
         grid-column: 2;
         padding-right: 0;
@@ -127,5 +127,84 @@
         padding-right: 2rem;
         padding-block: 2rem;
         align-self: stretch;
+    }
+}
+
+.page-roulette .sidebar .roulette-filters {
+    display: grid;
+    width: 100%;
+    gap: 0.75rem;
+}
+
+.page-roulette .sidebar .roulette-filters label {
+    font-weight: 700;
+}
+
+.page-roulette .sidebar .roulette-filters select,
+.page-roulette .sidebar .roulette-filters input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.65rem;
+    border: 1px solid var(--color-scrollbar-thumb);
+    border-radius: 0.5rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+}
+
+.page-roulette .sidebar .rank-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.page-roulette .sidebar .rank-range label {
+    grid-column: 1 / -1;
+}
+
+@media screen and (max-width: 900px), screen and (pointer: coarse) {
+    .page-roulette .sidebar {
+        grid-column: 1;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .page-roulette .sidebar .options {
+        width: 100%;
+    }
+
+    .page-roulette .levels-container {
+        grid-column: 1;
+        grid-row: auto;
+        max-height: none;
+        padding: 0 1rem;
+        overflow: visible;
+    }
+
+    .page-roulette .levels {
+        padding-block: 1rem;
+        gap: 1rem;
+    }
+
+    .page-roulette .levels .level {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .page-roulette .levels .level .video img {
+        aspect-ratio: 16 / 9;
+    }
+
+    .page-roulette .levels .level .actions {
+        grid-column: 1;
+        flex-wrap: wrap;
+    }
+
+    .page-roulette .levels .level .actions input[type="number"] {
+        min-width: 100%;
+    }
+
+    .page-roulette .toasts-container {
+        grid-column: 1;
+        grid-row: auto;
+        margin: 0 1rem 1rem;
     }
 }

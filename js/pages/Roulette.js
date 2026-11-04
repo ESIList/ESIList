@@ -3,6 +3,7 @@ import { getThumbnailFromId, getYoutubeIdFromUrl, shuffle } from '../util.js';
 
 import Spinner from '../components/Spinner.js';
 import Btn from '../components/Btn.js';
+import filterRegistry, { normalizeFilterId } from '../components/List/Filters.js';
 
 export default {
     components: { Spinner, Btn },
@@ -17,12 +18,49 @@ export default {
                 </p>
                 <form class="options">
                     <div class="check">
-                        <input type="checkbox" id="main" value="Main List" v-model="useMainList">
+                        <input type="checkbox" id="main" value="Main List" v-model="useMainList" :disabled="customRange" @change="updateRankRange">
                         <label for="main">Main List</label>
                     </div>
                     <div class="check">
-                        <input type="checkbox" id="extended" value="Extended List" v-model="useExtendedList">
+                        <input type="checkbox" id="extended" value="Extended List" v-model="useExtendedList" :disabled="customRange" @change="updateRankRange">
                         <label for="extended">Extended List</label>
+                    </div>
+                    <div class="check">
+                        <input type="checkbox" id="custom-range" v-model="customRange" @change="onCustomRangeChange">
+                        <label for="custom-range">Custom</label>
+                    </div>
+                    <div class="roulette-filters">
+                        <label for="roulette-filter">Gameplay filter</label>
+                        <select id="roulette-filter" v-model="selectedFilter">
+                            <option value="">All filters</option>
+                            <option v-for="filter in filterOptions" :key="filter.id" :value="filter.id">{{ filter.name }}</option>
+                        </select>
+
+                        <div class="rank-range" v-if="customRange">
+                            <label>Custom rank range</label>
+                            <input
+                                v-model="minRank"
+                                type="number"
+                                min="1"
+                                max="150"
+                                step="1"
+                                inputmode="numeric"
+                                aria-label="Minimum rank"
+                                placeholder="From"
+                            >
+                            <input
+                                v-model="maxRank"
+                                type="number"
+                                min="1"
+                                max="150"
+                                step="1"
+                                inputmode="numeric"
+                                aria-label="Maximum rank"
+                                placeholder="To"
+                            >
+                        </div>
+                        <p class="type-label-md" v-if="customRange">Custom uses this range instead of Main/Extended.</p>
+                        <p class="type-label-md">The roulette draws up to 100 matching levels.</p>
                     </div>
                     <Btn @click.native.prevent="onStart">{{ levels.length === 0 ? 'Start' : 'Restart'}}</Btn>
                 </form>
@@ -108,6 +146,11 @@ export default {
         showRemaining: false,
         useMainList: true,
         useExtendedList: true,
+        customRange: false,
+        selectedFilter: '',
+        minRank: 1,
+        maxRank: 150,
+        filterOptions: filterRegistry,
         toasts: [],
         fileInput: undefined,
     }),
@@ -128,6 +171,14 @@ export default {
 
         this.levels = roulette.levels;
         this.progression = roulette.progression;
+        if (roulette.settings) {
+            this.useMainList = roulette.settings.useMainList ?? this.useMainList;
+            this.useExtendedList = roulette.settings.useExtendedList ?? this.useExtendedList;
+            this.customRange = roulette.settings.customRange ?? this.customRange;
+            this.selectedFilter = roulette.settings.selectedFilter ?? this.selectedFilter;
+            this.minRank = roulette.settings.minRank ?? this.minRank;
+            this.maxRank = roulette.settings.maxRank ?? this.maxRank;
+        }
     },
     computed: {
         currentLevel() {
@@ -157,13 +208,49 @@ export default {
         shuffle,
         getThumbnailFromId,
         getYoutubeIdFromUrl,
+        updateRankRange() {
+            if (this.customRange) return;
+
+            if (this.useMainList && this.useExtendedList) {
+                this.minRank = 1;
+                this.maxRank = 150;
+            } else if (this.useMainList) {
+                this.minRank = 1;
+                this.maxRank = 75;
+            } else if (this.useExtendedList) {
+                this.minRank = 76;
+                this.maxRank = 150;
+            } else {
+                this.minRank = '';
+                this.maxRank = '';
+            }
+        },
+        onCustomRangeChange() {
+            if (!this.customRange) {
+                this.updateRankRange();
+            }
+        },
         async onStart() {
             if (this.isActive) {
                 this.showToast('Give up before starting a new roulette.');
                 return;
             }
 
-            if (!this.useMainList && !this.useExtendedList) {
+            if (!this.customRange && !this.useMainList && !this.useExtendedList) {
+                this.showToast('Choose at least one list.');
+                return;
+            }
+
+            const minRank = this.minRank === '' ? 1 : Number(this.minRank);
+            const maxRank = this.maxRank === '' ? 150 : Number(this.maxRank);
+            if (
+                !Number.isInteger(minRank) ||
+                !Number.isInteger(maxRank) ||
+                minRank < 1 ||
+                maxRank > 150 ||
+                minRank > maxRank
+            ) {
+                this.showToast('Enter a valid rank range between 1 and 150.');
                 return;
             }
 
@@ -171,7 +258,7 @@ export default {
 
             const fullList = await fetchList();
 
-            if (fullList.filter(([_, err]) => err).length > 0) {
+            if (!fullList || fullList.some(([_, err]) => err)) {
                 this.loading = false;
                 this.showToast(
                     'List is currently broken. Wait until it\'s fixed to start a roulette.',
@@ -179,19 +266,42 @@ export default {
                 return;
             }
 
-            const fullListMapped = fullList.map(([lvl, _], i) => ({
-                rank: i + 1,
-                id: lvl.id,
-                name: lvl.name,
-                video: lvl.verification,
-            }));
-            const list = [];
-            if (this.useMainList) list.push(...fullListMapped.slice(0, 75));
-            if (this.useExtendedList) {
-                list.push(...fullListMapped.slice(75, 150));
+            const list = fullList
+                .map(([level], i) => ({
+                    rank: i + 1,
+                    id: level.id,
+                    name: level.name,
+                    video: level.verification,
+                    filters: Array.isArray(level.filters) ? level.filters : [],
+                }))
+                .filter((level) => {
+                    const inSelectedList =
+                        this.customRange ||
+                        (level.rank <= 75 && this.useMainList) ||
+                        (level.rank > 75 && level.rank <= 150 && this.useExtendedList);
+                    if (!inSelectedList || level.rank < minRank || level.rank > maxRank) {
+                        return false;
+                    }
+
+                    if (
+                        this.selectedFilter &&
+                        !level.filters.some(
+                            (filter) => normalizeFilterId(filter) === this.selectedFilter,
+                        )
+                    ) {
+                        return false;
+                    }
+
+                    return true;
+                })
+                .map(({ rank, id, name, video }) => ({ rank, id, name, video }));
+
+            if (list.length === 0) {
+                this.loading = false;
+                this.showToast('No levels match the selected options.');
+                return;
             }
 
-            // random 100 levels
             this.levels = shuffle(list).slice(0, 100);
             this.showRemaining = false;
             this.givenUp = false;
@@ -199,6 +309,7 @@ export default {
             this.percentage = undefined;
 
             this.loading = false;
+            this.save();
         },
         save() {
             localStorage.setItem(
@@ -206,6 +317,14 @@ export default {
                 JSON.stringify({
                     levels: this.levels,
                     progression: this.progression,
+                    settings: {
+                        useMainList: this.useMainList,
+                        useExtendedList: this.useExtendedList,
+                        customRange: this.customRange,
+                        selectedFilter: this.selectedFilter,
+                        minRank: this.minRank,
+                        maxRank: this.maxRank,
+                    },
                 }),
             );
         },
@@ -263,6 +382,14 @@ export default {
 
                 this.levels = roulette.levels;
                 this.progression = roulette.progression;
+                if (roulette.settings) {
+                    this.useMainList = roulette.settings.useMainList ?? this.useMainList;
+                    this.useExtendedList = roulette.settings.useExtendedList ?? this.useExtendedList;
+                    this.customRange = roulette.settings.customRange ?? this.customRange;
+                    this.selectedFilter = roulette.settings.selectedFilter ?? this.selectedFilter;
+                    this.minRank = roulette.settings.minRank ?? this.minRank;
+                    this.maxRank = roulette.settings.maxRank ?? this.maxRank;
+                }
                 this.save();
                 this.givenUp = false;
                 this.showRemaining = false;
@@ -277,6 +404,14 @@ export default {
                 [JSON.stringify({
                     levels: this.levels,
                     progression: this.progression,
+                    settings: {
+                        useMainList: this.useMainList,
+                        useExtendedList: this.useExtendedList,
+                        customRange: this.customRange,
+                        selectedFilter: this.selectedFilter,
+                        minRank: this.minRank,
+                        maxRank: this.maxRank,
+                    },
                 })],
                 { type: 'application/json' },
             );

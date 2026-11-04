@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=1024" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>ESIList</title>
         <meta name="description" content="La Demonlist oficial de la ESI, la llamamos ESIList, aunque sea un nombre de amigo y la Escuela Superior de Ingeniería no sea amiga de nadie. Creada por Ninjedu." />
 
@@ -18,6 +18,7 @@
         <link rel="stylesheet" type="text/css" href="/css/typography.css" />
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
+        <link rel="stylesheet" type="text/css" href="/css/pages/comparator.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/runs.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/tags.css" />
         <link
@@ -43,41 +44,93 @@
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <header :class="{ dark: store.dark }">
+        <header :class="{ dark: store.dark }" :data-theme="store.theme">
             <div class="logo">
                 <h2>ESIList</h2>
                 <p>v2.0.2</p>
             </div>
             <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/runs">
-                    <span class="type-label-lg">Verifications</span>
-                </router-link>
-                <router-link class="nav__tab" to="/tags">
-                    <span class="type-label-lg">Packs</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
-                <router-link class="nav__tab" to="/changelog">
-                    <span class="type-label-lg">Changelog</span>
-                </router-link>
+                <div class="nav__links">
+                    <router-link class="nav__tab" to="/">
+                        <span class="type-label-lg">List</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/compare">
+                        <span class="type-label-lg">Compare</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/runs">
+                        <span class="type-label-lg">Verifications</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/tags">
+                        <span class="type-label-lg">Packs</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/leaderboard">
+                        <span class="type-label-lg">Leaderboard</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/roulette">
+                        <span class="type-label-lg">Roulette</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/changelog">
+                        <span class="type-label-lg">Changelog</span>
+                    </router-link>
+                </div>
 
                 <div class="nav__actions">
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                        />
-                    </button>
+                    <details class="nav__theme-menu">
+                        <summary class="nav__tab nav__theme-button" aria-label="Choose a site theme">
+                            <span aria-hidden="true">🎨</span>
+                            <span>Themes</span>
+                        </summary>
+                        <div class="nav__theme-options" role="group" aria-label="Site themes" :style="{ '--slider-hue': store.customHue }">
+                            <div class="nav__theme-sliders">
+                                <label class="nav__theme-slider-label" for="theme-hue">
+                                    <span>Color</span>
+                                    <output>{{ Math.round(store.customHue) }}°</output>
+                                </label>
+                                <input
+                                    id="theme-hue"
+                                    class="nav__theme-slider nav__theme-hue"
+                                    type="range"
+                                    min="0"
+                                    max="360"
+                                    step="1"
+                                    :value="store.customHue"
+                                    :style="{ '--slider-hue': store.customHue }"
+                                    aria-label="Theme color"
+                                    @input="store.updateCustomTheme('hue', $event.target.value)"
+                                />
+                                <label class="nav__theme-slider-label" for="theme-shade">
+                                    <span>Light to dark</span>
+                                    <output>{{ store.customShade }}%</output>
+                                </label>
+                                <input
+                                    id="theme-shade"
+                                    class="nav__theme-slider nav__theme-shade"
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    step="1"
+                                    :value="store.customShade"
+                                    :style="{ '--slider-hue': store.customHue }"
+                                    aria-label="Theme shade from light to dark"
+                                    @input="store.updateCustomTheme('shade', $event.target.value)"
+                                />
+                            </div>
+                            <div class="nav__theme-presets">
+                                <button
+                                    v-for="theme in store.themes"
+                                    :key="theme.id"
+                                    type="button"
+                                    class="nav__theme-option"
+                                    :class="{ selected: store.theme === theme.id }"
+                                    :aria-pressed="store.theme === theme.id"
+                                    @click="store.setTheme(theme.id)"
+                                >
+                                    <span class="nav__theme-swatch" :class="'swatch-' + theme.id" aria-hidden="true"></span>
+                                    {{ theme.name }}
+                                </button>
+                            </div>
+                        </div>
+                    </details>
                     <!-- Replace the '#' with your discord server's invite-->
                     <a class="nav__icon" href="https://youtu.be/8IVsNA_o1wE?si=tNU_LWOCUyFKPRho">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
@@ -92,6 +145,6 @@
                 </div>
             </nav>
         </header>
-        <router-view :class="{ dark: store.dark }"></router-view>
+        <router-view :class="{ dark: store.dark }" :data-theme="store.theme"></router-view>
     </body>
 </html>

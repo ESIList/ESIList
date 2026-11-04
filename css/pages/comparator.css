@@ -1,0 +1,162 @@
+.page-comparator {
+    display: block;
+    grid-column: 1 / -1;
+    overflow-y: auto;
+    padding: 1rem clamp(1rem, 4vw, 3rem) 3rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    transition: background-color 180ms ease, color 180ms ease;
+}
+
+.comparator-content {
+    width: min(100%, 76rem);
+    margin: 0 auto;
+}
+
+.comparator-heading {
+    margin-bottom: 2rem;
+}
+
+.comparator-heading h1 {
+    display: block;
+    margin: 0 0 1.35rem;
+    padding-bottom: 0.1rem;
+    line-height: 1.2;
+}
+
+.comparator-heading > p:last-child {
+    max-width: 42rem;
+    margin: 0;
+    line-height: 1.65;
+    color: var(--color-on-background);
+    opacity: 0.75;
+}
+
+.page-comparator .compare-selectors {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.page-comparator .compare-selectors label {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 700;
+}
+
+.page-comparator .compare-selectors select {
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid var(--color-scrollbar-thumb);
+    border-radius: 0.5rem;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    font: inherit;
+}
+
+.page-comparator .compare-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 1rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.page-comparator .compare-table {
+    width: 100%;
+    table-layout: fixed;
+    font-family: "Lexend Deca", sans-serif;
+    font-size: 0.95rem;
+}
+
+.page-comparator .compare-table th,
+.page-comparator .compare-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-background-hover);
+    text-align: start;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.page-comparator .compare-table tbody tr:nth-child(even) {
+    background: color-mix(in srgb, var(--color-background) 48%, transparent);
+}
+
+.page-comparator .compare-table thead th {
+    background: var(--color-background);
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.page-comparator .compare-table thead th:first-child {
+    width: 10rem;
+}
+
+.page-comparator .compare-table tbody th {
+    font-weight: 700;
+}
+
+.page-comparator .compare-level-rank {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+}
+
+.comparator-message {
+    padding: 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+}
+
+@media screen and (max-width: 600px), screen and (pointer: coarse) {
+    .page-comparator .compare-selectors {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .page-comparator .compare-table,
+    .page-comparator .compare-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .page-comparator .compare-table thead {
+        display: none;
+    }
+
+    .page-comparator .compare-table tr {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid var(--color-background-hover);
+    }
+
+    .page-comparator .compare-table th,
+    .page-comparator .compare-table td {
+        min-width: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .page-comparator .compare-table tbody th {
+        grid-column: 1 / -1;
+        color: var(--color-primary);
+        font-size: 0.85rem;
+    }
+}

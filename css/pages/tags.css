@@ -212,7 +212,7 @@
 }
 
 /* Responsive */
-@media (max-width: 900px) {
+@media (max-width: 900px), (pointer: coarse) {
   .page-tags {
     padding: 1.5rem;
   }
@@ -256,5 +256,31 @@
 
   .page-tag-detail .list.tag-detail-list td.author {
     font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-tags {
+    padding: 1rem;
+  }
+
+  .page-tags .tag-card {
+    width: 100%;
+    max-width: none;
+  }
+
+  .page-tag-detail {
+    min-height: 0;
+    margin: 0;
+    padding: 1.25rem;
+  }
+
+  .page-tag-detail .tag-info-cards {
+    margin-left: 0;
+  }
+
+  .page-tag-detail .levels-container {
+    max-height: none;
+    padding: 1rem;
   }
 }
