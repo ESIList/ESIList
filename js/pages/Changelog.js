@@ -11,6 +11,7 @@ export default {
             • Mobile App: Now, you can see the list as it should be on your phone<br>
             • New Roulette filters<br>
             • Added Level Comparator<br>
+            • Added a bad translation :skull:<br>
           `,
           featured: true,
         },
