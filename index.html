@@ -19,7 +19,6 @@
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/comparator.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/runs.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/tags.css" />
         <link
             rel="stylesheet"
@@ -47,40 +46,71 @@
         <header :class="{ dark: store.dark }" :data-theme="store.theme">
             <div class="logo">
                 <h2>ESIList</h2>
-                <p>v2.0.2</p>
+                <p>v2.1</p>
             </div>
             <nav class="nav">
                 <div class="nav__links">
-                    <router-link class="nav__tab" to="/">
-                        <span class="type-label-lg">List</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/compare">
-                        <span class="type-label-lg">Compare</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/runs">
-                        <span class="type-label-lg">Verifications</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/tags">
-                        <span class="type-label-lg">Packs</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/leaderboard">
-                        <span class="type-label-lg">Leaderboard</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/roulette">
-                        <span class="type-label-lg">Roulette</span>
-                    </router-link>
+                    <details class="nav__menu-group" name="site-navigation">
+                        <summary
+                            class="nav__tab nav__menu-trigger"
+                            :class="{ 'router-link-active': ['/', '/runs', '/leaderboard'].includes($route.path) }"
+                        >
+                            <span class="type-label-lg">List</span>
+                            <span class="nav__menu-chevron" aria-hidden="true">▾</span>
+                        </summary>
+                        <div class="nav__menu-options">
+                            <router-link class="nav__menu-item" to="/" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">List</span>
+                            </router-link>
+                            <router-link class="nav__menu-item" to="/leaderboard" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">Leaderboard</span>
+                            </router-link>
+                            <router-link class="nav__menu-item" to="/runs" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">Verifications</span>
+                            </router-link>
+                        </div>
+                    </details>
+                    <details class="nav__menu-group" name="site-navigation">
+                        <summary
+                            class="nav__tab nav__menu-trigger"
+                            :class="{ 'router-link-active': ['/compare', '/roulette', '/tags'].includes($route.path) || $route.path.startsWith('/tags/') }"
+                        >
+                            <span class="type-label-lg">Utilities</span>
+                            <span class="nav__menu-chevron" aria-hidden="true">▾</span>
+                        </summary>
+                        <div class="nav__menu-options">
+                            <router-link class="nav__menu-item" to="/compare" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">Compare</span>
+                            </router-link>
+                            <router-link class="nav__menu-item" to="/roulette" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">Roulette</span>
+                            </router-link>
+                            <router-link class="nav__menu-item" to="/tags" @click="$event.currentTarget.closest('details').open = false">
+                                <span class="type-label-lg">Packs</span>
+                            </router-link>
+                        </div>
+                    </details>
                     <router-link class="nav__tab" to="/changelog">
                         <span class="type-label-lg">Changelog</span>
                     </router-link>
                 </div>
 
                 <div class="nav__actions">
-                    <details class="nav__theme-menu">
-                        <summary class="nav__tab nav__theme-button" aria-label="Choose a site theme">
-                            <span aria-hidden="true">🎨</span>
-                            <span>Themes</span>
+                    <details class="nav__theme-menu" name="site-navigation">
+                        <summary class="nav__icon nav__theme-button" aria-label="Themes" title="Themes">
+                            <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
+                            <span class="type-label-lg">Themes</span>
                         </summary>
                         <div class="nav__theme-options" role="group" aria-label="Site themes" :style="{ '--slider-hue': store.customHue }">
+                            <button
+                                class="nav__theme-mode"
+                                type="button"
+                                :aria-pressed="store.dark"
+                                @click="store.toggleDark()"
+                            >
+                                <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
+                                {{ store.dark ? 'Switch to light mode' : 'Switch to dark mode' }}
+                            </button>
                             <div class="nav__theme-sliders">
                                 <label class="nav__theme-slider-label" for="theme-hue">
                                     <span>Color</span>

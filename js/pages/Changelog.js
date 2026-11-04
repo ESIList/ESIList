@@ -4,6 +4,17 @@ export default {
     return {
       changelog: [
         {
+          date: "4-11-2026",
+          message: `
+            • Release of ESIList v2.1<br>
+            • Added configurable color themes, presets and light/dark mode controls.<br>
+            • Grouped the navigation into List and Utilities menus and improved desktop and mobile layouts.<br>
+            • Added a dedicated level comparison page and improved mobile leaderboard profiles.<br>
+            • Improved the mobile verification list and roulette controls.<br>
+          `,
+          featured: true,
+        },
+        {
           date: "3-11-2026",
           message: `
             • Release of ESIList v2.0.2<br>

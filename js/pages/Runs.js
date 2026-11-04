@@ -19,7 +19,7 @@ export default {
         <main v-if="loading">
             <Spinner></Spinner>
         </main>
-        <main v-else class="page-list">
+        <main v-else class="page-list" :class="{ 'mobile-details-open': mobileDetailsOpen }">
             <div class="list-container">
                 <table class="list" v-if="runs">
                     <tr v-for="([level, err], i) in runs">
@@ -28,7 +28,7 @@ export default {
                             <p v-else class="type-label-lg">Legacy</p>
                         </td>
                         <td class="level" :class="{ 'active': selected == i, 'error': !level }">
-                            <button @click="selected = i">
+                            <button @click="selectRun(i)">
                                 <span class="type-label-lg">{{ level?.name || \`Error (\${err}.json)\` }}</span>
                             </button>
                         </td>
@@ -37,6 +37,9 @@ export default {
             </div>
 
             <div class="level-container">
+                <button class="mobile-back-button" type="button" @click="backToRuns">
+                    <span aria-hidden="true">←</span> Back to verifications
+                </button>
                 <div class="level" v-if="level">
                     <h1 class="level-title">
                         {{ level.name }}
@@ -186,15 +189,17 @@ export default {
         editors: [],
         loading: true,
         selected: 0,
+        mobileDetailsOpen: false,
         errors: [],
         roleIconMap,
         store
     }),
     computed: {
         level() {
-            return this.runs[this.selected][0];
+            return this.runs[this.selected]?.[0] ?? null;
         },
         video() {
+            if (!this.level) return "";
             if (!this.level.showcase) {
                 return embed(this.level.verification);
             }
@@ -226,5 +231,16 @@ export default {
     },
     methods: {
         embed,
+        selectRun(index) {
+            this.selected = index;
+            if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
+                this.mobileDetailsOpen = true;
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        },
+        backToRuns() {
+            this.mobileDetailsOpen = false;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        },
     },
 };

@@ -1,15 +1,15 @@
 import routes from './routes.js';
 
 const themes = [
-    { id: 'violet', name: 'Violet' },
-    { id: 'ocean', name: 'Ocean' },
-    { id: 'forest', name: 'Forest' },
-    { id: 'sunset', name: 'Sunset' },
-    { id: 'rose', name: 'Rose' },
-    { id: 'amber', name: 'Amber' },
-    { id: 'arctic', name: 'Arctic' },
-    { id: 'midnight', name: 'Midnight' },
-    { id: 'graphite', name: 'Graphite' },
+    { id: 'violet', name: 'Violet', hue: 270, shade: 20 },
+    { id: 'ocean', name: 'Ocean', hue: 198, shade: 5 },
+    { id: 'forest', name: 'Forest', hue: 132, shade: 5 },
+    { id: 'sunset', name: 'Sunset', hue: 20, shade: 5 },
+    { id: 'rose', name: 'Rose', hue: 338, shade: 5 },
+    { id: 'amber', name: 'Amber', hue: 38, shade: 5 },
+    { id: 'arctic', name: 'Arctic', hue: 183, shade: 5 },
+    { id: 'midnight', name: 'Midnight', hue: 236, shade: 96 },
+    { id: 'graphite', name: 'Graphite', hue: 210, shade: 94 },
     { id: 'custom', name: 'Custom' },
 ];
 
@@ -20,6 +20,7 @@ const initialTheme = themes.some(({ id }) => id === savedTheme)
     : legacyDark
         ? 'midnight'
         : 'violet';
+const initialThemePreset = themes.find(({ id }) => id === initialTheme);
 
 document.body.dataset.theme = initialTheme;
 
@@ -62,8 +63,18 @@ function applyCustomTheme(hue, shade) {
     return isDark;
 }
 
-const initialHue = boundedNumber(localStorage.getItem('custom-theme-hue'), 270, 0, 360);
-const initialShade = boundedNumber(localStorage.getItem('custom-theme-shade'), 20, 0, 100);
+const initialHue = boundedNumber(
+    initialTheme === 'custom' ? localStorage.getItem('custom-theme-hue') : initialThemePreset?.hue,
+    270,
+    0,
+    360,
+);
+const initialShade = boundedNumber(
+    initialTheme === 'custom' ? localStorage.getItem('custom-theme-shade') : initialThemePreset?.shade,
+    20,
+    0,
+    100,
+);
 if (initialTheme === 'custom') applyCustomTheme(initialHue, initialShade);
 
 export const store = Vue.reactive({
@@ -76,17 +87,26 @@ export const store = Vue.reactive({
             (this.theme === 'custom' && 98 - this.customShade * 0.84 < 50);
     },
     setTheme(themeId) {
-        if (!themes.some(({ id }) => id === themeId)) return;
+        const selectedTheme = themes.find(({ id }) => id === themeId);
+        if (!selectedTheme) return;
         this.theme = themeId;
         document.body.dataset.theme = themeId;
         if (themeId === 'custom') {
             this.customShade = Math.max(0, Math.min(100, this.customShade));
             applyCustomTheme(this.customHue, this.customShade);
         } else {
+            this.customHue = selectedTheme.hue;
+            this.customShade = selectedTheme.shade;
+            localStorage.setItem('custom-theme-hue', String(this.customHue));
+            localStorage.setItem('custom-theme-shade', String(this.customShade));
             document.body.dataset.themeDark = String(this.dark);
         }
         localStorage.setItem('theme', themeId);
         localStorage.setItem('dark', JSON.stringify(this.dark));
+    },
+    toggleDark() {
+        this.customShade = this.dark ? 5 : 96;
+        this.setTheme('custom');
     },
     updateCustomTheme(property, value) {
         if (property === 'hue') {

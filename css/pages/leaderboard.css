@@ -139,6 +139,10 @@
     border-top: 2px solid var(--color-scrollbar-thumb);
 }
 
+.page-leaderboard .mobile-board-button {
+    display: none;
+}
+
 @media screen and (max-width: 900px), screen and (pointer: coarse) {
     .page-leaderboard {
         height: auto;
@@ -168,20 +172,93 @@
         overflow-y: auto;
     }
 
+    .page-leaderboard.player-selected .board-container {
+        display: none;
+    }
+
     .page-leaderboard .player {
+        min-width: 0;
         padding: 0 1rem 2rem;
     }
 
     .page-leaderboard .player .table {
+        display: block;
+        width: 100%;
+        table-layout: auto;
+    }
+
+    .page-leaderboard .player .table tbody {
+        display: block;
         width: 100%;
     }
 
-    .page-leaderboard .player .table tr td:not(:last-child) {
-        padding-right: 0.75rem;
+    .page-leaderboard .player .table tr {
+        display: grid;
+        grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+        align-items: start;
+        gap: 0.5rem;
+        padding: 0.65rem 0;
+        border-bottom: 1px solid var(--color-background-hover);
+    }
+
+    .page-leaderboard .player .table td {
+        min-width: 0;
+        padding: 0 !important;
+        overflow-wrap: anywhere;
+    }
+
+    .page-leaderboard .player .table .rank p,
+    .page-leaderboard .player .table .score p {
+        padding-block: 0.15rem;
+        text-align: start;
+    }
+
+    .page-leaderboard .player .table .score {
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .page-leaderboard .player .table .level a {
+        padding-block: 0;
+    }
+
+    .page-leaderboard .player .table .level .level-subtitle,
+    .page-leaderboard .player .table .level .level-phrase {
+        margin-top: 0.25rem;
+        padding-block: 0;
+        font-size: 0.9rem;
+    }
+
+    .page-leaderboard .player .bonus-table tr {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .page-leaderboard .mobile-board-button {
+        display: inline-flex;
+        align-self: flex-start;
+        margin-bottom: 0.5rem;
+        padding: 0.6rem 0.85rem;
+        border: 1px solid var(--color-background-hover);
+        border-radius: 999px;
+        background: var(--color-surface);
+        color: var(--color-on-surface);
+        font: inherit;
+        cursor: pointer;
     }
 
     .global-graph-container {
         overflow-x: auto;
+    }
+
+    .graph-container,
+    .global-graph-container {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .graph-container canvas,
+    .global-graph-container canvas {
+        max-width: 100%;
     }
 }
 

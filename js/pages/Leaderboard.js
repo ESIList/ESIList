@@ -30,7 +30,7 @@ export default {
             <Spinner></Spinner>
         </main>
         <main v-else class="page-leaderboard-container">
-            <div class="page-leaderboard">
+            <div class="page-leaderboard" :class="{ 'player-selected': !showingGlobalGraph }">
                 <div class="error-container">
                     <p class="error" v-if="err.length > 0">
                         Leaderboard may be incorrect, as the following levels could not be loaded: {{ err.join(', ') }}
@@ -79,6 +79,9 @@ export default {
 
                     <!-- Individual Player View -->
                     <div class="player" v-else>
+                        <button class="mobile-board-button" type="button" @click="showGlobalGraph">
+                            ← All players
+                        </button>
                         <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
                         <h3>{{ entry.total }}</h3>
 
@@ -116,7 +119,7 @@ export default {
                         </table>
 
                         <h2 v-if="entry.tagBonuses && entry.tagBonuses.length > 0">Bonus Pack points ({{ entry.tagBonuses.length }})</h2>
-                        <table class="table" v-if="entry.tagBonuses && entry.tagBonuses.length > 0">
+                        <table class="table bonus-table" v-if="entry.tagBonuses && entry.tagBonuses.length > 0">
                             <tr v-for="bonus in entry.tagBonuses" :key="bonus.name">
                                 <td class="level"><p>{{ bonus.name }}</p></td>
                                 <td class="score"><p>+{{ localize(bonus.bonus) }}</p></td>
@@ -128,7 +131,7 @@ export default {
                             <tr v-for="score in entry.progressed">
                                 <td class="rank"><p>#{{ score.rank }}</p></td>
                                 <td class="level">
-                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a></td>
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a>
                                     <p v-if="getPhrase(score.level)" class="level-phrase">
                                         – “{{ getPhrase(score.level) }}”
                                     </p>
@@ -271,6 +274,9 @@ export default {
         selectPlayer(index) {
             this.selected = index;
             this.showingGlobalGraph = false;
+            if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
         },
 
         showGlobalGraph() {

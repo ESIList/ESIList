@@ -11,7 +11,7 @@ export default {
         <main v-if="loading">
             <Spinner></Spinner>
         </main>
-        <main v-else class="page-roulette">
+        <main v-else class="page-roulette" :class="{ 'roulette-playing': isPlaying }">
             <div class="sidebar">
                 <p class="type-label-md" style="color: #aaa">
                     Shameless copy of the Extreme Demon Roulette by <a href="https://matcool.github.io/extreme-demon-roulette/" target="_blank">matcool</a>.
@@ -202,6 +202,9 @@ export default {
                 !this.givenUp &&
                 !this.hasCompleted
             );
+        },
+        isPlaying() {
+            return this.levels.length > 0 && !this.givenUp && !this.hasCompleted;
         },
     },
     methods: {

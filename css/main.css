@@ -207,9 +207,19 @@ body {
 body {
     display: flex;
     flex-direction: column;
+    width: 100%;
+    min-width: 0;
     margin: 0;
     background-color: var(--color-background);
     color: var(--color-on-background);
+    font-family: "Lexend Deca", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
 }
 
 header,
@@ -227,6 +237,8 @@ main {
 header {
     display: flex;
     padding-inline: calc(25vw - 10rem);
+    width: 100%;
+    min-width: 0;
     height: 4rem;
     background-color: var(--color-primary);
     color: var(--color-on-primary);
@@ -246,6 +258,28 @@ header .logo {
 }
 header .nav {
     flex: 1;
+    min-width: 0;
+}
+
+header .nav__links {
+    min-width: 0;
+    flex: 1 1 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+header .nav__links::-webkit-scrollbar {
+    display: none;
+}
+
+header .nav__actions {
+    flex: 0 0 auto;
+}
+
+@media screen and (min-width: 901px) and (max-width: 1365px) and (pointer: fine) {
+    header {
+        padding-inline: 1rem;
+    }
 }
 
 main {

@@ -162,6 +162,10 @@
 }
 
 @media screen and (max-width: 900px), screen and (pointer: coarse) {
+    .page-roulette.roulette-playing .sidebar {
+        display: none;
+    }
+
     .page-roulette .sidebar {
         grid-column: 1;
         padding: 1rem;
