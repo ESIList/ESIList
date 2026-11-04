@@ -92,8 +92,12 @@ function parseAllowedFile(file) {
         throw new Error('Each file must include a path and string content.');
     }
     const isList = file.path === 'data/_list.json';
+    const isRunsList = file.path === 'data/runs/_runs.json';
     const isLevel = /^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
-    if (!isList && !isLevel) throw new Error('Only level JSON files and data/_list.json can be changed.');
+    const isRun = /^data\/runs\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
+    if (!isList && !isRunsList && !isLevel && !isRun) {
+        throw new Error('Only level and verification run JSON files and their index files can be changed.');
+    }
     if (textEncoder.encode(file.content).length > maxFileSize) throw new Error('A JSON file exceeds the 180 KB limit.');
 
     let parsed;
@@ -103,15 +107,16 @@ function parseAllowedFile(file) {
         throw new Error(`${file.path} does not contain valid JSON.`);
     }
 
-    if (isList) {
+    if (isList || isRunsList) {
         if (!Array.isArray(parsed) || parsed.length > 300 ||
             !parsed.every((name) => typeof name === 'string' && /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/.test(name)) ||
             new Set(parsed).size !== parsed.length) {
             throw new Error('The level list must contain unique, valid level names.');
         }
     } else if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object' ||
-        typeof parsed.name !== 'string' || !Array.isArray(parsed.records)) {
-        throw new Error(`${file.path} must be a level object with a name and records array.`);
+        typeof parsed.name !== 'string' || !Array.isArray(parsed.records) ||
+        (isRun && !Number.isSafeInteger(parsed.id))) {
+        throw new Error(`${file.path} must be a level or verification object with a name and records array.`);
     }
 
     return file;
@@ -147,10 +152,13 @@ async function saveFiles(files, env) {
     const reference = await githubRequest(`${api}/git/ref/heads/${branch}`, env);
     const currentCommit = reference.object.sha;
     const currentTree = await githubRequest(`${api}/git/commits/${currentCommit}`, env);
-    const levelList = files.find(({ path }) => path === 'data/_list.json');
-    if (levelList) {
+    const listFiles = files.filter(({ path }) =>
+        path === 'data/_list.json' || path === 'data/runs/_runs.json',
+    );
+    for (const levelList of listFiles) {
+        const listPath = levelList.path;
         const latestListResponse = await githubRequest(
-            `${api}/contents/data/_list.json?ref=${branch}`,
+            `${api}/contents/${listPath}?ref=${branch}`,
             env,
         );
         const latestList = JSON.parse(new TextDecoder().decode(
@@ -180,9 +188,11 @@ async function saveFiles(files, env) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            message: files.some(({ path }) => path === 'data/_list.json')
-                ? 'Update ESIList levels'
-                : `Update ${files[0].path}`,
+            message: files.some(({ path }) => path === 'data/runs/_runs.json')
+                ? 'Update ESIList verification runs'
+                : files.some(({ path }) => path === 'data/_list.json')
+                    ? 'Update ESIList levels'
+                    : `Update ${files[0].path}`,
             tree: tree.sha,
             parents: [currentCommit],
         }),
@@ -248,7 +258,7 @@ export default {
                 return jsonResponse({ error: 'Invalid request body.' }, 400, corsHeaders);
             }
             if (!Array.isArray(body.files) || body.files.length < 1 || body.files.length > 2) {
-                return jsonResponse({ error: 'Send one level file and optionally the level list.' }, 400, corsHeaders);
+                return jsonResponse({ error: 'Send one level or verification file and optionally its index.' }, 400, corsHeaders);
             }
 
             try {

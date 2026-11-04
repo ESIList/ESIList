@@ -75,10 +75,13 @@ a unique, randomly generated password before making the editor available.
 
 The login has an approximate limit of five attempts per IP per minute per
 Cloudflare location; it is not a substitute for a strong password. The editor
-only accepts level JSON files and `data/_list.json`; creating a level commits
-both files together and merges the latest list from GitHub to avoid dropping
-levels during a deployment delay. Each save is written directly to the
-configured GitHub branch.
+only accepts level and verification-run JSON files and their index files
+(`data/_list.json` and `data/runs/_runs.json`). Creating a level or run commits
+its file and index together and merges the latest index from GitHub to avoid
+dropping entries during a deployment delay. Each save is written directly to
+the configured GitHub branch. When creating a level, select its 1-based
+position in the list; levels below it shift down automatically because their
+rank is determined by the order in `data/_list.json`.
 
 ---
 

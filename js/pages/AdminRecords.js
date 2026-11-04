@@ -1,6 +1,46 @@
 import { recordsApiUrl } from '../admin/config.js';
+import { fetchList, fetchRuns } from '../content.js';
 
 const levelNamePattern = /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/;
+
+function emptyLevel(name = '') {
+    return {
+        id: '',
+        name,
+        subtitle: '-',
+        author: '',
+        verifier: '',
+        aredl: '',
+        verificationDate: '',
+        tagsText: '',
+        filtersText: '',
+        verification: '',
+        percentToQualify: '100',
+        positionHistory: [],
+        records: [],
+    };
+}
+
+function emptyRun(name = '') {
+    return {
+        id: '',
+        name,
+        author: '',
+        expectedplacement: '',
+        verifier: '',
+        verification: '',
+        percentToQualify: '0',
+        records: [],
+    };
+}
+
+function formatHistoryDate(date = new Date()) {
+    return [
+        String(date.getDate()).padStart(2, '0'),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        date.getFullYear(),
+    ].join('-');
+}
 
 export default {
     template: `
@@ -37,39 +77,179 @@ export default {
 
                 <section v-else class="admin-records-editor">
                     <p class="admin-records-hint">{{ $t('Changes are committed directly to the repository.') }}</p>
+                    <div class="admin-records-categories" role="group" :aria-label="$t('Submission type')">
+                        <button
+                            v-for="category in categories"
+                            :key="category.id"
+                            class="admin-records-category"
+                            :class="{ active: selectedCategory === category.id }"
+                            type="button"
+                            :aria-pressed="selectedCategory === category.id"
+                            @click="selectCategory(category.id)"
+                            :disabled="busy"
+                        >{{ $t(category.label) }}</button>
+                    </div>
+                    <div class="admin-records-workspace">
+                        <aside class="admin-records-sidebar">
                     <div class="admin-records-controls">
-                        <label>
-                            {{ $t('Choose a level') }}
-                            <select v-model="selectedName" @change="loadLevel" :disabled="busy">
-                                <option value="">{{ $t('Choose a level') }}</option>
-                                <option v-for="name in levels" :key="name" :value="name">{{ name }}</option>
-                            </select>
-                        </label>
-                        <form class="admin-records-create" @submit.prevent="createLevel">
+                        <form class="admin-records-create" @submit.prevent="createItem">
                             <label>
-                                {{ $t('Level file name') }}
+                                {{ $t(selectedCategory === 'verifications' ? 'Run file name' : 'Level file name') }}
                                 <input v-model.trim="newLevelName" maxlength="100" :disabled="busy">
                             </label>
+                            <label v-if="selectedCategory !== 'verifications'">
+                                {{ $t('Insert at position') }}
+                                <input v-model.number="newLevelRank" type="number" min="1" :max="levelEntries.length + 1" step="1" :disabled="busy">
+                            </label>
                             <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
-                                {{ $t('Create level') }}
+                                {{ $t(selectedCategory === 'verifications' ? 'Create verification' : 'Create level') }}
                             </button>
-                            <small>{{ $t('Create a new level file and add it to the end of the list.') }}</small>
+                            <small>{{ $t(selectedCategory === 'verifications' ? 'Create a new verification run.' : 'Create a new level file at the selected position in the list.') }}</small>
                         </form>
                     </div>
 
-                    <div v-if="selectedName" class="admin-records-json">
-                        <div class="admin-records-json-heading">
-                            <label for="level-json">{{ $t('JSON editor') }}</label>
-                            <button class="admin-records-button admin-records-button-secondary" type="button" @click="formatJson" :disabled="busy">
-                                {{ $t('Format JSON') }}
-                            </button>
-                        </div>
-                        <p class="admin-records-hint">{{ $t('Edit the complete level JSON, including its records array.') }}</p>
-                        <textarea id="level-json" v-model="jsonText" spellcheck="false" :disabled="busy"></textarea>
+                    <section class="admin-records-level-list">
+                        <h2>{{ $t(selectedCategory === 'verifications' ? 'Entries in category' : 'Levels in category') }} ({{ categoryItems.length }})</h2>
+                        <p v-if="!categoryItems.length" class="admin-records-hint">{{ $t('No entries match this category.') }}</p>
+                        <button
+                            v-for="item in categoryItems"
+                            :key="item.path"
+                            class="admin-records-level-item"
+                            :class="{ active: selectedName === item.path }"
+                            type="button"
+                            @click="selectItem(item)"
+                            :disabled="busy"
+                        >
+                            <span class="admin-records-level-rank">#{{ item.rank }}</span>
+                            <span class="admin-records-level-name">{{ item.name }}</span>
+                            <span class="admin-records-level-summary">{{ item.summary }}</span>
+                        </button>
+                    </section>
+                        </aside>
+
+                    <form v-if="selectedName" class="admin-records-form" @submit.prevent="saveLevel">
+                        <section v-if="selectedCategory === 'verifications'" class="admin-records-section">
+                            <h2>{{ $t('Verification run information') }}</h2>
+                            <div class="admin-records-fields">
+                                <label>
+                                    {{ $t('Run name') }}
+                                    <input v-model.trim="runForm.name" required :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Level ID') }}
+                                    <input v-model.trim="runForm.id" type="number" min="1" step="1" required :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Creator') }}
+                                    <input v-model.trim="runForm.author" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Verifier') }}
+                                    <input v-model.trim="runForm.verifier" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Expected Placement') }}
+                                    <input v-model.trim="runForm.expectedplacement" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Qualification percentage') }}
+                                    <input v-model="runForm.percentToQualify" type="number" min="0" max="100" step="any" :disabled="busy">
+                                </label>
+                                <label class="admin-records-field-wide">
+                                    {{ $t('Verification video URL') }}
+                                    <input v-model.trim="runForm.verification" type="url" :disabled="busy">
+                                </label>
+                            </div>
+                        </section>
+                        <section v-else class="admin-records-section">
+                            <h2>{{ $t('Level information') }}</h2>
+                            <div class="admin-records-fields">
+                                <label>
+                                    {{ $t('Level name') }}
+                                    <input v-model.trim="levelForm.name" required :disabled="busy || !isNewLevel">
+                                </label>
+                                <label>
+                                    {{ $t('Level ID') }}
+                                    <input v-model.trim="levelForm.id" type="number" min="1" step="1" required :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Subtitle') }}
+                                    <input v-model="levelForm.subtitle" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Creator') }}
+                                    <input v-model.trim="levelForm.author" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Verifier') }}
+                                    <input v-model.trim="levelForm.verifier" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('AREDL placement') }}
+                                    <input v-model.trim="levelForm.aredl" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Verification date') }}
+                                    <input v-model="levelForm.verificationDate" type="date" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Qualification percentage') }}
+                                    <input v-model="levelForm.percentToQualify" type="number" min="0" max="100" step="any" required :disabled="busy">
+                                </label>
+                                <label class="admin-records-field-wide">
+                                    {{ $t('Verification video URL') }}
+                                    <input v-model.trim="levelForm.verification" type="url" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Tags (one per line)') }}
+                                    <textarea v-model="levelForm.tagsText" rows="3" :disabled="busy"></textarea>
+                                </label>
+                                <label>
+                                    {{ $t('Gameplay filters (one per line)') }}
+                                    <textarea v-model="levelForm.filtersText" rows="3" :disabled="busy"></textarea>
+                                </label>
+                            </div>
+                        </section>
+
+                        <section v-if="selectedCategory !== 'verifications'" class="admin-records-section">
+                            <div class="admin-records-section-heading">
+                                <h2>{{ $t('Position history') }}</h2>
+                                <button class="admin-records-button admin-records-button-secondary" type="button" @click="addHistoryEntry" :disabled="busy">
+                                    {{ $t('Add history entry') }}
+                                </button>
+                            </div>
+                            <p class="admin-records-hint">{{ $t('History date format: DD-MM-YYYY.') }}</p>
+                            <div v-for="(entry, index) in levelForm.positionHistory" :key="index" class="admin-records-history-entry">
+                                <label>
+                                    {{ $t('Date') }}
+                                    <input v-model.trim="entry.date" placeholder="DD-MM-YYYY" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Position') }}
+                                    <input v-model="entry.position" type="number" min="1" step="1" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Change') }}
+                                    <input v-model="entry.change" type="number" step="1" :disabled="busy">
+                                </label>
+                                <label>
+                                    {{ $t('Reason') }}
+                                    <input v-model.trim="entry.reason" :disabled="busy">
+                                </label>
+                                <button
+                                    class="admin-records-button admin-records-button-secondary"
+                                    type="button"
+                                    :aria-label="$t('Remove history entry')"
+                                    @click="removeHistoryEntry(index)"
+                                    :disabled="busy"
+                                >×</button>
+                            </div>
+                        </section>
+
                         <section class="admin-records-records">
-                            <h2>{{ $t('Records') }} ({{ records.length }})</h2>
-                            <ul v-if="records.length">
-                                <li v-for="(record, index) in records" :key="index">
+                            <h2>{{ $t('Records') }} ({{ currentRecords.length }})</h2>
+                            <ul v-if="currentRecords.length">
+                                <li v-for="(record, index) in currentRecords" :key="index">
                                     <span>{{ record.user }} — {{ record.percent }}% — {{ record.date }}</span>
                                     <button
                                         class="admin-records-button admin-records-button-secondary"
@@ -80,18 +260,18 @@ export default {
                                     >×</button>
                                 </li>
                             </ul>
-                            <form class="admin-records-record-form" @submit.prevent="addRecord">
+                            <div class="admin-records-record-form">
                                 <label>
                                     {{ $t('Player') }}
-                                    <input v-model.trim="recordDraft.user" required :disabled="busy">
+                                    <input v-model.trim="recordDraft.user" :disabled="busy">
                                 </label>
                                 <label>
                                     {{ $t('Percentage') }}
-                                    <input v-model="recordDraft.percent" type="number" min="0" max="100" step="any" required :disabled="busy">
+                                    <input v-model="recordDraft.percent" type="number" min="0" max="100" step="any" :disabled="busy">
                                 </label>
                                 <label>
                                     {{ $t('Date') }}
-                                    <input v-model="recordDraft.date" type="date" required :disabled="busy">
+                                    <input v-model="recordDraft.date" type="date" :disabled="busy">
                                 </label>
                                 <label>
                                     {{ $t('Video link') }}
@@ -109,14 +289,18 @@ export default {
                                     <input v-model="recordDraft.mobile" type="checkbox" :disabled="busy">
                                     {{ $t('Mobile record') }}
                                 </label>
-                                <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
+                                <button class="admin-records-button admin-records-button-secondary" type="button" @click="addRecord" :disabled="busy">
                                     {{ $t('Add record') }}
                                 </button>
-                            </form>
+                            </div>
                         </section>
-                        <button class="admin-records-button" type="button" @click="saveLevel" :disabled="busy || !jsonText">
+                        <button class="admin-records-button" type="submit" :disabled="busy">
                             {{ busy ? $t('Loading...') : $t('Save changes') }}
                         </button>
+                    </form>
+                    <section v-else class="admin-records-empty">
+                        <p>{{ $t('Choose an entry from the list or create a new one.') }}</p>
+                    </section>
                     </div>
                 </section>
 
@@ -131,10 +315,20 @@ export default {
         authorized: Boolean(sessionStorage.getItem('records-admin-token')),
         username: '',
         password: '',
+        categories: [
+            { id: 'verifications', label: 'Verifications' },
+            { id: 'completions', label: 'Completions' },
+            { id: 'records', label: 'Records' },
+        ],
+        selectedCategory: 'verifications',
         levels: [],
+        levelEntries: [],
+        runEntries: [],
+        newLevelRank: 1,
         selectedName: '',
         newLevelName: '',
-        jsonText: '',
+        levelForm: emptyLevel(),
+        runForm: emptyRun(),
         isNewLevel: false,
         busy: false,
         error: '',
@@ -150,26 +344,54 @@ export default {
         },
     }),
     computed: {
-        records() {
-            try {
-                const level = JSON.parse(this.jsonText);
-                return Array.isArray(level.records) ? level.records : [];
-            } catch {
-                return [];
+        categoryItems() {
+            if (this.selectedCategory === 'verifications') {
+                return this.runEntries.map((run, index) => ({
+                    path: run.path,
+                    name: run.name,
+                    rank: index + 1,
+                    summary: run.expectedplacement || '',
+                }));
             }
+
+            return this.levelEntries
+                .filter((level) => level.records.some((record) =>
+                    this.selectedCategory === 'completions'
+                        ? Number(record.percent) === 100
+                        : Number(record.percent) < 100,
+                ))
+                .map((level) => {
+                    const count = level.records.filter((record) =>
+                        this.selectedCategory === 'completions'
+                            ? Number(record.percent) === 100
+                            : Number(record.percent) < 100,
+                    ).length;
+                    return {
+                        path: level.path,
+                        name: level.name,
+                        rank: level.rank,
+                        summary: `${count} ${this.$t('Records').toLowerCase()}`,
+                    };
+                });
+        },
+        currentRecords() {
+            return this.selectedCategory === 'verifications'
+                ? this.runForm.records
+                : this.levelForm.records;
         },
     },
     async mounted() {
         try {
-            const response = await fetch('/data/_list.json', { cache: 'no-store' });
-            if (!response.ok) throw new Error(String(response.status));
-            const levels = await response.json();
-            if (!Array.isArray(levels) || !levels.every((name) => typeof name === 'string')) {
-                throw new Error('Invalid level list');
-            }
-            this.levels = levels;
+            const [levels, runs] = await Promise.all([fetchList(), fetchRuns()]);
+            if (!levels || !runs) throw new Error('Failed to load level catalogs');
+            this.levelEntries = levels
+                .map(([level], index) => level ? { ...level, rank: index + 1 } : null)
+                .filter(Boolean);
+            this.levels = this.levelEntries.map((level) => level.path);
+            this.newLevelRank = this.levelEntries.length + 1;
+            this.runEntries = runs.map(([run]) => run).filter(Boolean);
         } catch {
-            this.error = this.$t('The level list could not be loaded.');
+            this.error = this.$t('The level and verification lists could not be loaded.');
         }
     },
     methods: {
@@ -208,9 +430,8 @@ export default {
                 sessionStorage.setItem('records-admin-token', this.token);
                 this.authorized = true;
                 this.password = '';
-                if (this.levels.length) {
-                    this.selectedName = this.levels[0];
-                    await this.loadLevel();
+                if (this.categoryItems.length) {
+                    await this.selectItem(this.categoryItems[0]);
                 }
             } catch (error) {
                 this.error = error.message === 'Invalid credentials'
@@ -220,22 +441,82 @@ export default {
                 this.busy = false;
             }
         },
-        async loadLevel() {
+        selectCategory(category) {
+            if (!this.categories.some((item) => item.id === category)) return;
+            this.selectedCategory = category;
+            this.selectedName = '';
+            this.levelForm = emptyLevel();
+            this.runForm = emptyRun();
+            this.isNewLevel = false;
+            this.error = '';
+            this.success = '';
+        },
+        async selectItem(item) {
+            this.selectedName = item.path;
+            await this.loadSelected();
+        },
+        async loadSelected() {
             if (!this.selectedName) return;
             this.busy = true;
             this.error = '';
             this.success = '';
             this.isNewLevel = false;
             try {
-                const response = await fetch(`/data/${encodeURIComponent(this.selectedName)}.json`, { cache: 'no-store' });
+                const path = this.selectedCategory === 'verifications'
+                    ? `/data/runs/${encodeURIComponent(this.selectedName)}.json`
+                    : `/data/${encodeURIComponent(this.selectedName)}.json`;
+                const response = await fetch(path, { cache: 'no-store' });
                 if (!response.ok) throw new Error(String(response.status));
-                this.jsonText = JSON.stringify(await response.json(), null, 4);
+                const level = await response.json();
+                if (this.selectedCategory === 'verifications') {
+                    this.runForm = {
+                        ...emptyRun(level.name || this.selectedName),
+                        id: level.id == null ? '' : String(level.id),
+                        author: level.author || '',
+                        expectedplacement: level.expectedplacement || '',
+                        verifier: level.verifier || '',
+                        verification: level.verification || '',
+                        percentToQualify: String(level.percentToQualify ?? '0'),
+                        records: Array.isArray(level.records) ? level.records.map((record) => ({ ...record })) : [],
+                    };
+                } else {
+                    this.levelForm = {
+                        ...emptyLevel(level.name || this.selectedName),
+                        id: level.id == null ? '' : String(level.id),
+                        subtitle: level.subtitle ?? '-',
+                        author: level.author || '',
+                        verifier: level.verifier || '',
+                        aredl: level.aredl || '',
+                        verificationDate: level.verificationDate || '',
+                        tagsText: Array.isArray(level.tags) ? level.tags.join('\n') : '',
+                        filtersText: Array.isArray(level.filters) ? level.filters.join('\n') : '',
+                        verification: level.verification || '',
+                        percentToQualify: String(level.percentToQualify ?? '100'),
+                        positionHistory: Array.isArray(level.positionHistory)
+                            ? level.positionHistory.map((entry) => ({
+                                date: entry.date || '',
+                                change: entry.change == null ? '' : String(entry.change),
+                                position: entry.position == null ? '' : String(entry.position),
+                                reason: entry.reason || '',
+                            }))
+                            : [],
+                        records: Array.isArray(level.records) ? level.records.map((record) => ({ ...record })) : [],
+                    };
+                }
             } catch {
                 this.error = this.$t('Error: {message}', { message: this.selectedName });
                 this.selectedName = '';
-                this.jsonText = '';
+                this.levelForm = emptyLevel();
+                this.runForm = emptyRun();
             } finally {
                 this.busy = false;
+            }
+        },
+        createItem() {
+            if (this.selectedCategory === 'verifications') {
+                this.createRun();
+            } else {
+                this.createLevel();
             }
         },
         createLevel() {
@@ -245,34 +526,58 @@ export default {
                 this.success = '';
                 return;
             }
+            if (!Number.isInteger(this.newLevelRank) ||
+                this.newLevelRank < 1 ||
+                this.newLevelRank > this.levelEntries.length + 1) {
+                this.error = this.$t('Enter a valid position in the top.');
+                this.success = '';
+                return;
+            }
             if (this.levels.includes(name)) {
                 this.selectedName = name;
-                this.loadLevel();
+                this.loadSelected();
                 return;
             }
             this.error = '';
             this.success = '';
             this.isNewLevel = true;
             this.selectedName = name;
-            this.jsonText = JSON.stringify({ name, records: [] }, null, 4);
+            this.levelForm = emptyLevel(name);
+            this.runForm = emptyRun();
         },
-        formatJson() {
-            try {
-                this.jsonText = JSON.stringify(JSON.parse(this.jsonText), null, 4);
-                this.error = '';
-            } catch (error) {
-                this.error = this.$t('Error: {message}', { message: error.message });
+        createRun() {
+            const name = this.newLevelName.trim();
+            if (!levelNamePattern.test(name)) {
+                this.error = this.$t('Enter a level file name using letters, numbers, spaces, apostrophes, underscores or hyphens.');
+                this.success = '';
+                return;
             }
+            if (this.runEntries.some((run) => run.path === name)) {
+                this.selectedName = name;
+                this.loadSelected();
+                return;
+            }
+            this.error = '';
+            this.success = '';
+            this.isNewLevel = true;
+            this.selectedName = name;
+            this.runForm = emptyRun(name);
+            this.levelForm = emptyLevel();
         },
         addRecord() {
             try {
-                const level = JSON.parse(this.jsonText);
-                if (!level || Array.isArray(level) || !Array.isArray(level.records)) {
-                    throw new Error(this.$t('The JSON must be an object with a name and a records array.'));
+                if (!this.recordDraft.user.trim()) {
+                    throw new Error(this.$t('Enter a player name.'));
+                }
+                if (!this.recordDraft.date || Number.isNaN(Date.parse(this.recordDraft.date))) {
+                    throw new Error(this.$t('Enter a valid record date.'));
+                }
+                if (this.recordDraft.percent === '') {
+                    throw new Error(this.$t('Enter a percentage between 0 and 100.'));
                 }
                 const percent = Number(this.recordDraft.percent);
                 if (!Number.isFinite(percent) || percent < 0 || percent > 100) {
-                    throw new Error(this.$t('The JSON must be an object with a name and a records array.'));
+                    throw new Error(this.$t('Enter a percentage between 0 and 100.'));
                 }
 
                 const record = {
@@ -284,8 +589,7 @@ export default {
                 if (this.recordDraft.hz) record.hz = Number(this.recordDraft.hz);
                 if (this.recordDraft.phrase) record.phrase = this.recordDraft.phrase;
                 if (this.recordDraft.mobile) record.mobile = true;
-                level.records.push(record);
-                this.jsonText = JSON.stringify(level, null, 4);
+                this.currentRecords.push(record);
                 this.recordDraft = {
                     user: '',
                     percent: '',
@@ -301,34 +605,84 @@ export default {
             }
         },
         removeRecord(index) {
-            try {
-                const level = JSON.parse(this.jsonText);
-                if (!Array.isArray(level.records)) {
-                    throw new Error(this.$t('The JSON must be an object with a name and a records array.'));
-                }
-                level.records.splice(index, 1);
-                this.jsonText = JSON.stringify(level, null, 4);
-                this.error = '';
-            } catch (error) {
-                this.error = error.message;
-            }
+            this.currentRecords.splice(index, 1);
+        },
+        addHistoryEntry() {
+            this.levelForm.positionHistory.push({
+                date: '',
+                change: '',
+                position: '',
+                reason: '',
+            });
+        },
+        removeHistoryEntry(index) {
+            this.levelForm.positionHistory.splice(index, 1);
         },
         async saveLevel() {
+            if (this.selectedCategory === 'verifications') {
+                await this.saveRun();
+                return;
+            }
             this.busy = true;
             this.error = '';
             this.success = '';
             try {
-                const level = JSON.parse(this.jsonText);
-                if (!level || Array.isArray(level) || typeof level !== 'object' ||
-                    typeof level.name !== 'string' || !Array.isArray(level.records)) {
-                    throw new Error(this.$t('The JSON must be an object with a name and a records array.'));
+                const id = Number(this.levelForm.id);
+                const percentToQualify = Number(this.levelForm.percentToQualify);
+                if (!Number.isSafeInteger(id) || id < 1) {
+                    throw new Error(this.$t('Enter a valid numeric level ID.'));
+                }
+                if (!Number.isFinite(percentToQualify) || percentToQualify < 0 || percentToQualify > 100) {
+                    throw new Error(this.$t('Enter a percentage between 0 and 100.'));
+                }
+
+                const positionHistory = this.levelForm.positionHistory.map((entry) => ({
+                    date: entry.date.trim(),
+                    change: entry.change === '' ? null : Number(entry.change),
+                    position: Number(entry.position),
+                    reason: entry.reason.trim(),
+                }));
+                if (this.isNewLevel) {
+                    positionHistory.push({
+                        date: formatHistoryDate(),
+                        change: null,
+                        position: this.newLevelRank,
+                        reason: 'Added to list',
+                    });
+                }
+                const level = {
+                    id,
+                    name: this.levelForm.name.trim(),
+                    subtitle: this.levelForm.subtitle.trim() || '-',
+                    author: this.levelForm.author.trim(),
+                    verifier: this.levelForm.verifier.trim(),
+                    aredl: this.levelForm.aredl.trim(),
+                    verificationDate: this.levelForm.verificationDate,
+                    tags: this.levelForm.tagsText.split(/\r?\n/).map((tag) => tag.trim()).filter(Boolean),
+                    filters: this.levelForm.filtersText.split(/\r?\n/).map((filter) => filter.trim()).filter(Boolean),
+                    verification: this.levelForm.verification.trim(),
+                    percentToQualify: String(percentToQualify),
+                    positionHistory,
+                    records: this.levelForm.records,
+                };
+                if (!level.name) throw new Error(this.$t('Enter a level name.'));
+                for (const entry of level.positionHistory) {
+                    if (!/^\d{2}-\d{2}-\d{4}$/.test(entry.date) ||
+                        !Number.isInteger(entry.position) || entry.position < 1 ||
+                        (entry.change !== null && !Number.isInteger(entry.change)) ||
+                        !entry.reason) {
+                        throw new Error(this.$t('Complete each history entry with a date, position and reason.'));
+                    }
                 }
 
                 const files = [{
                     path: `data/${this.selectedName}.json`,
                     content: JSON.stringify(level, null, 4),
                 }];
-                const updatedLevels = this.isNewLevel ? [...this.levels, this.selectedName] : this.levels;
+                const updatedLevels = [...this.levels];
+                if (this.isNewLevel) {
+                    updatedLevels.splice(this.newLevelRank - 1, 0, this.selectedName);
+                }
                 if (this.isNewLevel) {
                     files.push({
                         path: 'data/_list.json',
@@ -341,8 +695,69 @@ export default {
                     body: JSON.stringify({ files }),
                 });
                 this.levels = updatedLevels;
+                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
+                entriesByPath.set(this.selectedName, { ...level, path: this.selectedName });
+                this.levelEntries = updatedLevels.map((path, index) => ({
+                    ...entriesByPath.get(path),
+                    rank: index + 1,
+                }));
+                this.newLevelRank = this.levelEntries.length + 1;
                 this.isNewLevel = false;
-                this.jsonText = JSON.stringify(level, null, 4);
+                this.success = this.$t('Level saved successfully.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        async saveRun() {
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const id = Number(this.runForm.id);
+                if (!Number.isSafeInteger(id) || id < 1) {
+                    throw new Error(this.$t('Enter a valid numeric level ID.'));
+                }
+                const percentToQualify = Number(this.runForm.percentToQualify);
+                if (!Number.isFinite(percentToQualify) || percentToQualify < 0 || percentToQualify > 100) {
+                    throw new Error(this.$t('Enter a percentage between 0 and 100.'));
+                }
+                const run = {
+                    id,
+                    name: this.runForm.name.trim(),
+                    author: this.runForm.author.trim(),
+                    expectedplacement: this.runForm.expectedplacement.trim(),
+                    verifier: this.runForm.verifier.trim(),
+                    verification: this.runForm.verification.trim(),
+                    percentToQualify: String(percentToQualify),
+                    records: this.runForm.records,
+                };
+                if (!run.name) throw new Error(this.$t('Enter a level name.'));
+
+                const files = [{
+                    path: `data/runs/${this.selectedName}.json`,
+                    content: JSON.stringify(run, null, 4),
+                }];
+                const updatedRuns = this.runEntries.map(({ path }) => path);
+                if (this.isNewLevel) {
+                    updatedRuns.push(this.selectedName);
+                    files.push({
+                        path: 'data/runs/_runs.json',
+                        content: JSON.stringify(updatedRuns, null, 4),
+                    });
+                }
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({ files }),
+                });
+                if (this.isNewLevel) {
+                    this.runEntries.push({ ...run, path: this.selectedName, records: run.records });
+                } else {
+                    const index = this.runEntries.findIndex(({ path }) => path === this.selectedName);
+                    if (index >= 0) this.runEntries.splice(index, 1, { ...run, path: this.selectedName });
+                }
+                this.isNewLevel = false;
                 this.success = this.$t('Level saved successfully.');
             } catch (error) {
                 this.error = error.message;
@@ -356,7 +771,8 @@ export default {
             this.authorized = false;
             this.password = '';
             this.selectedName = '';
-            this.jsonText = '';
+            this.levelForm = emptyLevel();
+            this.runForm = emptyRun();
             this.isNewLevel = false;
             this.success = '';
         },

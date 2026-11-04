@@ -6,19 +6,25 @@
 }
 
 .page-admin-records {
+    display: block;
+    grid-column: 1 / -1;
+    height: auto;
+    min-width: 0;
+    flex: 1 0 auto;
+    overflow-y: auto;
     min-height: calc(100vh - 5rem);
-    padding: 2rem 1rem 4rem;
+    padding: 1.25rem 1rem 2rem;
     background: var(--color-background);
     color: var(--color-on-background);
 }
 
 .admin-records-content {
-    width: min(64rem, 100%);
+    width: min(96rem, 100%);
     margin-inline: auto;
 }
 
 .admin-records-heading,
-.admin-records-json-heading {
+.admin-records-section-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -78,19 +84,69 @@
 
 .admin-records-editor {
     display: grid;
+    gap: 0.75rem;
+}
+
+.admin-records-workspace {
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.72fr) minmax(0, 1.8fr);
+    align-items: start;
     gap: 1rem;
+}
+
+.admin-records-sidebar {
+    position: sticky;
+    top: 1rem;
+    display: grid;
+    min-width: 0;
+    max-height: calc(100vh - 2rem);
+    align-content: start;
+    gap: 0.75rem;
+    overflow: auto;
+    padding-right: 0.2rem;
 }
 
 .admin-records-controls {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
     align-items: start;
     gap: 1rem;
+}
+
+.admin-records-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-background-hover);
+}
+
+.admin-records-category {
+    min-height: 2.65rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.admin-records-category.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
 .admin-records-create {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
+    gap: 0.55rem;
+    padding: 0.8rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.65rem;
+    background: var(--color-background);
 }
 
 .admin-records-create label {
@@ -101,6 +157,64 @@
     grid-column: 1 / -1;
     color: var(--color-on-surface);
     font-weight: 400;
+}
+
+.admin-records-level-list {
+    display: grid;
+    max-height: min(58vh, 38rem);
+    gap: 0.4rem;
+    overflow-y: auto;
+    padding: 0.75rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.65rem;
+    background: var(--color-background);
+}
+
+.admin-records-level-list h2 {
+    position: sticky;
+    top: -0.75rem;
+    z-index: 1;
+    margin-bottom: 0.35rem;
+    padding-block: 0.4rem;
+    background: var(--color-background);
+    font-size: 1.15rem;
+}
+
+.admin-records-level-item {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3rem;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    cursor: pointer;
+    font: inherit;
+    text-align: start;
+}
+
+.admin-records-level-item:hover,
+.admin-records-level-item.active {
+    border-color: var(--color-primary);
+    background: var(--color-surface-hover);
+}
+
+.admin-records-level-rank {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.admin-records-level-name {
+    overflow-wrap: anywhere;
+    font-weight: 700;
+}
+
+.admin-records-level-summary {
+    color: var(--color-on-surface);
+    font-size: 0.85rem;
 }
 
 .admin-records-button {
@@ -126,26 +240,69 @@
     color: var(--color-on-surface);
 }
 
-.admin-records-json {
+.admin-records-form {
     display: grid;
-    gap: 0.75rem;
+    min-width: 0;
+    gap: 0.85rem;
 }
 
-.admin-records-json-heading label {
+.admin-records-section {
+    display: grid;
+    gap: 0.7rem;
+    padding: 0.85rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.7rem;
+    background: var(--color-background);
+}
+
+.admin-records-section h2 {
+    font-size: 1.15rem;
+}
+
+.admin-records-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.admin-records-fields label,
+.admin-records-history-entry label {
+    display: grid;
+    min-width: 0;
+    gap: 0.35rem;
+    font-size: 0.9rem;
     font-weight: 700;
 }
 
-.admin-records-json textarea {
+.admin-records-fields input,
+.admin-records-fields textarea,
+.admin-records-history-entry input {
     width: 100%;
-    min-height: 60vh;
-    padding: 1rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.65rem;
     border: 1px solid var(--color-background-hover);
-    border-radius: 0.6rem;
+    border-radius: 0.4rem;
     background: var(--color-surface);
     color: var(--color-on-surface);
-    font: 0.9rem/1.5 Consolas, "Courier New", monospace;
+    font: inherit;
+}
+
+.admin-records-fields textarea {
     resize: vertical;
-    tab-size: 4;
+}
+
+.admin-records-field-wide {
+    grid-column: span 2;
+}
+
+.admin-records-history-entry {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 0.65rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: var(--color-surface);
 }
 
 .admin-records-records {
@@ -178,9 +335,9 @@
 
 .admin-records-record-form {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-    padding: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+    padding: 0.75rem;
     border: 1px solid var(--color-background-hover);
     border-radius: 0.6rem;
 }
@@ -235,9 +392,43 @@
     color: var(--color-primary);
 }
 
+@media (max-width: 900px) {
+    .admin-records-workspace {
+        grid-template-columns: minmax(15rem, 0.8fr) minmax(0, 1.4fr);
+        gap: 0.7rem;
+    }
+
+    .admin-records-fields,
+    .admin-records-record-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 640px) {
+    .admin-records-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-records-sidebar {
+        position: static;
+        max-height: none;
+        overflow: visible;
+    }
+
+    .admin-records-level-list {
+        max-height: 15rem;
+    }
+
     .admin-records-controls {
         grid-template-columns: 1fr;
+    }
+
+    .admin-records-level-item {
+        grid-template-columns: 2.75rem minmax(0, 1fr);
+    }
+
+    .admin-records-level-summary {
+        grid-column: 2;
     }
 
     .admin-records-heading h1 {
@@ -248,7 +439,28 @@
         grid-template-columns: 1fr;
     }
 
-    .admin-records-record-form {
+    .admin-records-record-form,
+    .admin-records-fields {
         grid-template-columns: 1fr;
+    }
+
+    .admin-records-history-entry {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-records-field-wide {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 420px) {
+    .admin-records-categories {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .admin-records-category {
+        padding-inline: 0.4rem;
+        font-size: 0.85rem;
     }
 }
