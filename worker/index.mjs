@@ -142,7 +142,7 @@ async function githubRequest(url, env, options = {}) {
     return body;
 }
 
-async function saveFiles(files, env) {
+async function saveFiles(files, deletePaths, expectedList, env) {
     if (!env.GITHUB_TOKEN) throw new Error('The records service is missing its GitHub token.');
     const [owner, repository] = (env.GITHUB_REPOSITORY || '').split('/');
     if (!owner || !repository || !env.GITHUB_BRANCH) throw new Error('The GitHub repository is not configured.');
@@ -165,30 +165,56 @@ async function saveFiles(files, env) {
             Uint8Array.from(atob(latestListResponse.content.replace(/\n/g, '')), (character) => character.charCodeAt(0)),
         ));
         const submittedList = JSON.parse(levelList.content);
-        const mergedList = [
-            ...submittedList,
-            ...latestList.filter((name) => !submittedList.includes(name)),
-        ];
-        levelList.content = JSON.stringify(mergedList, null, 4);
+        if (listPath === 'data/_list.json' && expectedList) {
+            if (latestList.length !== expectedList.length ||
+                latestList.some((name, index) => name !== expectedList[index])) {
+                const error = new Error('The level list changed while it was being edited.');
+                error.status = 422;
+                throw error;
+            }
+            levelList.content = JSON.stringify(submittedList, null, 4);
+        } else {
+            const removedNames = new Set(deletePaths.map((path) =>
+                path.slice('data/'.length, -'.json'.length),
+            ));
+            const mergedList = [
+                ...submittedList,
+                ...latestList.filter((name) =>
+                    !submittedList.includes(name) && !removedNames.has(name),
+                ),
+            ];
+            levelList.content = JSON.stringify(mergedList, null, 4);
+        }
     }
+    const treeEntries = [
+        ...files.map(({ path, content }) => ({
+            path,
+            mode: '100644',
+            type: 'blob',
+            content,
+        })),
+        ...deletePaths.map((path) => ({
+            path,
+            mode: '100644',
+            type: 'blob',
+            sha: null,
+        })),
+    ];
     const tree = await githubRequest(`${api}/git/trees`, env, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             base_tree: currentTree.tree.sha,
-            tree: files.map(({ path, content }) => ({
-                path,
-                mode: '100644',
-                type: 'blob',
-                content,
-            })),
+            tree: treeEntries,
         }),
     });
     const commit = await githubRequest(`${api}/git/commits`, env, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            message: files.some(({ path }) => path === 'data/runs/_runs.json')
+            message: deletePaths.length
+                ? 'Remove ESIList level'
+                : files.some(({ path }) => path === 'data/runs/_runs.json')
                 ? 'Update ESIList verification runs'
                 : files.some(({ path }) => path === 'data/_list.json')
                     ? 'Update ESIList levels'
@@ -246,27 +272,73 @@ export default {
             if (!await hasValidSession(request, env)) {
                 return jsonResponse({ error: 'Authentication required.' }, 401, corsHeaders);
             }
-            const contentLength = Number(request.headers.get('Content-Length') || 0);
-            if (contentLength > 400_000) {
-                return jsonResponse({ error: 'Request exceeds the 400 KB limit.' }, 413, corsHeaders);
-            }
-
+            let rawBody;
             let body;
             try {
-                body = await request.json();
+                rawBody = await request.text();
             } catch {
                 return jsonResponse({ error: 'Invalid request body.' }, 400, corsHeaders);
             }
-            if (!Array.isArray(body.files) || body.files.length < 1 || body.files.length > 2) {
-                return jsonResponse({ error: 'Send one level or verification file and optionally its index.' }, 400, corsHeaders);
+            if (textEncoder.encode(rawBody).length > 8_000_000) {
+                return jsonResponse({ error: 'Request exceeds the 8 MB limit.' }, 413, corsHeaders);
+            }
+            try {
+                body = JSON.parse(rawBody);
+            } catch {
+                return jsonResponse({ error: 'Invalid request body.' }, 400, corsHeaders);
+            }
+            if (!body || typeof body !== 'object' || Array.isArray(body)) {
+                return jsonResponse({ error: 'Invalid request body.' }, 400, corsHeaders);
+            }
+            const deletePaths = body.deletePaths || [];
+            if (!Array.isArray(body.files) || body.files.length < 1 || body.files.length > 301 ||
+                !Array.isArray(deletePaths) || deletePaths.length > 1) {
+                return jsonResponse({ error: 'Send up to 301 files and at most one level deletion.' }, 400, corsHeaders);
+            }
+            if (!deletePaths.every((path) =>
+                typeof path === 'string' && /^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(path),
+            )) {
+                return jsonResponse({ error: 'Only level JSON files can be deleted.' }, 400, corsHeaders);
+            }
+            const expectedList = body.expectedList;
+            if (expectedList !== undefined && (!Array.isArray(expectedList) ||
+                expectedList.length > 300 ||
+                !expectedList.every((name) =>
+                    typeof name === 'string' && /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/.test(name),
+                ) ||
+                new Set(expectedList).size !== expectedList.length)) {
+                return jsonResponse({ error: 'The expected level list is invalid.' }, 400, corsHeaders);
             }
 
             try {
                 const files = body.files.map(parseAllowedFile);
-                if (new Set(files.map(({ path }) => path)).size !== files.length) {
+                const paths = [...files.map(({ path }) => path), ...deletePaths];
+                if (new Set(paths).size !== paths.length) {
                     return jsonResponse({ error: 'A file can only be included once.' }, 400, corsHeaders);
                 }
-                const commit = await saveFiles(files, env);
+                const listFile = files.find(({ path }) => path === 'data/_list.json');
+                if (deletePaths.length && (!listFile || !expectedList)) {
+                    return jsonResponse({ error: 'Deleting a level requires an expected list and an updated level index.' }, 400, corsHeaders);
+                }
+                if (deletePaths.length) {
+                    const removedNames = new Set(deletePaths.map((path) =>
+                        path.slice('data/'.length, -'.json'.length),
+                    ));
+                    const submittedList = JSON.parse(listFile.content);
+                    if (deletePaths.some((path) =>
+                        !expectedList.includes(path.slice('data/'.length, -'.json'.length)) ||
+                        submittedList.includes(path.slice('data/'.length, -'.json'.length)),
+                    )) {
+                        return jsonResponse({ error: 'The deleted level must be removed from the updated index.' }, 400, corsHeaders);
+                    }
+                    if (removedNames.size !== deletePaths.length) {
+                        return jsonResponse({ error: 'A level can only be deleted once.' }, 400, corsHeaders);
+                    }
+                }
+                if (expectedList && !listFile) {
+                    return jsonResponse({ error: 'An expected level list requires an updated level index.' }, 400, corsHeaders);
+                }
+                const commit = await saveFiles(files, deletePaths, expectedList, env);
                 return jsonResponse({ commit }, 200, corsHeaders);
             } catch (error) {
                 const status = error.status === 422 ? 409 : error.status ? 502 : 400;

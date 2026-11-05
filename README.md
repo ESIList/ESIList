@@ -75,13 +75,20 @@ a unique, randomly generated password before making the editor available.
 
 The login has an approximate limit of five attempts per IP per minute per
 Cloudflare location; it is not a substitute for a strong password. The editor
-only accepts level and verification-run JSON files and their index files
-(`data/_list.json` and `data/runs/_runs.json`). Creating a level or run commits
-its file and index together and merges the latest index from GitHub to avoid
-dropping entries during a deployment delay. Each save is written directly to
-the configured GitHub branch. When creating a level, select its 1-based
-position in the list; levels below it shift down automatically because their
-rank is determined by the order in `data/_list.json`.
+has two sections: **Verifications** manages runs and progress for levels not
+yet on the list, while **Records** shows every listed level, including levels
+without records, and manages its completions and progress.
+
+Creating, moving, or deleting a listed level updates `data/_list.json` and
+adds position-history entries for every level whose rank changes. Deleting a
+level removes its JSON file from the repository after confirmation. The
+editor checks that the list has not changed elsewhere before applying these
+operations; reload and retry if another update has landed. Each save is
+committed directly to the configured GitHub branch.
+
+After changing `worker/index.mjs`, redeploy the Worker with
+`npx wrangler@latest deploy --config worker/wrangler.toml`. Publish the website
+changes through the configured Cloudflare Pages deployment.
 
 ---
 

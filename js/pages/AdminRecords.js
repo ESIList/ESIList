@@ -42,6 +42,22 @@ function formatHistoryDate(date = new Date()) {
     ].join('-');
 }
 
+function withPositionChange(level, oldPosition, newPosition, reason, date) {
+    const positionHistory = Array.isArray(level.positionHistory) ? [...level.positionHistory] : [];
+    positionHistory.push({
+        date,
+        change: oldPosition - newPosition,
+        position: newPosition,
+        reason,
+    });
+    return { ...level, positionHistory };
+}
+
+function levelFileContent(level) {
+    const { path, rank, unavailable, ...data } = level;
+    return JSON.stringify(data, null, 4);
+}
+
 export default {
     template: `
         <main class="page-admin-records">
@@ -97,25 +113,30 @@ export default {
                                 {{ $t(selectedCategory === 'verifications' ? 'Run file name' : 'Level file name') }}
                                 <input v-model.trim="newLevelName" maxlength="100" :disabled="busy">
                             </label>
-                            <label v-if="selectedCategory !== 'verifications'">
-                                {{ $t('Insert at position') }}
-                                <input v-model.number="newLevelRank" type="number" min="1" :max="levelEntries.length + 1" step="1" :disabled="busy">
+                            <label v-if="selectedCategory === 'records'">
+                                {{ $t('New level position') }}
+                                <input v-model.number="newLevelRank" type="number" min="1" :max="Math.min(levelEntries.length + 1, 300)" step="1" :disabled="busy">
                             </label>
                             <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
                                 {{ $t(selectedCategory === 'verifications' ? 'Create verification' : 'Create level') }}
                             </button>
-                            <small>{{ $t(selectedCategory === 'verifications' ? 'Create a new verification run.' : 'Create a new level file at the selected position in the list.') }}</small>
+                            <small>{{ $t(selectedCategory === 'verifications' ? 'Create a new verification run for a level outside the list.' : 'Create a new level file at the selected position in the list.') }}</small>
                         </form>
                     </div>
 
                     <section class="admin-records-level-list">
-                        <h2>{{ $t(selectedCategory === 'verifications' ? 'Entries in category' : 'Levels in category') }} ({{ categoryItems.length }})</h2>
-                        <p v-if="!categoryItems.length" class="admin-records-hint">{{ $t('No entries match this category.') }}</p>
+                        <label class="admin-records-search">
+                            {{ $t('Search by name') }}
+                            <input v-model.trim="searchQuery" type="search" :disabled="busy">
+                        </label>
+                        <h2>{{ $t(selectedCategory === 'verifications' ? 'Off-list verifications' : 'Levels in list') }} ({{ filteredItems.length }})</h2>
+                        <p v-if="!filteredItems.length" class="admin-records-hint">{{ $t('No entries match this search.') }}</p>
                         <button
-                            v-for="item in categoryItems"
+                            v-for="item in filteredItems"
                             :key="item.path"
                             class="admin-records-level-item"
                             :class="{ active: selectedName === item.path }"
+                            :title="item.summary"
                             type="button"
                             @click="selectItem(item)"
                             :disabled="busy"
@@ -128,6 +149,20 @@ export default {
                         </aside>
 
                     <form v-if="selectedName" class="admin-records-form" @submit.prevent="saveLevel">
+                        <section v-if="selectedCategory === 'records'" class="admin-records-placement">
+                            <label v-if="!isNewLevel">
+                                {{ $t('Position in list') }}
+                                <input v-model.number="selectedLevelPosition" type="number" min="1" :max="levels.length" step="1" :disabled="busy">
+                            </label>
+                            <p v-else class="admin-records-hint">{{ $t('This level will be inserted at position {position}.', { position: newLevelRank }) }}</p>
+                            <button
+                                v-if="!isNewLevel"
+                                class="admin-records-button admin-records-button-danger"
+                                type="button"
+                                @click="deleteLevel"
+                                :disabled="busy"
+                            >{{ $t('Delete level') }}</button>
+                        </section>
                         <section v-if="selectedCategory === 'verifications'" class="admin-records-section">
                             <h2>{{ $t('Verification run information') }}</h2>
                             <div class="admin-records-fields">
@@ -294,9 +329,11 @@ export default {
                                 </button>
                             </div>
                         </section>
-                        <button class="admin-records-button" type="submit" :disabled="busy">
-                            {{ busy ? $t('Loading...') : $t('Save changes') }}
-                        </button>
+                        <div class="admin-records-actions">
+                            <button class="admin-records-button" type="submit" :disabled="busy">
+                                {{ busy ? $t('Loading...') : $t('Save changes') }}
+                            </button>
+                        </div>
                     </form>
                     <section v-else class="admin-records-empty">
                         <p>{{ $t('Choose an entry from the list or create a new one.') }}</p>
@@ -317,7 +354,6 @@ export default {
         password: '',
         categories: [
             { id: 'verifications', label: 'Verifications' },
-            { id: 'completions', label: 'Completions' },
             { id: 'records', label: 'Records' },
         ],
         selectedCategory: 'verifications',
@@ -325,6 +361,8 @@ export default {
         levelEntries: [],
         runEntries: [],
         newLevelRank: 1,
+        selectedLevelPosition: 1,
+        searchQuery: '',
         selectedName: '',
         newLevelName: '',
         levelForm: emptyLevel(),
@@ -346,7 +384,10 @@ export default {
     computed: {
         categoryItems() {
             if (this.selectedCategory === 'verifications') {
-                return this.runEntries.map((run, index) => ({
+                const listedLevels = new Set(this.levels.map((level) => level.toLocaleLowerCase()));
+                return this.runEntries
+                    .filter((run) => !listedLevels.has(run.path.toLocaleLowerCase()))
+                    .map((run, index) => ({
                     path: run.path,
                     name: run.name,
                     rank: index + 1,
@@ -355,24 +396,26 @@ export default {
             }
 
             return this.levelEntries
-                .filter((level) => level.records.some((record) =>
-                    this.selectedCategory === 'completions'
-                        ? Number(record.percent) === 100
-                        : Number(record.percent) < 100,
-                ))
                 .map((level) => {
-                    const count = level.records.filter((record) =>
-                        this.selectedCategory === 'completions'
-                            ? Number(record.percent) === 100
-                            : Number(record.percent) < 100,
-                    ).length;
+                    const records = Array.isArray(level.records) ? level.records : [];
+                    const completions = records.filter((record) => Number(record.percent) === 100).length;
+                    const progress = records.filter((record) => Number(record.percent) < 100).length;
                     return {
                         path: level.path,
                         name: level.name,
                         rank: level.rank,
-                        summary: `${count} ${this.$t('Records').toLowerCase()}`,
+                        summary: this.$t('Level counts: {completions} completions · {progress} progress', {
+                            completions,
+                            progress,
+                        }),
                     };
                 });
+        },
+        filteredItems() {
+            const search = this.searchQuery.toLocaleLowerCase();
+            return this.categoryItems.filter((item) =>
+                !search || `${item.name} ${item.path} ${item.rank}`.toLocaleLowerCase().includes(search),
+            );
         },
         currentRecords() {
             return this.selectedCategory === 'verifications'
@@ -384,12 +427,41 @@ export default {
         try {
             const [levels, runs] = await Promise.all([fetchList(), fetchRuns()]);
             if (!levels || !runs) throw new Error('Failed to load level catalogs');
-            this.levelEntries = levels
-                .map(([level], index) => level ? { ...level, rank: index + 1 } : null)
-                .filter(Boolean);
+            this.levelEntries = levels.map(([level, missingPath], index) => level
+                ? { ...level, path: level.path || missingPath, rank: index + 1 }
+                : {
+                    path: missingPath,
+                    name: missingPath,
+                    records: [],
+                    positionHistory: [],
+                    unavailable: true,
+                    rank: index + 1,
+                });
             this.levels = this.levelEntries.map((level) => level.path);
             this.newLevelRank = this.levelEntries.length + 1;
-            this.runEntries = runs.map(([run]) => run).filter(Boolean);
+            this.runEntries = runs.map(([run, missingPath]) => run
+                ? { ...run, path: run.path || missingPath }
+                : {
+                    path: missingPath,
+                    name: missingPath,
+                    expectedplacement: '',
+                    records: [],
+                    unavailable: true,
+                });
+            const missingLevels = this.levelEntries.filter((level) => level.unavailable);
+            const missingRuns = this.runEntries.filter((run) => run.unavailable);
+            const loadErrors = [];
+            if (missingLevels.length) {
+                loadErrors.push(this.$t('Some level files could not be loaded: {levels}', {
+                    levels: missingLevels.map(({ path }) => path).join(', '),
+                }));
+            }
+            if (missingRuns.length) {
+                loadErrors.push(this.$t('Some verification files could not be loaded: {runs}', {
+                    runs: missingRuns.map(({ path }) => path).join(', '),
+                }));
+            }
+            this.error = loadErrors.join(' ');
         } catch {
             this.error = this.$t('The level and verification lists could not be loaded.');
         }
@@ -448,11 +520,14 @@ export default {
             this.levelForm = emptyLevel();
             this.runForm = emptyRun();
             this.isNewLevel = false;
+            this.searchQuery = '';
             this.error = '';
             this.success = '';
         },
         async selectItem(item) {
             this.selectedName = item.path;
+            const entry = this.levelEntries.find((level) => level.path === item.path);
+            this.selectedLevelPosition = entry?.rank || 1;
             await this.loadSelected();
         },
         async loadSelected() {
@@ -526,22 +601,27 @@ export default {
                 this.success = '';
                 return;
             }
-            if (!Number.isInteger(this.newLevelRank) ||
-                this.newLevelRank < 1 ||
-                this.newLevelRank > this.levelEntries.length + 1) {
-                this.error = this.$t('Enter a valid position in the top.');
-                this.success = '';
+            const existing = this.levelEntries.find((level) =>
+                level.path.toLocaleLowerCase() === name.toLocaleLowerCase(),
+            );
+            if (existing) {
+                this.selectedName = existing.path;
+                this.selectedLevelPosition = existing.rank;
+                this.loadSelected();
                 return;
             }
-            if (this.levels.includes(name)) {
-                this.selectedName = name;
-                this.loadSelected();
+            if (!Number.isInteger(this.newLevelRank) ||
+                this.newLevelRank < 1 ||
+                this.newLevelRank > Math.min(this.levelEntries.length + 1, 300)) {
+                this.error = this.$t('Enter a valid position in the top.');
+                this.success = '';
                 return;
             }
             this.error = '';
             this.success = '';
             this.isNewLevel = true;
             this.selectedName = name;
+            this.selectedLevelPosition = this.newLevelRank;
             this.levelForm = emptyLevel(name);
             this.runForm = emptyRun();
         },
@@ -549,6 +629,11 @@ export default {
             const name = this.newLevelName.trim();
             if (!levelNamePattern.test(name)) {
                 this.error = this.$t('Enter a level file name using letters, numbers, spaces, apostrophes, underscores or hyphens.');
+                this.success = '';
+                return;
+            }
+            if (this.levels.some((level) => level.toLocaleLowerCase() === name.toLocaleLowerCase())) {
+                this.error = this.$t('Listed levels must be edited in Records.');
                 this.success = '';
                 return;
             }
@@ -675,15 +760,71 @@ export default {
                     }
                 }
 
+                const oldLevels = [...this.levels];
+                const updatedLevels = [...oldLevels];
+                if (this.isNewLevel) {
+                    if (!Number.isInteger(this.newLevelRank) ||
+                        this.newLevelRank < 1 || this.newLevelRank > updatedLevels.length + 1) {
+                        throw new Error(this.$t('Enter a valid position in the top.'));
+                    }
+                    updatedLevels.splice(this.newLevelRank - 1, 0, this.selectedName);
+                } else {
+                    const oldPosition = updatedLevels.indexOf(this.selectedName) + 1;
+                    if (!oldPosition || !Number.isInteger(this.selectedLevelPosition) ||
+                        this.selectedLevelPosition < 1 || this.selectedLevelPosition > updatedLevels.length) {
+                        throw new Error(this.$t('Enter a valid position in the top.'));
+                    }
+                    updatedLevels.splice(oldPosition - 1, 1);
+                    updatedLevels.splice(this.selectedLevelPosition - 1, 0, this.selectedName);
+                }
+
+                const orderChanged = this.isNewLevel ||
+                    oldLevels.some((path, index) => updatedLevels[index] !== path);
+                const today = formatHistoryDate();
+                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
                 const files = [{
                     path: `data/${this.selectedName}.json`,
                     content: JSON.stringify(level, null, 4),
                 }];
-                const updatedLevels = [...this.levels];
-                if (this.isNewLevel) {
-                    updatedLevels.splice(this.newLevelRank - 1, 0, this.selectedName);
+                const changedLevels = updatedLevels.flatMap((path, index) => {
+                    const oldPosition = oldLevels.indexOf(path) + 1;
+                    const newPosition = index + 1;
+                    return oldPosition && oldPosition !== newPosition
+                        ? [{ path, oldPosition, newPosition }]
+                        : [];
+                });
+                for (const changed of changedLevels) {
+                    if (changed.path === this.selectedName) {
+                        level.positionHistory = withPositionChange(
+                            level,
+                            changed.oldPosition,
+                            changed.newPosition,
+                            `Moved to #${changed.newPosition}`,
+                            today,
+                        ).positionHistory;
+                        files[0].content = JSON.stringify(level, null, 4);
+                        continue;
+                    }
+                    const existing = entriesByPath.get(changed.path);
+                    if (!existing || existing.unavailable) {
+                        throw new Error(this.$t('Cannot update position history because a level file could not be loaded. Reload the page and try again.'));
+                    }
+                    const updated = withPositionChange(
+                        existing,
+                        changed.oldPosition,
+                        changed.newPosition,
+                        this.isNewLevel
+                            ? `Shifted after adding ${this.selectedName}`
+                            : `Shifted after moving ${this.selectedName}`,
+                        today,
+                    );
+                    entriesByPath.set(changed.path, updated);
+                    files.push({
+                        path: `data/${changed.path}.json`,
+                        content: levelFileContent(updated),
+                    });
                 }
-                if (this.isNewLevel) {
+                if (orderChanged) {
                     files.push({
                         path: 'data/_list.json',
                         content: JSON.stringify(updatedLevels, null, 4),
@@ -692,18 +833,89 @@ export default {
 
                 await this.request('/api/files', {
                     method: 'POST',
-                    body: JSON.stringify({ files }),
+                    body: JSON.stringify({
+                        files,
+                        expectedList: orderChanged ? oldLevels : undefined,
+                    }),
                 });
                 this.levels = updatedLevels;
-                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
                 entriesByPath.set(this.selectedName, { ...level, path: this.selectedName });
                 this.levelEntries = updatedLevels.map((path, index) => ({
                     ...entriesByPath.get(path),
                     rank: index + 1,
                 }));
                 this.newLevelRank = this.levelEntries.length + 1;
+                this.selectedLevelPosition = updatedLevels.indexOf(this.selectedName) + 1;
+                this.levelForm.positionHistory = level.positionHistory.map((entry) => ({ ...entry }));
                 this.isNewLevel = false;
                 this.success = this.$t('Level saved successfully.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        async deleteLevel() {
+            if (this.selectedCategory !== 'records' || this.isNewLevel || !this.selectedName) return;
+            const name = this.selectedName;
+            if (!window.confirm(this.$t('Delete level {name}? This action cannot be undone.', { name }))) return;
+
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const oldLevels = [...this.levels];
+                const oldPosition = oldLevels.indexOf(name) + 1;
+                if (!oldPosition) throw new Error(this.$t('The level is not in the current list.'));
+                const updatedLevels = oldLevels.filter((path) => path !== name);
+                const today = formatHistoryDate();
+                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
+                const files = [{
+                    path: 'data/_list.json',
+                    content: JSON.stringify(updatedLevels, null, 4),
+                }];
+
+                for (const [index, path] of updatedLevels.entries()) {
+                    const previousPosition = oldLevels.indexOf(path) + 1;
+                    const newPosition = index + 1;
+                    if (previousPosition === newPosition) continue;
+                    const existing = entriesByPath.get(path);
+                    if (!existing || existing.unavailable) {
+                        throw new Error(this.$t('Cannot update position history because a level file could not be loaded. Reload the page and try again.'));
+                    }
+                    const updated = withPositionChange(
+                        existing,
+                        previousPosition,
+                        newPosition,
+                        `Shifted after removing ${name}`,
+                        today,
+                    );
+                    entriesByPath.set(path, updated);
+                    files.push({
+                        path: `data/${path}.json`,
+                        content: levelFileContent(updated),
+                    });
+                }
+
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files,
+                        deletePaths: [`data/${name}.json`],
+                        expectedList: oldLevels,
+                    }),
+                });
+
+                this.levels = updatedLevels;
+                this.levelEntries = updatedLevels.map((path, index) => ({
+                    ...entriesByPath.get(path),
+                    rank: index + 1,
+                }));
+                this.newLevelRank = Math.min(oldPosition, updatedLevels.length + 1);
+                this.selectedName = '';
+                this.levelForm = emptyLevel();
+                this.isNewLevel = false;
+                this.success = this.$t('Level deleted and position histories updated.');
             } catch (error) {
                 this.error = error.message;
             } finally {
