@@ -21,7 +21,7 @@
     "positionHistory": [
         {
             "date": "26-10-2026",
-            "change": null,
+            "change": 0,
             "position": 109,
             "reason": "Release of the ESIList"
         },
@@ -60,12 +60,6 @@
             "change": -1,
             "position": 115,
             "reason": "Placed GRAVITY at #36"
-        },
-        {
-            "date": "05-11-2026",
-            "change": 1,
-            "position": 115,
-            "reason": "Moved to #115"
         }
     ],
     "records": []
