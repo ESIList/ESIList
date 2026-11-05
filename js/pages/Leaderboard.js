@@ -227,7 +227,8 @@ export default {
                 ...this.entry.progressed.map(l => l.level),
             ]);
             return this.allLevels.filter(l => !attempted.has(l.level));
-        }
+        },
+        
         filterProgress() {
             if (!this.entry || !Array.isArray(this.allLevels)) return [];
 
