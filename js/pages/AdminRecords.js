@@ -802,7 +802,7 @@ export default {
                 const otherName = oldLevels[otherPosition - 1];
                 const updatedLevels = [...oldLevels];
                 [updatedLevels[currentPosition - 1], updatedLevels[otherPosition - 1]] =
-                    [updatedLevels[otherPosition - 1], updatedLevels[currentPosition - 1]];
+                [updatedLevels[otherPosition - 1], updatedLevels[currentPosition - 1]];
 
                 const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
                 const selectedLevel = entriesByPath.get(this.selectedName);
@@ -812,18 +812,26 @@ export default {
                 }
 
                 const today = formatHistoryDate();
+        
+        // --- NUEVA LÓGICA DE MENSAJE ---
+                const isSelectedAbove = currentPosition < otherPosition;
+                const nivelArriba = isSelectedAbove ? this.selectedName : otherName;
+                const puestoArriba = isSelectedAbove ? currentPosition : otherPosition;
+                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${nivelArriba} sitting above at ${puestoArriba}`;
+        // --------------------------------
+
                 const updatedSelected = withPositionChange(
                     selectedLevel,
                     currentPosition,
                     otherPosition,
-                    `Placed ${this.selectedName} at #${otherPosition}`,
+                    swapMsg,
                     today,
                 );
                 const updatedOther = withPositionChange(
                     otherLevel,
                     otherPosition,
                     currentPosition,
-                    `Placed ${otherName} at #${currentPosition}`,
+                    swapMsg,
                     today,
                 );
                 const files = [
@@ -856,15 +864,14 @@ export default {
                 this.selectedLevelPosition = otherPosition;
                 this.swapLevelPosition = currentPosition;
                 this.levelForm.positionHistory = updatedSelected.positionHistory.map((entry) => ({ ...entry }));
-                this.success = this.$t('Swapped {first} and {second}.', {
-                    first: this.selectedName,
-                    second: otherName,
-                });
-            } catch (error) {
-                this.error = error.message;
-            } finally {
-                this.busy = false;
-            }
+        
+        // Mensaje de éxito actualizado usando la misma variable
+                this.success = swapMsg;
+                } catch (error) {
+                    this.error = error.message;
+                } finally {
+                    this.busy = false;
+                }
         },
         async saveLevel() {
             if (this.selectedCategory === 'verifications') {
