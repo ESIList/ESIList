@@ -5,18 +5,6 @@ export default {
       communityChangelog: [],
       changelog: [
         {
-          date: "4-11-2026",
-          message: `
-            • Release of ESIList v2.0.0<br>
-            • Massive Visual Overhaul: New themes, options and colours<br>
-            • Mobile App: Now, you can see the list as it should be on your phone<br>
-            • New Roulette filters<br>
-            • Added Level Comparator<br>
-            • Added a bad translation :skull:<br>
-          `,
-          featured: true,
-        },
-        {
           date: "3-11-2026",
           message: `
             • Release of ESIList v1.4.2<br>

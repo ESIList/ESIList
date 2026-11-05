@@ -105,7 +105,44 @@ export default {
                             :disabled="busy"
                         >{{ $t(category.label) }}</button>
                     </div>
-                    <div class="admin-records-workspace">
+                    <section v-if="selectedCategory === 'changelog'" class="admin-records-changelog-manager">
+                        <form class="admin-records-changelog-form" @submit.prevent="addChangelogEntry">
+                            <label>
+                                {{ $t('Date') }}
+                                <input v-model="changelogDraft.date" type="date" required :disabled="busy">
+                            </label>
+                            <label class="admin-records-field-wide">
+                                {{ $t('Changelog message') }}
+                                <textarea v-model.trim="changelogDraft.message" rows="3" maxlength="4000" required :disabled="busy"></textarea>
+                            </label>
+                            <label class="admin-records-featured">
+                                <input v-model="changelogDraft.featured" type="checkbox" :disabled="busy">
+                                {{ $t('Featured update') }}
+                            </label>
+                            <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
+                                {{ $t('Publish changelog entry') }}
+                            </button>
+                        </form>
+
+                        <section class="admin-records-changelog-list">
+                            <h2>{{ $t('Changelog entries') }} ({{ changelogEntries.length }})</h2>
+                            <p v-if="!changelogEntries.length" class="admin-records-hint">{{ $t('No changelog entries yet.') }}</p>
+                            <article v-for="(entry, index) in changelogEntries" :key="entry.date + '-' + index" class="admin-records-changelog-entry">
+                                <div>
+                                    <strong>{{ entry.date }}</strong>
+                                    <span v-if="entry.featured" class="admin-records-changelog-featured">{{ $t('Featured update') }}</span>
+                                    <p>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
+                                </div>
+                                <button
+                                    class="admin-records-button admin-records-button-danger"
+                                    type="button"
+                                    @click="deleteChangelogEntry(index)"
+                                    :disabled="busy"
+                                >{{ $t('Delete changelog') }}</button>
+                            </article>
+                        </section>
+                    </section>
+                    <div v-else class="admin-records-workspace">
                         <aside class="admin-records-sidebar">
                     <div class="admin-records-controls">
                         <form class="admin-records-create" @submit.prevent="createItem">
@@ -127,27 +164,6 @@ export default {
                             <small>{{ $t(selectedCategory === 'verifications' ? 'Add verification or progress for a level not yet in the list.' : 'Add a level at the selected position in the list.') }}</small>
                         </form>
                     </div>
-
-                    <details class="admin-records-changelog-tools">
-                        <summary>{{ $t('Add changelog entry') }}</summary>
-                        <form class="admin-records-changelog-form" @submit.prevent="addChangelogEntry">
-                            <label>
-                                {{ $t('Date') }}
-                                <input v-model="changelogDraft.date" type="date" required :disabled="busy">
-                            </label>
-                            <label class="admin-records-field-wide">
-                                {{ $t('Changelog message') }}
-                                <textarea v-model.trim="changelogDraft.message" rows="3" maxlength="4000" required :disabled="busy"></textarea>
-                            </label>
-                            <label class="admin-records-featured">
-                                <input v-model="changelogDraft.featured" type="checkbox" :disabled="busy">
-                                {{ $t('Featured update') }}
-                            </label>
-                            <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
-                                {{ $t('Publish changelog entry') }}
-                            </button>
-                        </form>
-                    </details>
 
                     <section class="admin-records-level-list">
                         <label class="admin-records-search">
@@ -400,6 +416,7 @@ export default {
         categories: [
             { id: 'verifications', label: 'Verifications' },
             { id: 'records', label: 'Records' },
+            { id: 'changelog', label: 'Changelog' },
         ],
         selectedCategory: 'verifications',
         levels: [],
@@ -432,6 +449,8 @@ export default {
             message: '',
             featured: false,
         },
+        changelogEntries: [],
+        changelogLoaded: false,
     }),
     computed: {
         categoryItems() {
@@ -565,7 +584,7 @@ export default {
                 this.busy = false;
             }
         },
-        selectCategory(category) {
+        async selectCategory(category) {
             if (!this.categories.some((item) => item.id === category)) return;
             this.selectedCategory = category;
             this.selectedName = '';
@@ -575,6 +594,7 @@ export default {
             this.searchQuery = '';
             this.error = '';
             this.success = '';
+            if (category === 'changelog') await this.loadChangelog();
         },
         async selectItem(item) {
             this.selectedName = item.path;
@@ -1187,10 +1207,9 @@ export default {
                     message: message.split(/\r?\n/).map((line) => `• ${line.trim()}`).join('<br>'),
                     featured: this.changelogDraft.featured,
                 };
-                const response = await fetch('/data/_changelog.json', { cache: 'no-store' });
-                if (!response.ok) throw new Error(this.$t('Could not load existing changelog entries.'));
-                const entries = await response.json();
-                if (!Array.isArray(entries)) throw new Error(this.$t('The changelog data is invalid.'));
+                if (!this.changelogLoaded) await this.loadChangelog();
+                if (!this.changelogLoaded) throw new Error(this.error || this.$t('Could not load existing changelog entries.'));
+                const entries = [...this.changelogEntries];
                 await this.request('/api/files', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -1201,12 +1220,56 @@ export default {
                         expectedChangelog: entries,
                     }),
                 });
+                this.changelogEntries = [entry, ...entries];
                 this.changelogDraft = {
                     date: new Date().toISOString().slice(0, 10),
                     message: '',
                     featured: false,
                 };
                 this.success = this.$t('Changelog entry published.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        async loadChangelog() {
+            try {
+                const response = await fetch('/data/_changelog.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(this.$t('Could not load existing changelog entries.'));
+                const entries = await response.json();
+                if (!Array.isArray(entries)) throw new Error(this.$t('The changelog data is invalid.'));
+                this.changelogEntries = entries;
+                this.changelogLoaded = true;
+            } catch (error) {
+                this.error = error.message;
+            }
+        },
+        async deleteChangelogEntry(index) {
+            const entry = this.changelogEntries[index];
+            if (!entry) return;
+            if (!window.confirm(this.$t('Delete changelog entry from {date}? This action cannot be undone.', {
+                date: entry.date,
+            }))) return;
+
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const existing = [...this.changelogEntries];
+                const updated = existing.filter((_, entryIndex) => entryIndex !== index);
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files: [{
+                            path: 'data/_changelog.json',
+                            content: JSON.stringify(updated, null, 4),
+                        }],
+                        expectedChangelog: existing,
+                    }),
+                });
+                this.changelogEntries = updated;
+                this.success = this.$t('Changelog entry deleted.');
             } catch (error) {
                 this.error = error.message;
             } finally {

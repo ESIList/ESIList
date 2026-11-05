@@ -75,9 +75,10 @@ a unique, randomly generated password before making the editor available.
 
 The login has an approximate limit of five attempts per IP per minute per
 Cloudflare location; it is not a substitute for a strong password. The editor
-has two sections: **Verifications** manages runs and progress for levels not
+has three sections: **Verifications** manages runs and progress for levels not
 yet on the list, while **Records** shows every listed level, including levels
-without records, and manages its completions and progress.
+without records, and manages its completions and progress. **Changelog** adds
+and removes dated updates displayed on the Changelog page.
 
 Creating, moving, or deleting a listed level updates `data/_list.json` and
 adds position-history entries for every level whose rank changes. Deleting a
@@ -90,8 +91,8 @@ configured GitHub branch.
 
 Verification entries can be reordered from their position field. Listed levels
 can also be swapped directly, with `Placed [level] at #[position]` history
-entries for both. The **Add changelog entry** panel publishes dated plain-text
-entries to `data/_changelog.json`; the Changelog page displays them alongside
+entries for both. The **Changelog** tab publishes and deletes dated plain-text
+entries in `data/_changelog.json`; the Changelog page displays them alongside
 its existing release notes.
 
 After changing `worker/index.mjs`, redeploy the Worker with
