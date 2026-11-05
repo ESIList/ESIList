@@ -95,7 +95,6 @@ export default {
 
                         <!-- NEW: filter progress -->
                         <div class="filter-progress" v-if="filterProgress.length">
-                            <h2>{{ $t('Filter progress') }}</h2>
                             <div class="filter-progress-grid">
                                 <div
                                     v-for="f in filterProgress"
@@ -228,7 +227,7 @@ export default {
             ]);
             return this.allLevels.filter(l => !attempted.has(l.level));
         },
-        
+
         filterProgress() {
             if (!this.entry || !Array.isArray(this.allLevels)) return [];
 
