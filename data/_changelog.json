@@ -1,11 +1,6 @@
 [
     {
         "date": "05-11-2026",
-        "message": "• Placed MAYHEM at #2, above TARTARUS and below NOMAD. This pushes HYPERSONIC into the Extended List",
-        "featured": false
-    },
-    {
-        "date": "05-11-2026",
         "message": "• Release of ESIList v2.0.0 (beta 2)<br>• Fixed some Visual Glitches<br>• Added full Admin Control<br>• Added Tags section to individual profiles",
         "featured": true
     },
