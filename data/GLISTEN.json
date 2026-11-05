@@ -58,15 +58,9 @@
         },
         {
             "date": "05-11-2026",
-            "change": 1,
-            "position": 116,
-            "reason": "Shifted after removing Placeholder"
-        },
-        {
-            "date": "05-11-2026",
             "change": -1,
             "position": 117,
-            "reason": "Shifted after adding GRAVITY"
+            "reason": "Placed GRAVITY at #36"
         }
     ],
     "records": [
