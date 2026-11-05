@@ -1,6 +1,16 @@
 const textEncoder = new TextEncoder();
 const maxFileSize = 180_000;
 
+function isValidChangelogDate(value) {
+    const match = /^(\d{2})-(\d{2})-(\d{4})$/.exec(value);
+    if (!match) return false;
+    const [, day, month, year] = match.map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.getUTCFullYear() === year &&
+        date.getUTCMonth() === month - 1 &&
+        date.getUTCDate() === day;
+}
+
 function jsonResponse(body, status, corsHeaders) {
     return new Response(JSON.stringify(body), {
         status,
@@ -93,10 +103,11 @@ function parseAllowedFile(file) {
     }
     const isList = file.path === 'data/_list.json';
     const isRunsList = file.path === 'data/runs/_runs.json';
+    const isChangelog = file.path === 'data/_changelog.json';
     const isLevel = /^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
     const isRun = /^data\/runs\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
-    if (!isList && !isRunsList && !isLevel && !isRun) {
-        throw new Error('Only level and verification run JSON files and their index files can be changed.');
+    if (!isList && !isRunsList && !isChangelog && !isLevel && !isRun) {
+        throw new Error('Only level, verification, changelog, and index JSON files can be changed.');
     }
     if (textEncoder.encode(file.content).length > maxFileSize) throw new Error('A JSON file exceeds the 180 KB limit.');
 
@@ -112,6 +123,15 @@ function parseAllowedFile(file) {
             !parsed.every((name) => typeof name === 'string' && /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/.test(name)) ||
             new Set(parsed).size !== parsed.length) {
             throw new Error('The level list must contain unique, valid level names.');
+        }
+    } else if (isChangelog) {
+        if (!Array.isArray(parsed) || parsed.length > 200 ||
+            !parsed.every((entry) => entry && typeof entry === 'object' && !Array.isArray(entry) &&
+                typeof entry.date === 'string' && isValidChangelogDate(entry.date) &&
+                typeof entry.message === 'string' && entry.message.trim().length > 0 &&
+                entry.message.length <= 4_000 &&
+                (entry.featured === undefined || typeof entry.featured === 'boolean'))) {
+            throw new Error('The changelog must contain up to 200 valid dated entries.');
         }
     } else if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object' ||
         typeof parsed.name !== 'string' || !Array.isArray(parsed.records) ||
@@ -142,7 +162,7 @@ async function githubRequest(url, env, options = {}) {
     return body;
 }
 
-async function saveFiles(files, deletePaths, expectedIndexes, env) {
+async function saveFiles(files, deletePaths, expectedIndexes, expectedChangelog, env) {
     if (!env.GITHUB_TOKEN) throw new Error('The records service is missing its GitHub token.');
     const [owner, repository] = (env.GITHUB_REPOSITORY || '').split('/');
     if (!owner || !repository || !env.GITHUB_BRANCH) throw new Error('The GitHub repository is not configured.');
@@ -189,6 +209,20 @@ async function saveFiles(files, deletePaths, expectedIndexes, env) {
                 ),
             ];
             levelList.content = JSON.stringify(mergedList, null, 4);
+        }
+    }
+    if (expectedChangelog) {
+        const latestChangelogResponse = await githubRequest(
+            `${api}/contents/data/_changelog.json?ref=${branch}`,
+            env,
+        );
+        const latestChangelog = JSON.parse(new TextDecoder().decode(
+            Uint8Array.from(atob(latestChangelogResponse.content.replace(/\n/g, '')), (character) => character.charCodeAt(0)),
+        ));
+        if (JSON.stringify(latestChangelog) !== JSON.stringify(expectedChangelog)) {
+            const error = new Error('The changelog changed while it was being edited.');
+            error.status = 422;
+            throw error;
         }
     }
     const treeEntries = [
@@ -328,6 +362,20 @@ export default {
                 )) {
                 return jsonResponse({ error: 'The expected index is invalid.' }, 400, corsHeaders);
             }
+            const expectedChangelog = body.expectedChangelog;
+            if (expectedChangelog !== undefined && (!Array.isArray(expectedChangelog) ||
+                expectedChangelog.length > 200 ||
+                !expectedChangelog.every((entry) => entry && typeof entry === 'object' &&
+                    !Array.isArray(entry) && typeof entry.date === 'string' &&
+                    isValidChangelogDate(entry.date) &&
+                    typeof entry.message === 'string' && entry.message.trim().length > 0 &&
+                    entry.message.length <= 4_000 &&
+                    (entry.featured === undefined || typeof entry.featured === 'boolean')))) {
+                return jsonResponse({ error: 'The expected changelog is invalid.' }, 400, corsHeaders);
+            }
+            if (expectedChangelog && !body.files.some((file) => file.path === 'data/_changelog.json')) {
+                return jsonResponse({ error: 'An expected changelog requires an updated changelog file.' }, 400, corsHeaders);
+            }
 
             try {
                 const files = body.files.map(parseAllowedFile);
@@ -356,7 +404,7 @@ export default {
                         return jsonResponse({ error: 'An expected index requires an updated index file.' }, 400, corsHeaders);
                     }
                 }
-                const commit = await saveFiles(files, deletePaths, expectedIndexes, env);
+                const commit = await saveFiles(files, deletePaths, expectedIndexes, expectedChangelog, env);
                 return jsonResponse({ commit }, 200, corsHeaders);
             } catch (error) {
                 const status = error.status === 422 ? 409 : error.status ? 502 : 400;

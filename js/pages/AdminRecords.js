@@ -117,12 +117,37 @@ export default {
                                 {{ $t('New level position') }}
                                 <input v-model.number="newLevelRank" type="number" min="1" :max="Math.min(levelEntries.length + 1, 300)" step="1" :disabled="busy">
                             </label>
+                            <label v-else>
+                                {{ $t('New verification position') }}
+                                <input v-model.number="selectedRunPosition" type="number" min="1" :max="Math.min(runEntries.length + 1, 300)" step="1" :disabled="busy">
+                            </label>
                             <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
                                 {{ $t(selectedCategory === 'verifications' ? 'Add verification' : 'Add level') }}
                             </button>
                             <small>{{ $t(selectedCategory === 'verifications' ? 'Add verification or progress for a level not yet in the list.' : 'Add a level at the selected position in the list.') }}</small>
                         </form>
                     </div>
+
+                    <details class="admin-records-changelog-tools">
+                        <summary>{{ $t('Add changelog entry') }}</summary>
+                        <form class="admin-records-changelog-form" @submit.prevent="addChangelogEntry">
+                            <label>
+                                {{ $t('Date') }}
+                                <input v-model="changelogDraft.date" type="date" required :disabled="busy">
+                            </label>
+                            <label class="admin-records-field-wide">
+                                {{ $t('Changelog message') }}
+                                <textarea v-model.trim="changelogDraft.message" rows="3" maxlength="4000" required :disabled="busy"></textarea>
+                            </label>
+                            <label class="admin-records-featured">
+                                <input v-model="changelogDraft.featured" type="checkbox" :disabled="busy">
+                                {{ $t('Featured update') }}
+                            </label>
+                            <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
+                                {{ $t('Publish changelog entry') }}
+                            </button>
+                        </form>
+                    </details>
 
                     <section class="admin-records-level-list">
                         <label class="admin-records-search">
@@ -154,6 +179,15 @@ export default {
                                 {{ $t('Position in list') }}
                                 <input v-model.number="selectedLevelPosition" type="number" min="1" :max="levels.length" step="1" :disabled="busy">
                             </label>
+                            <label v-if="!isNewLevel" class="admin-records-swap-position">
+                                {{ $t('Swap with position') }}
+                                <div>
+                                    <input v-model.number="swapLevelPosition" type="number" min="1" :max="levels.length" step="1" :disabled="busy">
+                                    <button class="admin-records-button admin-records-button-secondary" type="button" @click="swapLevel" :disabled="busy">
+                                        {{ $t('Swap levels') }}
+                                    </button>
+                                </div>
+                            </label>
                             <p v-else class="admin-records-hint">{{ $t('This level will be inserted at position {position}.', { position: newLevelRank }) }}</p>
                             <button
                                 v-if="!isNewLevel"
@@ -165,6 +199,10 @@ export default {
                         </section>
                         <section v-if="selectedCategory === 'verifications'" class="admin-records-section">
                             <h2>{{ $t('Verification information') }}</h2>
+                            <label v-if="!isNewLevel" class="admin-records-position">
+                                {{ $t('Verification position') }}
+                                <input v-model.number="selectedRunPosition" type="number" min="1" :max="runEntries.length" step="1" :disabled="busy">
+                            </label>
                             <div class="admin-records-fields">
                                 <label>
                                     {{ $t('Level name') }}
@@ -369,6 +407,8 @@ export default {
         runEntries: [],
         newLevelRank: 1,
         selectedLevelPosition: 1,
+        swapLevelPosition: 1,
+        selectedRunPosition: 1,
         searchQuery: '',
         selectedName: '',
         newLevelName: '',
@@ -387,6 +427,11 @@ export default {
             phrase: '',
             mobile: false,
         },
+        changelogDraft: {
+            date: new Date().toISOString().slice(0, 10),
+            message: '',
+            featured: false,
+        },
     }),
     computed: {
         categoryItems() {
@@ -394,10 +439,10 @@ export default {
                 const listedLevels = new Set(this.levels.map((level) => level.toLocaleLowerCase()));
                 return this.runEntries
                     .filter((run) => !listedLevels.has(run.path.toLocaleLowerCase()))
-                    .map((run, index) => ({
+                    .map((run) => ({
                     path: run.path,
                     name: run.name,
-                    rank: index + 1,
+                    rank: this.runEntries.findIndex((entry) => entry.path === run.path) + 1,
                     summary: run.expectedplacement || '',
                 }));
             }
@@ -535,6 +580,9 @@ export default {
             this.selectedName = item.path;
             const entry = this.levelEntries.find((level) => level.path === item.path);
             this.selectedLevelPosition = entry?.rank || 1;
+            this.swapLevelPosition = entry?.rank || 1;
+            const runIndex = this.runEntries.findIndex((run) => run.path === item.path);
+            this.selectedRunPosition = runIndex >= 0 ? runIndex + 1 : this.runEntries.length + 1;
             await this.loadSelected();
         },
         async loadSelected() {
@@ -656,6 +704,7 @@ export default {
             this.success = '';
             this.isNewLevel = true;
             this.selectedName = name;
+            this.selectedRunPosition = this.runEntries.length + 1;
             this.runForm = emptyRun(name);
             this.levelForm = emptyLevel();
         },
@@ -713,6 +762,90 @@ export default {
         removeHistoryEntry(index) {
             this.levelForm.positionHistory.splice(index, 1);
         },
+        async swapLevel() {
+            if (this.selectedCategory !== 'records' || this.isNewLevel || !this.selectedName) return;
+            const currentPosition = this.levels.indexOf(this.selectedName) + 1;
+            const otherPosition = this.swapLevelPosition;
+            if (!currentPosition || !Number.isInteger(otherPosition) ||
+                otherPosition < 1 || otherPosition > this.levels.length) {
+                this.error = this.$t('Enter a valid position in the top.');
+                this.success = '';
+                return;
+            }
+            if (currentPosition === otherPosition) return;
+
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const oldLevels = [...this.levels];
+                const otherName = oldLevels[otherPosition - 1];
+                const updatedLevels = [...oldLevels];
+                [updatedLevels[currentPosition - 1], updatedLevels[otherPosition - 1]] =
+                    [updatedLevels[otherPosition - 1], updatedLevels[currentPosition - 1]];
+
+                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
+                const selectedLevel = entriesByPath.get(this.selectedName);
+                const otherLevel = entriesByPath.get(otherName);
+                if (!selectedLevel || selectedLevel.unavailable || !otherLevel || otherLevel.unavailable) {
+                    throw new Error(this.$t('Cannot update position history because a level file could not be loaded. Reload the page and try again.'));
+                }
+
+                const today = formatHistoryDate();
+                const updatedSelected = withPositionChange(
+                    selectedLevel,
+                    currentPosition,
+                    otherPosition,
+                    `Placed ${this.selectedName} at #${otherPosition}`,
+                    today,
+                );
+                const updatedOther = withPositionChange(
+                    otherLevel,
+                    otherPosition,
+                    currentPosition,
+                    `Placed ${otherName} at #${currentPosition}`,
+                    today,
+                );
+                const files = [
+                    {
+                        path: `data/${this.selectedName}.json`,
+                        content: levelFileContent(updatedSelected),
+                    },
+                    {
+                        path: `data/${otherName}.json`,
+                        content: levelFileContent(updatedOther),
+                    },
+                    {
+                        path: 'data/_list.json',
+                        content: JSON.stringify(updatedLevels, null, 4),
+                    },
+                ];
+
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({ files, expectedList: oldLevels }),
+                });
+
+                entriesByPath.set(this.selectedName, updatedSelected);
+                entriesByPath.set(otherName, updatedOther);
+                this.levels = updatedLevels;
+                this.levelEntries = updatedLevels.map((path, index) => ({
+                    ...entriesByPath.get(path),
+                    rank: index + 1,
+                }));
+                this.selectedLevelPosition = otherPosition;
+                this.swapLevelPosition = currentPosition;
+                this.levelForm.positionHistory = updatedSelected.positionHistory.map((entry) => ({ ...entry }));
+                this.success = this.$t('Swapped {first} and {second}.', {
+                    first: this.selectedName,
+                    second: otherName,
+                });
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
         async saveLevel() {
             if (this.selectedCategory === 'verifications') {
                 await this.saveRun();
@@ -742,7 +875,7 @@ export default {
                         date: formatHistoryDate(),
                         change: null,
                         position: this.newLevelRank,
-                        reason: 'Added to list',
+                        reason: `Placed ${this.selectedName} at #${this.newLevelRank}`,
                     });
                 }
                 const level = {
@@ -809,7 +942,7 @@ export default {
                             level,
                             changed.oldPosition,
                             changed.newPosition,
-                            `Moved to #${changed.newPosition}`,
+                            `Placed ${level.name} at #${changed.newPosition}`,
                             today,
                         ).positionHistory;
                         files[0].content = JSON.stringify(level, null, 4);
@@ -824,8 +957,8 @@ export default {
                         changed.oldPosition,
                         changed.newPosition,
                         this.isNewLevel
-                            ? `Shifted after adding ${this.selectedName}`
-                            : `Shifted after moving ${this.selectedName}`,
+                            ? `Placed ${this.selectedName} at #${this.newLevelRank}`
+                            : `Moved ${this.selectedName} to #${this.selectedLevelPosition}`,
                         today,
                     );
                     entriesByPath.set(changed.path, updated);
@@ -897,7 +1030,7 @@ export default {
                         existing,
                         previousPosition,
                         newPosition,
-                        `Shifted after removing ${name}`,
+                        `Removed ${name} from #${oldPosition}`,
                         today,
                     );
                     entriesByPath.set(path, updated);
@@ -994,13 +1127,29 @@ export default {
                 };
                 if (!run.name) throw new Error(this.$t('Enter a level name.'));
 
+                const oldRuns = this.runEntries.map(({ path }) => path);
+                const updatedRuns = [...oldRuns];
+                if (this.isNewLevel) {
+                    if (!Number.isInteger(this.selectedRunPosition) ||
+                        this.selectedRunPosition < 1 || this.selectedRunPosition > Math.min(updatedRuns.length + 1, 300)) {
+                        throw new Error(this.$t('Enter a valid verification position.'));
+                    }
+                    updatedRuns.splice(this.selectedRunPosition - 1, 0, this.selectedName);
+                } else {
+                    const oldPosition = updatedRuns.indexOf(this.selectedName) + 1;
+                    if (!oldPosition || !Number.isInteger(this.selectedRunPosition) ||
+                        this.selectedRunPosition < 1 || this.selectedRunPosition > updatedRuns.length) {
+                        throw new Error(this.$t('Enter a valid verification position.'));
+                    }
+                    updatedRuns.splice(oldPosition - 1, 1);
+                    updatedRuns.splice(this.selectedRunPosition - 1, 0, this.selectedName);
+                }
+                const orderChanged = this.isNewLevel || oldRuns.some((path, index) => path !== updatedRuns[index]);
                 const files = [{
                     path: `data/runs/${this.selectedName}.json`,
                     content: JSON.stringify(run, null, 4),
                 }];
-                const updatedRuns = this.runEntries.map(({ path }) => path);
-                if (this.isNewLevel) {
-                    updatedRuns.push(this.selectedName);
+                if (orderChanged) {
                     files.push({
                         path: 'data/runs/_runs.json',
                         content: JSON.stringify(updatedRuns, null, 4),
@@ -1010,17 +1159,54 @@ export default {
                     method: 'POST',
                     body: JSON.stringify({
                         files,
-                        expectedRuns: this.isNewLevel ? this.runEntries.map(({ path }) => path) : undefined,
+                        expectedRuns: orderChanged ? oldRuns : undefined,
                     }),
                 });
-                if (this.isNewLevel) {
-                    this.runEntries.push({ ...run, path: this.selectedName, records: run.records });
-                } else {
-                    const index = this.runEntries.findIndex(({ path }) => path === this.selectedName);
-                    if (index >= 0) this.runEntries.splice(index, 1, { ...run, path: this.selectedName });
-                }
+                const entriesByPath = new Map(this.runEntries.map((entry) => [entry.path, entry]));
+                entriesByPath.set(this.selectedName, { ...run, path: this.selectedName });
+                this.runEntries = updatedRuns.map((path) => entriesByPath.get(path));
+                this.selectedRunPosition = updatedRuns.indexOf(this.selectedName) + 1;
                 this.isNewLevel = false;
                 this.success = this.$t('Changes saved successfully.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        async addChangelogEntry() {
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const message = this.changelogDraft.message.trim();
+                if (!message) throw new Error(this.$t('Enter a changelog message.'));
+                const [year, month, day] = this.changelogDraft.date.split('-');
+                const entry = {
+                    date: `${day}-${month}-${year}`,
+                    message: message.split(/\r?\n/).map((line) => `• ${line.trim()}`).join('<br>'),
+                    featured: this.changelogDraft.featured,
+                };
+                const response = await fetch('/data/_changelog.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(this.$t('Could not load existing changelog entries.'));
+                const entries = await response.json();
+                if (!Array.isArray(entries)) throw new Error(this.$t('The changelog data is invalid.'));
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files: [{
+                            path: 'data/_changelog.json',
+                            content: JSON.stringify([entry, ...entries], null, 4),
+                        }],
+                        expectedChangelog: entries,
+                    }),
+                });
+                this.changelogDraft = {
+                    date: new Date().toISOString().slice(0, 10),
+                    message: '',
+                    featured: false,
+                };
+                this.success = this.$t('Changelog entry published.');
             } catch (error) {
                 this.error = error.message;
             } finally {

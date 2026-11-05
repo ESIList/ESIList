@@ -88,6 +88,12 @@ relevant index has not changed elsewhere before applying deletions; reload and
 retry if another update has landed. Each save is committed directly to the
 configured GitHub branch.
 
+Verification entries can be reordered from their position field. Listed levels
+can also be swapped directly, with `Placed [level] at #[position]` history
+entries for both. The **Add changelog entry** panel publishes dated plain-text
+entries to `data/_changelog.json`; the Changelog page displays them alongside
+its existing release notes.
+
 After changing `worker/index.mjs`, redeploy the Worker with
 `npx wrangler@latest deploy --config worker/wrangler.toml`. Publish the website
 changes through the configured Cloudflare Pages deployment.

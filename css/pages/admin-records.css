@@ -99,6 +99,58 @@
     font: inherit;
 }
 
+.admin-records-changelog-tools {
+    padding: 0.8rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.65rem;
+    background: var(--color-background);
+}
+
+.admin-records-changelog-tools summary {
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.admin-records-changelog-form {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.5fr) minmax(0, 1.5fr);
+    align-items: end;
+    gap: 0.7rem;
+    padding-top: 0.8rem;
+}
+
+.admin-records-changelog-form label,
+.admin-records-position {
+    display: grid;
+    min-width: 0;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.admin-records-changelog-form input:not([type="checkbox"]),
+.admin-records-changelog-form textarea,
+.admin-records-position input {
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.4rem;
+    background: var(--color-surface);
+    color: var(--color-on-surface);
+    font: inherit;
+}
+
+.admin-records-changelog-form textarea {
+    resize: vertical;
+}
+
+.admin-records-changelog-form .admin-records-featured {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .admin-records-editor {
     display: grid;
     gap: 0.75rem;
@@ -292,6 +344,19 @@
     gap: 0.35rem;
     font-size: 0.9rem;
     font-weight: 700;
+}
+
+.admin-records-swap-position {
+    width: min(28rem, 100%) !important;
+}
+
+.admin-records-swap-position > div {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.admin-records-swap-position > div input {
+    min-width: 5rem;
 }
 
 .admin-records-placement input {
@@ -506,6 +571,10 @@
     .admin-records-placement {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .admin-records-changelog-form {
+        grid-template-columns: 1fr;
     }
 
     .admin-records-record-form,
