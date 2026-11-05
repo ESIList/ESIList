@@ -45,6 +45,12 @@
             "change": 1,
             "position": 76,
             "reason": "Placed MELTDOWN at #76"
+        },
+        {
+            "date": "05-11-2026",
+            "change": -1,
+            "position": 77,
+            "reason": "Placed MELTDOWN at #77"
         }
     ],
     "records": []
