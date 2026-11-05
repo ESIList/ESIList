@@ -46,6 +46,12 @@
             "change": 2,
             "position": 38,
             "reason": "Placed AUDITORY BREAKER at #38"
+        },
+        {
+            "date": "05-11-2026",
+            "change": -1,
+            "position": 39,
+            "reason": "Placed MAYHEM at #2"
         }
     ],
     "records": [
