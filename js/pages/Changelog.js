@@ -6,8 +6,8 @@ export default {
         {
           date: "4-11-2026",
           message: `
-            • Release of ESIList v2.1<br>
-            • Visual Overhaul: New themes, options and colours<br>
+            • Release of ESIList v2.0.0<br>
+            • Massive Visual Overhaul: New themes, options and colours<br>
             • Mobile App: Now, you can see the list as it should be on your phone<br>
             • New Roulette filters<br>
             • Added Level Comparator<br>
@@ -18,7 +18,7 @@ export default {
         {
           date: "3-11-2026",
           message: `
-            • Release of ESIList v2.0.2<br>
+            • Release of ESIList v1.4.2<br>
             • Finished adding all the information to levels: ID, creator, aredl placement and filters.<br>
             • Changed score logic by a bit. Now, levels in extended list (between top 75 and 150) will also give points if progressed, just lighter than a mainlist.<br>
           `,
@@ -34,7 +34,7 @@ export default {
         {
           date: "2-11-2026",
           message: `
-            • Release of ESIList v2.0.1<br>
+            • Release of ESIList v1.4.1<br>
             • Made some visual updates for the changelog and leaderboard.<br>
           `,
           featured: true,
@@ -65,7 +65,7 @@ export default {
         {
           date: "30-10-2026",
           message: `
-            • Release of ESIList v2.0.0<br>
+            • Release of ESIList v1.4.0<br>
             • Removed skills (unused).<br>
             • Added the searchbar on the list.<br>
             • Added filters for the searchbar.<br>
