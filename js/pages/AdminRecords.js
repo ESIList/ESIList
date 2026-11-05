@@ -813,11 +813,12 @@ export default {
 
                 const today = formatHistoryDate();
         
-        // --- NUEVA LÓGICA DE MENSAJE ---
-                const isSelectedAbove = currentPosition < otherPosition;
-                const nivelArriba = isSelectedAbove ? this.selectedName : otherName;
-                const puestoArriba = isSelectedAbove ? currentPosition : otherPosition;
-                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${otherName} sitting above at ${puestoArriba}`;
+        // --- NUEVA LÓGICA CORREGIDA ---
+                const minPosition = Math.min(currentPosition, otherPosition);
+        // Si el que se mueve (selectedName) va a la posición menor, él es el que queda arriba; si no, es el otro (otherName)
+                const nivelArriba = (currentPosition === minPosition) ? this.selectedName : otherName;
+        
+                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${nivelArriba} sitting above at #${minPosition}`;
         // --------------------------------
 
                 const updatedSelected = withPositionChange(
