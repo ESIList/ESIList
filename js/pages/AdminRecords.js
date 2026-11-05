@@ -779,96 +779,100 @@ export default {
                 reason: '',
             });
         },
-        removeHistoryEntry(index) {
-            this.levelForm.positionHistory.splice(index, 1);
-        },
+                removeHistoryEntry(index) {
+                    this.levelForm.positionHistory.splice(index, 1);
+                },
         async swapLevel() {
-            if (this.selectedCategory !== 'records' || this.isNewLevel || !this.selectedName) return;
-            const currentPosition = this.levels.indexOf(this.selectedName) + 1;
-            const otherPosition = this.swapLevelPosition;
-            if (!currentPosition || !Number.isInteger(otherPosition) ||
-                otherPosition < 1 || otherPosition > this.levels.length) {
-                this.error = this.$t('Enter a valid position in the top.');
-                this.success = '';
-                return;
-            }
-            if (currentPosition === otherPosition) return;
+    if (this.selectedCategory !== 'records' || this.isNewLevel || !this.selectedName) return;
+    const currentPosition = this.levels.indexOf(this.selectedName) + 1;
+    const otherPosition = this.swapLevelPosition;
+    if (!currentPosition || !Number.isInteger(otherPosition) ||
+        otherPosition < 1 || otherPosition > this.levels.length) {
+        this.error = this.$t('Enter a valid position in the top.');
+        this.success = '';
+        return;
+    }
+    if (currentPosition === otherPosition) return;
 
-            this.busy = true;
-            this.error = '';
-            this.success = '';
-            try {
-                const oldLevels = [...this.levels];
-                const otherName = oldLevels[otherPosition - 1];
-                const updatedLevels = [...oldLevels];
-                [updatedLevels[currentPosition - 1], updatedLevels[otherPosition - 1]] =
-                [updatedLevels[otherPosition - 1], updatedLevels[currentPosition - 1]];
+    this.busy = true;
+    this.error = '';
+    this.success = '';
+    try {
+        const oldLevels = [...this.levels];
+        const otherName = oldLevels[otherPosition - 1];
+        const updatedLevels = [...oldLevels];
+        [updatedLevels[currentPosition - 1], updatedLevels[otherPosition - 1]] =
+            [updatedLevels[otherPosition - 1], updatedLevels[currentPosition - 1]];
 
-                const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
-                const selectedLevel = entriesByPath.get(this.selectedName);
-                const otherLevel = entriesByPath.get(otherName);
-                if (!selectedLevel || selectedLevel.unavailable || !otherLevel || otherLevel.unavailable) {
-                    throw new Error(this.$t('Cannot update position history because a level file could not be loaded. Reload the page and try again.'));
-                }
+        const entriesByPath = new Map(this.levelEntries.map((entry) => [entry.path, entry]));
+        const selectedLevel = entriesByPath.get(this.selectedName);
+        const otherLevel = entriesByPath.get(otherName);
+        if (!selectedLevel || selectedLevel.unavailable || !otherLevel || otherLevel.unavailable) {
+            throw new Error(this.$t('Cannot update position history because a level file could not be loaded. Reload the page and try again.'));
+        }
 
-                const today = formatHistoryDate();
+        const today = formatHistoryDate();
         
-                const minPosition = Math.min(currentPosition, otherPosition);
-                const nivelArriba = (otherPosition < currentPosition) ? this.selectedName : otherName;
-                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${nivelArriba} sitting above at #${minPosition}`;
-                const updatedSelected = withPositionChange(
-                    selectedLevel,
-                    currentPosition,
-                    otherPosition,
-                    swapMsg,
-                    today,
-                );
-                const updatedOther = withPositionChange(
-                    otherLevel,
-                    otherPosition,
-                    currentPosition,
-                    swapMsg,
-                    today,
-                );
-                const files = [
-                    {
-                        path: `data/${this.selectedName}.json`,
-                        content: levelFileContent(updatedSelected),
-                    },
-                    {
-                        path: `data/${otherName}.json`,
-                        content: levelFileContent(updatedOther),
-                    },
-                    {
-                        path: 'data/_list.json',
-                        content: JSON.stringify(updatedLevels, null, 4),
-                    },
-                ];
-
-                await this.request('/api/files', {
-                    method: 'POST',
-                    body: JSON.stringify({ files, expectedList: oldLevels }),
-                });
-
-                entriesByPath.set(this.selectedName, updatedSelected);
-                entriesByPath.set(otherName, updatedOther);
-                this.levels = updatedLevels;
-                this.levelEntries = updatedLevels.map((path, index) => ({
-                    ...entriesByPath.get(path),
-                    rank: index + 1,
-                }));
-                this.selectedLevelPosition = otherPosition;
-                this.swapLevelPosition = currentPosition;
-                this.levelForm.positionHistory = updatedSelected.positionHistory.map((entry) => ({ ...entry }));
+        // --- LÓGICA EXACTA DE POSICIÓN ---
+        const minPosition = Math.min(currentPosition, otherPosition);
+        // Si la posición de destino del nivel seleccionado es menor, él es el que sube; si no, es el otro.
+        const nivelArriba = (otherPosition < currentPosition) ? this.selectedName : otherName;
         
-        // Mensaje de éxito actualizado usando la misma variable
-                this.success = swapMsg;
-                } catch (error) {
-                    this.error = error.message;
-                } finally {
-                    this.busy = false;
-                }
-        },
+        const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${nivelArriba} sitting above at #${minPosition}`;
+        // ---------------------------------
+
+        const updatedSelected = withPositionChange(
+            selectedLevel,
+            currentPosition,
+            otherPosition,
+            swapMsg,
+            today,
+        );
+        const updatedOther = withPositionChange(
+            otherLevel,
+            otherPosition,
+            currentPosition,
+            swapMsg,
+            today,
+        );
+        const files = [
+            {
+                path: `data/${this.selectedName}.json`,
+                content: levelFileContent(updatedSelected),
+            },
+            {
+                path: `data/${otherName}.json`,
+                content: levelFileContent(updatedOther),
+            },
+            {
+                path: 'data/_list.json',
+                content: JSON.stringify(updatedLevels, null, 4),
+            },
+        ];
+
+        await this.request('/api/files', {
+            method: 'POST',
+            body: JSON.stringify({ files, expectedList: oldLevels }),
+        });
+
+        entriesByPath.set(this.selectedName, updatedSelected);
+        entriesByPath.set(otherName, updatedOther);
+        this.levels = updatedLevels;
+        this.levelEntries = updatedLevels.map((path, index) => ({
+            ...entriesByPath.get(path),
+            rank: index + 1,
+        }));
+        this.selectedLevelPosition = otherPosition;
+        this.swapLevelPosition = currentPosition;
+        this.levelForm.positionHistory = updatedSelected.positionHistory.map((entry) => ({ ...entry }));
+        
+        this.success = swapMsg;
+    } catch (error) {
+        this.error = error.message;
+    } finally {
+        this.busy = false;
+    }
+},
         async saveLevel() {
             if (this.selectedCategory === 'verifications') {
                 await this.saveRun();
