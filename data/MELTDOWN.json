@@ -18,7 +18,7 @@
     "positionHistory": [
         {
             "date": "26-10-2026",
-            "change": null,
+            "change": 0,
             "position": 74,
             "reason": "Release of the ESIList"
         },
@@ -39,12 +39,6 @@
             "change": -1,
             "position": 77,
             "reason": "Shifted after adding GRAVITY"
-        },
-        {
-            "date": "05-11-2026",
-            "change": 1,
-            "position": 76,
-            "reason": "MELTDOWN and HYDRATIC have been swapped, with now HYDRATIC sitting above at #76"
         }
     ],
     "records": []
