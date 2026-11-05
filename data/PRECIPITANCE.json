@@ -57,27 +57,9 @@
         },
         {
             "date": "05-11-2026",
-            "change": 1,
-            "position": 115,
-            "reason": "Shifted after removing Placeholder"
-        },
-        {
-            "date": "05-11-2026",
             "change": -1,
             "position": 116,
-            "reason": "Shifted after adding GRAVITY"
-        },
-        {
-            "date": "05-11-2026",
-            "change": 1,
-            "position": 115,
-            "reason": "Shifted after moving RAUCHKAMMER"
-        },
-        {
-            "date": "05-11-2026",
-            "change": -1,
-            "position": 116,
-            "reason": "Shifted after moving RAUCHKAMMER"
+            "reason": "Placed GRAVITY at #36"
         }
     ],
     "records": []
