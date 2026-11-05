@@ -7,7 +7,14 @@
     "aredl": "85",
     "verificationDate": "2026-11-05",
     "tags": [],
-    "filters": [],
+    "filters": [
+        "2.1",
+        "long",
+        "fast-paced",
+        "timings",
+        "chokepoints",
+        "learny"
+    ],
     "verification": "",
     "percentToQualify": "100",
     "positionHistory": [
