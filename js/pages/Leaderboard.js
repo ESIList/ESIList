@@ -2,8 +2,10 @@ import { fetchLeaderboard, fetchPlayerHistory } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
 import tags from "../components/List/Tags.js";
+import filterRegistry, { resolveFilter } from "../components/List/Filters.js";
 import { score } from '../score.js';
 import { store } from '../main.js';
+
 
 let chart = null;
 let globalChart = null;
@@ -89,6 +91,22 @@ export default {
 
                         <div class="graph-container" v-if="entry.total > 0 && pointsOverTime.length > 0">
                             <canvas id="pointsChart"></canvas>
+                        </div>
+
+                        <!-- NEW: filter progress -->
+                        <div class="filter-progress" v-if="filterProgress.length">
+                            <h2>{{ $t('Filter progress') }}</h2>
+                            <div class="filter-progress-grid">
+                                <div
+                                    v-for="f in filterProgress"
+                                    :key="f.id"
+                                    class="filter-progress-item"
+                                    :class="{ complete: f.completed === f.total, empty: f.completed === 0 }"
+                                >
+                                    <span class="filter-progress-name">{{ $t(f.name) }}</span>
+                                    <span class="filter-progress-count">{{ f.completed }}/{{ f.total }}</span>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Rest of player stats tables... -->
@@ -210,6 +228,41 @@ export default {
             ]);
             return this.allLevels.filter(l => !attempted.has(l.level));
         }
+        filterProgress() {
+            if (!this.entry || !Array.isArray(this.allLevels)) return [];
+
+            // levels the player has completed (verified counts too, same as the bonus packs)
+            const done = new Set([
+                ...this.entry.verified.map((l) => l.level),
+                ...this.entry.completed.map((l) => l.level),
+            ]);
+
+            const stats = new Map();
+            for (const lvl of this.allLevels) {
+                if (!lvl || !Array.isArray(lvl.filters)) continue;
+                const seen = new Set();
+                for (const raw of lvl.filters) {
+                    const f = resolveFilter(raw);
+                    if (seen.has(f.id)) continue; // don't count a duplicate filter twice on one level
+                    seen.add(f.id);
+                    if (!stats.has(f.id)) {
+                        stats.set(f.id, { id: f.id, name: f.name, completed: 0, total: 0 });
+                    }
+                    const s = stats.get(f.id);
+                    s.total++;
+                    if (done.has(lvl.level)) s.completed++;
+                }
+            }
+
+            // registry order first, then any unregistered filter A-Z (same as list.js)
+            const registeredIds = new Set(filterRegistry.map((f) => f.id));
+            const ordered = filterRegistry.map((f) => stats.get(f.id)).filter(Boolean);
+            const extras = [...stats.values()]
+                .filter((s) => !registeredIds.has(s.id))
+                .sort((a, b) => a.id.localeCompare(b.id));
+
+            return [...ordered, ...extras];
+        },
     },
 
     watch: {
