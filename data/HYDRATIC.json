@@ -41,12 +41,6 @@
             "change": -1,
             "position": 76,
             "reason": "Shifted after adding GRAVITY"
-        },
-        {
-            "date": "05-11-2026",
-            "change": 1,
-            "position": 76,
-            "reason": "HYDRATIC and MELTDOWN have been swapped, with now MELTDOWN sitting above at 76"
         }
     ],
     "records": []
