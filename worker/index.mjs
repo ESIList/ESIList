@@ -142,7 +142,7 @@ async function githubRequest(url, env, options = {}) {
     return body;
 }
 
-async function saveFiles(files, deletePaths, expectedList, env) {
+async function saveFiles(files, deletePaths, expectedIndexes, env) {
     if (!env.GITHUB_TOKEN) throw new Error('The records service is missing its GitHub token.');
     const [owner, repository] = (env.GITHUB_REPOSITORY || '').split('/');
     if (!owner || !repository || !env.GITHUB_BRANCH) throw new Error('The GitHub repository is not configured.');
@@ -165,18 +165,23 @@ async function saveFiles(files, deletePaths, expectedList, env) {
             Uint8Array.from(atob(latestListResponse.content.replace(/\n/g, '')), (character) => character.charCodeAt(0)),
         ));
         const submittedList = JSON.parse(levelList.content);
-        if (listPath === 'data/_list.json' && expectedList) {
-            if (latestList.length !== expectedList.length ||
-                latestList.some((name, index) => name !== expectedList[index])) {
-                const error = new Error('The level list changed while it was being edited.');
+        const expectedIndex = expectedIndexes[listPath];
+        if (expectedIndex) {
+            if (latestList.length !== expectedIndex.length ||
+                latestList.some((name, index) => name !== expectedIndex[index])) {
+                const error = new Error(`The ${listPath} index changed while it was being edited.`);
                 error.status = 422;
                 throw error;
             }
             levelList.content = JSON.stringify(submittedList, null, 4);
         } else {
-            const removedNames = new Set(deletePaths.map((path) =>
-                path.slice('data/'.length, -'.json'.length),
-            ));
+            const removedNames = new Set(deletePaths
+                .filter((path) => listPath === (path.startsWith('data/runs/')
+                    ? 'data/runs/_runs.json'
+                    : 'data/_list.json'))
+                .map((path) => path.slice(listPath === 'data/runs/_runs.json'
+                    ? 'data/runs/'.length
+                    : 'data/'.length, -'.json'.length)));
             const mergedList = [
                 ...submittedList,
                 ...latestList.filter((name) =>
@@ -213,7 +218,9 @@ async function saveFiles(files, deletePaths, expectedList, env) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             message: deletePaths.length
-                ? 'Remove ESIList level'
+                ? deletePaths[0].startsWith('data/runs/')
+                    ? 'Remove ESIList verification'
+                    : 'Remove ESIList level'
                 : files.some(({ path }) => path === 'data/runs/_runs.json')
                 ? 'Update ESIList verification runs'
                 : files.some(({ path }) => path === 'data/_list.json')
@@ -296,18 +303,30 @@ export default {
                 return jsonResponse({ error: 'Send up to 301 files and at most one level deletion.' }, 400, corsHeaders);
             }
             if (!deletePaths.every((path) =>
-                typeof path === 'string' && /^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(path),
+                typeof path === 'string' &&
+                (/^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(path) ||
+                    /^data\/runs\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(path)),
             )) {
-                return jsonResponse({ error: 'Only level JSON files can be deleted.' }, 400, corsHeaders);
+                return jsonResponse({ error: 'Only level or verification JSON files can be deleted.' }, 400, corsHeaders);
             }
-            const expectedList = body.expectedList;
-            if (expectedList !== undefined && (!Array.isArray(expectedList) ||
-                expectedList.length > 300 ||
-                !expectedList.every((name) =>
-                    typeof name === 'string' && /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/.test(name),
-                ) ||
-                new Set(expectedList).size !== expectedList.length)) {
-                return jsonResponse({ error: 'The expected level list is invalid.' }, 400, corsHeaders);
+            if (body.expectedIndexes !== undefined &&
+                (!body.expectedIndexes || typeof body.expectedIndexes !== 'object' ||
+                    Array.isArray(body.expectedIndexes))) {
+                return jsonResponse({ error: 'The expected index is invalid.' }, 400, corsHeaders);
+            }
+            const expectedIndexes = { ...(body.expectedIndexes || {}) };
+            if (body.expectedList !== undefined) expectedIndexes['data/_list.json'] = body.expectedList;
+            if (body.expectedRuns !== undefined) expectedIndexes['data/runs/_runs.json'] = body.expectedRuns;
+            const validIndexPaths = new Set(['data/_list.json', 'data/runs/_runs.json']);
+            if (Object.entries(expectedIndexes).some(([path, names]) =>
+                    !validIndexPaths.has(path) || !Array.isArray(names) ||
+                    names.length > 300 ||
+                    !names.every((name) =>
+                        typeof name === 'string' && /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/.test(name),
+                    ) ||
+                    new Set(names).size !== names.length,
+                )) {
+                return jsonResponse({ error: 'The expected index is invalid.' }, 400, corsHeaders);
             }
 
             try {
@@ -316,29 +335,28 @@ export default {
                 if (new Set(paths).size !== paths.length) {
                     return jsonResponse({ error: 'A file can only be included once.' }, 400, corsHeaders);
                 }
-                const listFile = files.find(({ path }) => path === 'data/_list.json');
-                if (deletePaths.length && (!listFile || !expectedList)) {
-                    return jsonResponse({ error: 'Deleting a level requires an expected list and an updated level index.' }, 400, corsHeaders);
-                }
                 if (deletePaths.length) {
-                    const removedNames = new Set(deletePaths.map((path) =>
-                        path.slice('data/'.length, -'.json'.length),
-                    ));
-                    const submittedList = JSON.parse(listFile.content);
-                    if (deletePaths.some((path) =>
-                        !expectedList.includes(path.slice('data/'.length, -'.json'.length)) ||
-                        submittedList.includes(path.slice('data/'.length, -'.json'.length)),
-                    )) {
-                        return jsonResponse({ error: 'The deleted level must be removed from the updated index.' }, 400, corsHeaders);
-                    }
-                    if (removedNames.size !== deletePaths.length) {
-                        return jsonResponse({ error: 'A level can only be deleted once.' }, 400, corsHeaders);
+                    for (const path of deletePaths) {
+                        const runs = path.startsWith('data/runs/');
+                        const indexPath = runs ? 'data/runs/_runs.json' : 'data/_list.json';
+                        const indexFile = files.find((file) => file.path === indexPath);
+                        const expectedIndex = expectedIndexes[indexPath];
+                        if (!indexFile || !expectedIndex) {
+                            return jsonResponse({ error: 'Deleting an entry requires its expected index and an updated index file.' }, 400, corsHeaders);
+                        }
+                        const name = path.slice(runs ? 'data/runs/'.length : 'data/'.length, -'.json'.length);
+                        const submittedIndex = JSON.parse(indexFile.content);
+                        if (!expectedIndex.includes(name) || submittedIndex.includes(name)) {
+                            return jsonResponse({ error: 'The deleted entry must be removed from the updated index.' }, 400, corsHeaders);
+                        }
                     }
                 }
-                if (expectedList && !listFile) {
-                    return jsonResponse({ error: 'An expected level list requires an updated level index.' }, 400, corsHeaders);
+                for (const indexPath of Object.keys(expectedIndexes)) {
+                    if (!files.some((file) => file.path === indexPath)) {
+                        return jsonResponse({ error: 'An expected index requires an updated index file.' }, 400, corsHeaders);
+                    }
                 }
-                const commit = await saveFiles(files, deletePaths, expectedList, env);
+                const commit = await saveFiles(files, deletePaths, expectedIndexes, env);
                 return jsonResponse({ commit }, 200, corsHeaders);
             } catch (error) {
                 const status = error.status === 422 ? 409 : error.status ? 502 : 400;

@@ -110,7 +110,7 @@ export default {
                     <div class="admin-records-controls">
                         <form class="admin-records-create" @submit.prevent="createItem">
                             <label>
-                                {{ $t(selectedCategory === 'verifications' ? 'Run file name' : 'Level file name') }}
+                                {{ $t('Level name') }}
                                 <input v-model.trim="newLevelName" maxlength="100" :disabled="busy">
                             </label>
                             <label v-if="selectedCategory === 'records'">
@@ -118,9 +118,9 @@ export default {
                                 <input v-model.number="newLevelRank" type="number" min="1" :max="Math.min(levelEntries.length + 1, 300)" step="1" :disabled="busy">
                             </label>
                             <button class="admin-records-button admin-records-button-secondary" type="submit" :disabled="busy">
-                                {{ $t(selectedCategory === 'verifications' ? 'Create verification' : 'Create level') }}
+                                {{ $t(selectedCategory === 'verifications' ? 'Add verification' : 'Add level') }}
                             </button>
-                            <small>{{ $t(selectedCategory === 'verifications' ? 'Create a new verification run for a level outside the list.' : 'Create a new level file at the selected position in the list.') }}</small>
+                            <small>{{ $t(selectedCategory === 'verifications' ? 'Add verification or progress for a level not yet in the list.' : 'Add a level at the selected position in the list.') }}</small>
                         </form>
                     </div>
 
@@ -164,10 +164,10 @@ export default {
                             >{{ $t('Delete level') }}</button>
                         </section>
                         <section v-if="selectedCategory === 'verifications'" class="admin-records-section">
-                            <h2>{{ $t('Verification run information') }}</h2>
+                            <h2>{{ $t('Verification information') }}</h2>
                             <div class="admin-records-fields">
                                 <label>
-                                    {{ $t('Run name') }}
+                                    {{ $t('Level name') }}
                                     <input v-model.trim="runForm.name" required :disabled="busy">
                                 </label>
                                 <label>
@@ -330,6 +330,13 @@ export default {
                             </div>
                         </section>
                         <div class="admin-records-actions">
+                            <button
+                                v-if="selectedCategory === 'verifications' && !isNewLevel"
+                                class="admin-records-button admin-records-button-danger"
+                                type="button"
+                                @click="deleteRun"
+                                :disabled="busy"
+                            >{{ $t('Delete verification') }}</button>
                             <button class="admin-records-button" type="submit" :disabled="busy">
                                 {{ busy ? $t('Loading...') : $t('Save changes') }}
                             </button>
@@ -637,8 +644,11 @@ export default {
                 this.success = '';
                 return;
             }
-            if (this.runEntries.some((run) => run.path === name)) {
-                this.selectedName = name;
+            const existing = this.runEntries.find((run) =>
+                run.path.toLocaleLowerCase() === name.toLocaleLowerCase(),
+            );
+            if (existing) {
+                this.selectedName = existing.path;
                 this.loadSelected();
                 return;
             }
@@ -848,7 +858,7 @@ export default {
                 this.selectedLevelPosition = updatedLevels.indexOf(this.selectedName) + 1;
                 this.levelForm.positionHistory = level.positionHistory.map((entry) => ({ ...entry }));
                 this.isNewLevel = false;
-                this.success = this.$t('Level saved successfully.');
+                this.success = this.$t('Changes saved successfully.');
             } catch (error) {
                 this.error = error.message;
             } finally {
@@ -922,6 +932,43 @@ export default {
                 this.busy = false;
             }
         },
+        async deleteRun() {
+            if (this.selectedCategory !== 'verifications' || this.isNewLevel || !this.selectedName) return;
+            const name = this.selectedName;
+            if (!window.confirm(this.$t('Delete verification for {name}? This action cannot be undone.', { name }))) return;
+
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const oldRuns = this.runEntries.map(({ path }) => path);
+                if (!oldRuns.includes(name)) {
+                    throw new Error(this.$t('The verification is not in the current list.'));
+                }
+                const updatedRuns = oldRuns.filter((path) => path !== name);
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files: [{
+                            path: 'data/runs/_runs.json',
+                            content: JSON.stringify(updatedRuns, null, 4),
+                        }],
+                        deletePaths: [`data/runs/${name}.json`],
+                        expectedRuns: oldRuns,
+                    }),
+                });
+
+                this.runEntries = this.runEntries.filter((run) => run.path !== name);
+                this.selectedName = '';
+                this.runForm = emptyRun();
+                this.isNewLevel = false;
+                this.success = this.$t('Verification deleted.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
         async saveRun() {
             this.busy = true;
             this.error = '';
@@ -961,7 +1008,10 @@ export default {
                 }
                 await this.request('/api/files', {
                     method: 'POST',
-                    body: JSON.stringify({ files }),
+                    body: JSON.stringify({
+                        files,
+                        expectedRuns: this.isNewLevel ? this.runEntries.map(({ path }) => path) : undefined,
+                    }),
                 });
                 if (this.isNewLevel) {
                     this.runEntries.push({ ...run, path: this.selectedName, records: run.records });
@@ -970,7 +1020,7 @@ export default {
                     if (index >= 0) this.runEntries.splice(index, 1, { ...run, path: this.selectedName });
                 }
                 this.isNewLevel = false;
-                this.success = this.$t('Level saved successfully.');
+                this.success = this.$t('Changes saved successfully.');
             } catch (error) {
                 this.error = error.message;
             } finally {

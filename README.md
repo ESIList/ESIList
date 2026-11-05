@@ -81,10 +81,12 @@ without records, and manages its completions and progress.
 
 Creating, moving, or deleting a listed level updates `data/_list.json` and
 adds position-history entries for every level whose rank changes. Deleting a
-level removes its JSON file from the repository after confirmation. The
-editor checks that the list has not changed elsewhere before applying these
-operations; reload and retry if another update has landed. Each save is
-committed directly to the configured GitHub branch.
+level removes its JSON file from the repository after confirmation. A
+verification can also be deleted from **Verifications**; its run file and
+`data/runs/_runs.json` entry are removed together. The editor checks that the
+relevant index has not changed elsewhere before applying deletions; reload and
+retry if another update has landed. Each save is committed directly to the
+configured GitHub branch.
 
 After changing `worker/index.mjs`, redeploy the Worker with
 `npx wrangler@latest deploy --config worker/wrangler.toml`. Publish the website
