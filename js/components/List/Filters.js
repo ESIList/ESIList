@@ -18,8 +18,8 @@ const filters = [
     { id: "wave", name: "Wave" },
     { id: "robot", name: "Robot" },
     { id: "spider", name: "Spider" },
-    { id: "old-swing", name: "Old Swing" },
-    { id: "new-swing", name: "New Swing" },
+    { id: "floating-ball", name: "Floating Ball" },
+    { id: "swing", name: "Swing" },
     { id: "duals", name: "Duals" },
     { id: "2p", name: "2P" },
 
