@@ -72,6 +72,12 @@
             "change": 1,
             "position": 115,
             "reason": "Shifted after moving RAUCHKAMMER"
+        },
+        {
+            "date": "05-11-2026",
+            "change": -1,
+            "position": 116,
+            "reason": "Shifted after moving RAUCHKAMMER"
         }
     ],
     "records": []
