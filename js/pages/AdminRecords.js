@@ -817,7 +817,7 @@ export default {
                 const isSelectedAbove = currentPosition < otherPosition;
                 const nivelArriba = isSelectedAbove ? this.selectedName : otherName;
                 const puestoArriba = isSelectedAbove ? currentPosition : otherPosition;
-                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${nivelArriba} sitting above at ${puestoArriba}`;
+                const swapMsg = `${this.selectedName} and ${otherName} have been swapped, with now ${otherName} sitting above at ${puestoArriba}`;
         // --------------------------------
 
                 const updatedSelected = withPositionChange(
