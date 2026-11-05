@@ -172,6 +172,7 @@ export async function fetchLeaderboard() {
             rank: rank + 1,
             link: level.verification || '#',
             tags: level.tags || [],
+            filters: level.filters || [],   // <-- NEW
             score: 0,
             percentToQualify: level.percentToQualify,
             skills: level.skills || [],
