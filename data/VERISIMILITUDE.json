@@ -47,6 +47,12 @@
             "change": -1,
             "position": 97,
             "reason": "Placed MOMENT at #35"
+        },
+        {
+            "date": "05-11-2026",
+            "change": -1,
+            "position": 98,
+            "reason": "Shifted after adding GRAVITY"
         }
     ],
     "records": []
