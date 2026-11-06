@@ -142,18 +142,13 @@ export default {
                                 </div>
                                 <div class="admin-records-changelog-actions">
                                     <template v-if="editingChangelogIndex === index">
-                                        <textarea
-                                            v-model="editingChangelogText"
-                                            rows="5"
-                                            maxlength="4000"
-                                            :disabled="busy"
-                                        ></textarea>
-                                        <label class="admin-records-changelog-edit-featured">
-                                            <input v-model="editingChangelogFeatured" type="checkbox" :disabled="busy">
-                                            {{ $t('Featured update') }}
-                                        </label>
+                                        <button class="admin-records-button" type="button" @click="saveChangelogEdit(index)" :disabled="busy">
+                                            {{ $t('Save changelog') }}
+                                        </button>
+                                        <button class="admin-records-button admin-records-button-secondary" type="button" @click="cancelChangelogEdit" :disabled="busy">
+                                            {{ $t('Cancel') }}
+                                        </button>
                                     </template>
-                                    <p v-else>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
                                     <template v-else>
                                         <button class="admin-records-button admin-records-button-secondary" type="button" @click="startChangelogEdit(index)" :disabled="busy">
                                             {{ $t('Edit changelog') }}
