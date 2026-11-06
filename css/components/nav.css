@@ -499,9 +499,3 @@
         font-size: 0.65rem;
     }
 }
-
-.nav .nav__actions .nav__tab.router-link-active::after,
-.nav .nav__actions .nav__tab:hover::after,
-.nav .nav__actions .nav__tab:focus-visible::after {
-    bottom: 0;
-}
