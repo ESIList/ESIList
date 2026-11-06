@@ -142,13 +142,18 @@ export default {
                                 </div>
                                 <div class="admin-records-changelog-actions">
                                     <template v-if="editingChangelogIndex === index">
-                                        <button class="admin-records-button" type="button" @click="saveChangelogEdit(index)" :disabled="busy">
-                                            {{ $t('Save changelog') }}
-                                        </button>
-                                        <button class="admin-records-button admin-records-button-secondary" type="button" @click="cancelChangelogEdit" :disabled="busy">
-                                            {{ $t('Cancel') }}
-                                        </button>
+                                        <textarea
+                                            v-model="editingChangelogText"
+                                            rows="5"
+                                            maxlength="4000"
+                                            :disabled="busy"
+                                        ></textarea>
+                                        <label class="admin-records-changelog-edit-featured">
+                                            <input v-model="editingChangelogFeatured" type="checkbox" :disabled="busy">
+                                            {{ $t('Featured update') }}
+                                        </label>
                                     </template>
+                                    <p v-else>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
                                     <template v-else>
                                         <button class="admin-records-button admin-records-button-secondary" type="button" @click="startChangelogEdit(index)" :disabled="busy">
                                             {{ $t('Edit changelog') }}
@@ -472,6 +477,7 @@ export default {
         changelogLoaded: false,
         editingChangelogIndex: null,
         editingChangelogText: '',
+        editingChangelogFeatured: false,
     }),
     computed: {
         categoryItems() {
@@ -1312,12 +1318,14 @@ export default {
             if (!entry) return;
             this.editingChangelogIndex = index;
             this.editingChangelogText = entry.message.replace(/<br\s*\/?\s*>/gi, '\n');
+            this.editingChangelogFeatured = Boolean(entry.featured);
             this.error = '';
             this.success = '';
         },
         cancelChangelogEdit() {
             this.editingChangelogIndex = null;
             this.editingChangelogText = '';
+            this.editingChangelogFeatured = false;
         },
         async saveChangelogEdit(index) {
             const entry = this.changelogEntries[index];
@@ -1335,7 +1343,9 @@ export default {
 
                 const existing = [...this.changelogEntries];
                 const updated = existing.map((item, itemIndex) =>
-                    itemIndex === index ? { ...item, message } : item,
+                    itemIndex === index
+                        ? { ...item, message, featured: this.editingChangelogFeatured }
+                        : item,
                 );
                 await this.request('/api/files', {
                     method: 'POST',

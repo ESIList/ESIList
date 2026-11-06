@@ -654,3 +654,12 @@
     display: flex;
     gap: 0.5rem;
 }
+
+.admin-records-changelog-edit-featured {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
