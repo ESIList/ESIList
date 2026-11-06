@@ -501,5 +501,6 @@
 }
 
 .nav .nav__actions > .nav__tab {
-    align-self: flex-start;
+    align-self: stretch;
+    height: 100%;
 }
