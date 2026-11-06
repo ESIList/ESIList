@@ -131,13 +131,18 @@ export default {
                                 <div class="admin-records-changelog-body">
                                     <strong>{{ entry.date }}</strong>
                                     <span v-if="entry.featured" class="admin-records-changelog-featured">{{ $t('Featured update') }}</span>
-                                    <textarea
-                                        v-if="editingChangelogIndex === index"
-                                        v-model="editingChangelogText"
-                                        rows="5"
-                                        maxlength="4000"
-                                        :disabled="busy"
-                                    ></textarea>
+                                    <template v-if="editingChangelogIndex === index">
+                                        <textarea
+                                            v-model="editingChangelogText"
+                                            rows="5"
+                                            maxlength="4000"
+                                            :disabled="busy"
+                                        ></textarea>
+                                        <label class="admin-records-changelog-edit-featured">
+                                            <input v-model="editingChangelogFeatured" type="checkbox" :disabled="busy">
+                                            {{ $t('Featured update') }}
+                                        </label>
+                                    </template>
                                     <p v-else>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
                                 </div>
                                 <div class="admin-records-changelog-actions">
