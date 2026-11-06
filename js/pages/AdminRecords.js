@@ -128,17 +128,36 @@ export default {
                             <h2>{{ $t('Changelog entries') }} ({{ changelogEntries.length }})</h2>
                             <p v-if="!changelogEntries.length" class="admin-records-hint">{{ $t('No changelog entries yet.') }}</p>
                             <article v-for="(entry, index) in changelogEntries" :key="entry.date + '-' + index" class="admin-records-changelog-entry">
-                                <div>
+                                <div class="admin-records-changelog-body">
                                     <strong>{{ entry.date }}</strong>
                                     <span v-if="entry.featured" class="admin-records-changelog-featured">{{ $t('Featured update') }}</span>
-                                    <p>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
+                                    <textarea
+                                        v-if="editingChangelogIndex === index"
+                                        v-model="editingChangelogText"
+                                        rows="5"
+                                        maxlength="4000"
+                                        :disabled="busy"
+                                    ></textarea>
+                                    <p v-else>{{ entry.message.replace(/<br\\s*\\/?\\s*>/gi, ' ') }}</p>
                                 </div>
-                                <button
-                                    class="admin-records-button admin-records-button-danger"
-                                    type="button"
-                                    @click="deleteChangelogEntry(index)"
-                                    :disabled="busy"
-                                >{{ $t('Delete changelog') }}</button>
+                                <div class="admin-records-changelog-actions">
+                                    <template v-if="editingChangelogIndex === index">
+                                        <button class="admin-records-button" type="button" @click="saveChangelogEdit(index)" :disabled="busy">
+                                            {{ $t('Save changelog') }}
+                                        </button>
+                                        <button class="admin-records-button admin-records-button-secondary" type="button" @click="cancelChangelogEdit" :disabled="busy">
+                                            {{ $t('Cancel') }}
+                                        </button>
+                                    </template>
+                                    <template v-else>
+                                        <button class="admin-records-button admin-records-button-secondary" type="button" @click="startChangelogEdit(index)" :disabled="busy">
+                                            {{ $t('Edit changelog') }}
+                                        </button>
+                                        <button class="admin-records-button admin-records-button-danger" type="button" @click="deleteChangelogEntry(index)" :disabled="busy">
+                                            {{ $t('Delete changelog') }}
+                                        </button>
+                                    </template>
+                                </div>
                             </article>
                         </section>
                     </section>
@@ -451,6 +470,8 @@ export default {
         },
         changelogEntries: [],
         changelogLoaded: false,
+        editingChangelogIndex: null,
+        editingChangelogText: '',
     }),
     computed: {
         categoryItems() {
@@ -586,6 +607,7 @@ export default {
         },
         async selectCategory(category) {
             if (!this.categories.some((item) => item.id === category)) return;
+            this.cancelChangelogEdit();
             this.selectedCategory = category;
             this.selectedName = '';
             this.levelForm = emptyLevel();
@@ -1202,6 +1224,7 @@ export default {
             }
         },
         async addChangelogEntry() {
+            this.cancelChangelogEdit();
             this.busy = true;
             this.error = '';
             this.success = '';
@@ -1259,6 +1282,7 @@ export default {
                 date: entry.date,
             }))) return;
 
+            this.cancelChangelogEdit();
             this.busy = true;
             this.error = '';
             this.success = '';
@@ -1277,6 +1301,55 @@ export default {
                 });
                 this.changelogEntries = updated;
                 this.success = this.$t('Changelog entry deleted.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        startChangelogEdit(index) {
+            const entry = this.changelogEntries[index];
+            if (!entry) return;
+            this.editingChangelogIndex = index;
+            this.editingChangelogText = entry.message.replace(/<br\s*\/?\s*>/gi, '\n');
+            this.error = '';
+            this.success = '';
+        },
+        cancelChangelogEdit() {
+            this.editingChangelogIndex = null;
+            this.editingChangelogText = '';
+        },
+        async saveChangelogEdit(index) {
+            const entry = this.changelogEntries[index];
+            if (!entry) return;
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const message = this.editingChangelogText
+                    .trim()
+                    .split(/\r?\n/)
+                    .map((line) => line.trim())
+                    .join('<br>');
+                if (!message) throw new Error(this.$t('Enter a changelog message.'));
+
+                const existing = [...this.changelogEntries];
+                const updated = existing.map((item, itemIndex) =>
+                    itemIndex === index ? { ...item, message } : item,
+                );
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files: [{
+                            path: 'data/_changelog.json',
+                            content: JSON.stringify(updated, null, 4),
+                        }],
+                        expectedChangelog: existing,
+                    }),
+                });
+                this.changelogEntries = updated;
+                this.cancelChangelogEdit();
+                this.success = this.$t('Changelog entry updated.');
             } catch (error) {
                 this.error = error.message;
             } finally {
