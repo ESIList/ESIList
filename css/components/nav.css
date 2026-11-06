@@ -503,5 +503,5 @@
 .nav .nav__actions .nav__tab.router-link-active::after,
 .nav .nav__actions .nav__tab:hover::after,
 .nav .nav__actions .nav__tab:focus-visible::after {
-    bottom: -1;
+    bottom: 0;
 }
