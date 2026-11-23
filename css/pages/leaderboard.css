@@ -490,6 +490,65 @@
         justify-self: end;
     }
 
+    .page-leaderboard .player .table.player-detail-table tr,
+    .page-leaderboard .player .table.player-detail-table tr:not(.bonus-table) {
+        grid-template-columns: 2.75rem minmax(0, 1fr) 76px;
+        grid-template-areas: "rank level score";
+        align-items: start;
+        column-gap: 0.5rem;
+        width: 100%;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.rank {
+        grid-area: rank;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.level {
+        grid-area: level;
+        width: 100%;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.level a,
+    .page-leaderboard .player .table.player-detail-table tr td.level p {
+        display: block;
+        width: 100%;
+        margin-left: 0;
+        text-align: left;
+        overflow-wrap: anywhere;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.level a {
+        position: relative;
+        z-index: 2;
+        line-height: 1.15;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.level a.type-label-lg::before,
+    .page-leaderboard .player .table.player-detail-table tr td.level a.type-label-lg::after {
+        content: none;
+        display: none;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.level .level-subtitle {
+        display: block;
+        height: auto;
+        min-height: 0;
+        margin: 0.4rem 0 0;
+        padding: 0;
+        position: relative;
+        z-index: 1;
+        line-height: 1.2;
+        white-space: normal;
+    }
+
+    .page-leaderboard .player .table.player-detail-table tr td.score {
+        grid-area: score;
+        width: 76px;
+        justify-self: end;
+        text-align: end;
+    }
+
+
     .page-leaderboard .player .table td {
         min-width: 0;
         padding: 0 !important;
@@ -597,8 +656,143 @@
     white-space: nowrap;
 }
 
+.player-detail-navigation {
+    display: grid;
+    gap: 0.85rem;
+    padding: 1rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 1rem;
+    background: var(--color-surface);
+}
+
+.player-detail-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.player-detail-heading h2 {
+    font-size: 1.25rem;
+}
+
+.player-detail-heading > span {
+    color: var(--color-on-surface);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.player-detail-groups {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.player-detail-tabs,
+.player-detail-button-grid,
+.player-detail-filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.player-detail-tabs button,
+.player-detail-button-grid button,
+.player-detail-filter-grid button {
+    display: inline-flex;
+    min-height: 2.1rem;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 999px;
+    background: var(--color-background);
+    color: var(--color-on-background);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.player-detail-tabs button:hover,
+.player-detail-tabs button.active,
+.player-detail-button-grid button:hover,
+.player-detail-button-grid button.active,
+.player-detail-filter-grid button:hover,
+.player-detail-filter-grid button.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.player-detail-button-grid button small,
+.player-detail-filter-grid button small {
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+
+.player-detail-filter-grid {
+    max-height: 9.5rem;
+    overflow-y: auto;
+}
+
+.player-detail-overview {
+    min-height: 0;
+}
+
+.player-detail-table {
+    width: 100%;
+}
+
+.page-leaderboard .player-detail-table tr.player-detail-row-completed .level a,
+.page-leaderboard .player-detail-table tr.player-detail-row-completed .rank p,
+.page-leaderboard .player-detail-table tr.player-detail-row-completed .score p {
+    color: #111111 !important;
+}
+
+.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .level,
+.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .rank,
+.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .score {
+    color: #8a8a8a !important;
+    opacity: 1;
+}
+
+.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .level-subtitle {
+    display: none;
+}
+
+.page-leaderboard .player-detail-table tr.player-detail-row-completed .level-subtitle {
+    display: block;
+    clear: both;
+    margin: 0.35rem 0 0;
+    padding-top: 0;
+    line-height: 1.25;
+    position: relative;
+    z-index: 1;
+}
+
+.player-detail-empty {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--color-background);
+    text-align: center;
+    opacity: 0.75;
+}
+
 @media screen and (max-width: 900px), screen and (pointer: coarse) {
     .filter-progress-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .player-detail-heading {
+        align-items: flex-start;
+    }
+
+    .player-detail-buttons {
+        width: 100%;
+    }
+
+    .player-detail-buttons button {
+        flex: 1 1 calc(50% - 0.4rem);
+        justify-content: center;
+        text-align: center;
     }
 }

@@ -10,6 +10,10 @@ import { store } from '../main.js';
 let chart = null;
 let globalChart = null;
 
+function normalizeLeaderboardFilter(value) {
+    return String(value).trim().toLowerCase();
+}
+
 export default {
     components: { Spinner },
     data: () => ({
@@ -20,6 +24,10 @@ export default {
         showingGlobalGraph: true,
         err: [],
         allLevels: [],
+        activePlayerSection: 'overview',
+        activeTagId: '',
+        activeFilterId: '',
+        activeBrowserGroup: 'categories',
         playerColors: {
             'Lolencio04': '#ff0000',
             'Ninjedu': '#580072',
@@ -141,81 +149,86 @@ export default {
                         <div class="graph-container" v-if="entry.total > 0 && pointsOverTime.length > 0">
                             <canvas id="pointsChart"></canvas>
                         </div>
+                        <section class="player-detail-navigation">
+                            <div class="player-detail-heading">
+                                <div>
+                                    <p class="leaderboard-eyebrow">{{ $t('Level browser') }}</p>
+                                    <h2>{{ playerSectionTitle }}</h2>
+                                </div>
+                                <span v-if="activePlayerLevels.length">{{ activePlayerLevels.length }} {{ $t('levels') }}</span>
+                            </div>
 
-                        <!-- NEW: filter progress -->
-                        <div class="filter-progress" v-if="filterProgress.length">
-                            <div class="filter-progress-grid">
-                                <div
-                                    v-for="f in filterProgress"
-                                    :key="f.id"
-                                    class="filter-progress-item"
-                                    :class="{ complete: f.completed === f.total, empty: f.completed === 0 }"
-                                >
-                                    <span class="filter-progress-name">{{ $t(f.name) }}</span>
-                                    <span class="filter-progress-count">{{ f.completed }}/{{ f.total }}</span>
+                            <div class="player-detail-groups">
+                                <nav class="player-detail-tabs" aria-label="Level browser groups">
+                                    <button type="button" :class="{ active: activeBrowserGroup === 'categories' }" @click="setBrowserGroup('categories')">{{ $t('Categories') }}</button>
+                                    <button type="button" :class="{ active: activeBrowserGroup === 'status' }" @click="setBrowserGroup('status')">{{ $t('Record status') }}</button>
+                                    <button type="button" :class="{ active: activeBrowserGroup === 'filters' }" @click="setBrowserGroup('filters')">{{ $t('Filters') }}</button>
+                                    <button type="button" v-if="tagButtons.length" :class="{ active: activeBrowserGroup === 'tags' }" @click="setBrowserGroup('tags')">{{ $t('Tags') }}</button>
+                                </nav>
+
+                                <div v-if="activeBrowserGroup === 'categories'" class="player-detail-button-grid">
+                                    <button type="button" :class="{ active: activePlayerSection === 'overview' }" @click="setPlayerSection('overview')">{{ $t('Overview') }}</button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'main' }" @click="setPlayerSection('main')">#1–75</button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'extended' }" @click="setPlayerSection('extended')">#76–150</button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'legacy' }" @click="setPlayerSection('legacy')">#151+</button>
+                                </div>
+
+                                <div v-else-if="activeBrowserGroup === 'status'" class="player-detail-button-grid">
+                                    <button type="button" :class="{ active: activePlayerSection === 'verified' }" @click="setPlayerSection('verified')">{{ $t('Verified') }} <small>{{ entry.verified.length }}</small></button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'completed' }" @click="setPlayerSection('completed')">{{ $t('Completed') }} <small>{{ entry.completed.length }}</small></button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'progressed' }" @click="setPlayerSection('progressed')">{{ $t('Progressed') }} <small>{{ entry.progressed.length }}</small></button>
+                                    <button type="button" :class="{ active: activePlayerSection === 'none' }" @click="setPlayerSection('none')">{{ $t('No Progress') }} <small>{{ noProgress.length }}</small></button>
+                                </div>
+
+                                <div v-else-if="activeBrowserGroup === 'filters' && filterProgress.length" class="player-detail-filter-grid">
+                                        <button
+                                            v-for="filter in filterProgress"
+                                            :key="filter.id"
+                                            type="button"
+                                            :class="{ active: activePlayerSection === 'filter' && activeFilterId === filter.id }"
+                                            @click="setFilterSection(filter.id)"
+                                        >
+                                            {{ $t(filter.name) }}
+                                            <small>{{ filter.completed }}/{{ filter.total }}</small>
+                                        </button>
+                                </div>
+
+                                <div v-else-if="activeBrowserGroup === 'tags' && tagButtons.length" class="player-detail-filter-grid">
+                                        <button
+                                            v-for="tag in tagButtons"
+                                            :key="tag.id"
+                                            type="button"
+                                            :class="{ active: activePlayerSection === 'tag' && activeTagId === tag.id }"
+                                            @click="setTagSection(tag.id)"
+                                        >
+                                            {{ $t(tag.name) }}
+                                            <small>{{ tag.count }}</small>
+                                        </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Rest of player stats tables... -->
-                        <h2 v-if="entry.verified.length > 0">{{ $t('Verified ({count})', { count: entry.verified.length }) }}</h2>
-                        <table class="table">
-                            <tr v-for="score in entry.verified">
-                                <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level">
-                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
-                                    <p v-if="getSubtitle(score.level)" class="level-subtitle">
-                                        – “{{ getSubtitle(score.level) }}”
-                                    </p>
-                                </td>
-                                <td class="score"><p>+{{ localize(score.score) }}</p></td>
-                            </tr>
-                        </table>
+                            <div v-if="activePlayerSection === 'overview'" class="player-detail-overview">
+                                <p class="player-detail-empty">{{ $t('Choose a category, status, filter or tag to browse levels.') }}</p>
+                            </div>
 
-                        <h2 v-if="entry.completed.length > 0">{{ $t('Completed ({count})', { count: entry.completed.length }) }}</h2>
-                        <table class="table">
-                            <tr v-for="score in entry.completed">
-                                <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level">
-                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
-                                    <p v-if="getPhrase(score.level)" class="level-phrase">
-                                        – “{{ getPhrase(score.level) }}”
-                                    </p>
-                                </td>
-                                <td class="score"><p>+{{ localize(score.score) }}</p></td>
-                            </tr>
-                        </table>
-
-                        <h2 v-if="entry.tagBonuses && entry.tagBonuses.length > 0">{{ $t('Bonus Pack points ({count})', { count: entry.tagBonuses.length }) }}</h2>
-                        <table class="table bonus-table" v-if="entry.tagBonuses && entry.tagBonuses.length > 0">
-                            <tr v-for="bonus in entry.tagBonuses" :key="bonus.name">
-                                <td class="level"><p>{{ $t(bonus.name) }}</p></td>
-                                <td class="score"><p>+{{ localize(bonus.bonus) }}</p></td>
-                            </tr>
-                        </table>
-
-                        <h2 v-if="entry.progressed.length > 0">{{ $t('Progressed ({count})', { count: entry.progressed.length }) }}</h2>
-                        <table class="table">
-                            <tr v-for="score in entry.progressed">
-                                <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level">
-                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a>
-                                    <p v-if="getPhrase(score.level)" class="level-phrase">
-                                        – “{{ getPhrase(score.level) }}”
-                                    </p>
-                                </td>
-                                <td class="score"><p>+{{ localize(score.score) }}</p></td>
-                            </tr>
-                        </table>
-
-                        <h2 v-if="noProgress.length > 0">{{ $t('No Progress ({count})', { count: noProgress.length }) }}</h2>
-                        <table class="table" v-if="noProgress.length > 0">
-                            <tr v-for="score in noProgress">
-                                <td class="rank"><p>#{{ score.rank }}</p></td>
-                                <td class="level"><a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a></td>
-                                <td class="score"><p>+{{ localize(score.score) }}</p></td>
-                            </tr>
-                        </table>
+                            <table v-else-if="activePlayerLevels.length" class="table player-detail-table">
+                                <tr
+                                    v-for="level in activePlayerLevels"
+                                    :key="level.level"
+                                    :class="level.rowTone ? 'player-detail-row-' + level.rowTone : ''"
+                                >
+                                    <td class="rank"><p>#{{ level.rank }}</p></td>
+                                    <td class="level">
+                                        <a class="type-label-lg" target="_blank" :href="level.link">{{ level.displayName || level.level }}</a>
+                                        <p v-if="level.showSubtitle && getSubtitle(level.level)" class="level-subtitle">
+                                            – “{{ getSubtitle(level.level) }}”
+                                        </p>
+                                    </td>
+                                    <td class="score"><p v-if="level.score !== null">{{ level.scorePrefix || '+' }}{{ localize(level.score) }}</p></td>
+                                </tr>
+                            </table>
+                            <p v-else class="player-detail-empty">{{ $t('No levels in this section.') }}</p>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -277,6 +290,119 @@ export default {
             return this.allLevels.filter(l => !attempted.has(l.level));
         },
 
+        tagButtons() {
+            if (!Array.isArray(this.allLevels)) return [];
+            const counts = new Map();
+            this.allLevels.forEach((level) => {
+                if (!Array.isArray(level.tags)) return;
+                level.tags.forEach((raw) => {
+                    const id = String(raw).trim();
+                    if (!id) return;
+                    const key = id.toLowerCase();
+                    if (!counts.has(key)) counts.set(key, { id: key, name: id, count: 0 });
+                    counts.get(key).count++;
+                });
+            });
+            const registered = tags
+                .filter((tag) => counts.has(String(tag.id).toLowerCase()))
+                .map((tag) => ({ ...counts.get(String(tag.id).toLowerCase()), id: String(tag.id).toLowerCase(), name: tag.name }));
+            const registeredIds = new Set(registered.map((tag) => tag.id));
+            const extras = [...counts.values()].filter((tag) => !registeredIds.has(tag.id))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            return [...registered, ...extras];
+        },
+
+        playerSectionTitle() {
+            const titles = {
+                overview: 'Overview',
+                main: 'Main list (#1–75)',
+                extended: 'Extended list (#76–150)',
+                legacy: 'Legacy list (#151+)',
+                verified: 'Verified levels',
+                completed: 'Completed levels',
+                progressed: 'Progressed levels',
+                none: 'No Progress',
+            };
+            if (this.activePlayerSection === 'filter') {
+                const filter = this.filterProgress.find((item) => item.id === this.activeFilterId);
+                return filter ? this.$t(filter.name) : this.$t('Gameplay filter');
+            }
+            if (this.activePlayerSection === 'tag') {
+                const tag = this.tagButtons.find((item) => item.id === this.activeTagId);
+                return tag ? this.$t(tag.name) : this.$t('Tags');
+            }
+            return this.$t(titles[this.activePlayerSection] || 'Overview');
+        },
+
+        activePlayerLevels() {
+            if (!this.entry) return [];
+            const verified = new Map(this.entry.verified.map((item) => [item.level, item]));
+            const completed = new Map(this.entry.completed.map((item) => [item.level, item]));
+            const progressed = new Map(this.entry.progressed.map((item) => [item.level, item]));
+            const buildLevel = (level, statusOverride) => {
+                const record = verified.get(level.level) || completed.get(level.level) || progressed.get(level.level);
+                let status = statusOverride;
+                if (!status) {
+                    status = verified.has(level.level) ? 'verified'
+                        : completed.has(level.level) ? 'completed'
+                        : progressed.has(level.level) ? 'progressed'
+                        : 'none';
+                }
+                const isCompleted = status === 'verified' || status === 'completed';
+                const usesCompletionTone = ['main', 'extended', 'legacy', 'filter'].includes(this.activePlayerSection);
+                return {
+                    rank: level.rank,
+                    level: level.level,
+                    link: record?.link || level.link || '#',
+                    score: record?.score ?? null,
+                    completed: isCompleted,
+                    showSubtitle: isCompleted,
+                    rowTone: usesCompletionTone ? (isCompleted ? 'completed' : 'incomplete') : '',
+                    displayName: progressed.has(level.level)
+                        ? `${progressed.get(level.level).percent}% ${level.level}`
+                        : level.level,
+                };
+            };
+
+            if (this.activePlayerSection === 'overview') return [];
+            if (this.activePlayerSection === 'main') {
+                return this.allLevels.filter((level) => level.rank <= 75).map((level) => buildLevel(level));
+            }
+            if (this.activePlayerSection === 'extended') {
+                return this.allLevels.filter((level) => level.rank >= 76 && level.rank <= 150).map((level) => buildLevel(level));
+            }
+            if (this.activePlayerSection === 'legacy') {
+                return this.allLevels.filter((level) => level.rank >= 151).map((level) => buildLevel(level));
+            }
+            if (this.activePlayerSection === 'verified') {
+                return this.entry.verified.map((item) => buildLevel({ level: item.level, rank: item.rank, link: item.link }, 'verified'));
+            }
+            if (this.activePlayerSection === 'completed') {
+                return this.entry.completed.map((item) => buildLevel({ level: item.level, rank: item.rank, link: item.link }, 'completed'));
+            }
+            if (this.activePlayerSection === 'progressed') {
+                return this.entry.progressed.map((item) => buildLevel({ level: item.level, rank: item.rank, link: item.link }, 'progressed'));
+            }
+            if (this.activePlayerSection === 'none') {
+                return this.noProgress.map((level) => buildLevel(level, 'none'));
+            }
+            if (this.activePlayerSection === 'filter') {
+                return this.allLevels
+                    .filter((level) => Array.isArray(level.filters) && level.filters.some((raw) =>
+                        normalizeLeaderboardFilter(raw) === this.activeFilterId
+                    ))
+                    .map((level) => buildLevel(level));
+            }
+            if (this.activePlayerSection === 'tag') {
+                return this.allLevels
+                    .filter((level) => Array.isArray(level.tags) && level.tags.some((raw) =>
+                        String(raw).trim().toLowerCase() === this.activeTagId
+                    ))
+                    .map((level) => buildLevel(level));
+            }
+            return [];
+        },
+
         filterProgress() {
             if (!this.entry || !Array.isArray(this.allLevels)) return [];
 
@@ -315,6 +441,12 @@ export default {
     },
 
     watch: {
+        selected() {
+            this.activePlayerSection = 'overview';
+            this.activeTagId = '';
+            this.activeFilterId = '';
+            this.activeBrowserGroup = 'categories';
+        },
         showingGlobalGraph(newVal) {
             if (newVal) {
                 this.$nextTick(this.renderGlobalChart);
@@ -388,9 +520,35 @@ export default {
         selectPlayer(index) {
             this.selected = index;
             this.showingGlobalGraph = false;
+            this.activePlayerSection = 'overview';
+            this.activeTagId = '';
+            this.activeFilterId = '';
+            this.activeBrowserGroup = 'categories';
             if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
             }
+        },
+
+        setPlayerSection(section) {
+            this.activePlayerSection = section;
+            this.activeTagId = '';
+            this.activeFilterId = '';
+        },
+
+        setBrowserGroup(group) {
+            this.activeBrowserGroup = group;
+        },
+
+        setFilterSection(filterId) {
+            this.activePlayerSection = 'filter';
+            this.activeFilterId = filterId;
+            this.activeTagId = '';
+        },
+
+        setTagSection(tagId) {
+            this.activePlayerSection = 'tag';
+            this.activeTagId = tagId;
+            this.activeFilterId = '';
         },
 
         showGlobalGraph() {
