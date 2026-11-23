@@ -1,0 +1,31 @@
+{
+    "id": 83340498,
+    "name": "PROTOFLICKER",
+    "subtitle": "no es una victoria limpia, pero es una victoria",
+    "author": "ewop",
+    "verifier": "itzniw",
+    "aredl": "#891",
+    "verificationDate": "2026-11-23",
+    "tags": [],
+    "filters": [
+        "2.1",
+        "long",
+        "timings",
+        "nong",
+        "clicksync",
+        "nerve-control",
+        "wave",
+        "overall"
+    ],
+    "verification": "https://youtu.be/pvPKByMStOY",
+    "percentToQualify": "60",
+    "positionHistory": [
+        {
+            "date": "23-11-2026",
+            "change": null,
+            "position": 42,
+            "reason": "Placed PROTOFLICKER at #42"
+        }
+    ],
+    "records": []
+}
