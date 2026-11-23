@@ -19,7 +19,7 @@
     "positionHistory": [
         {
             "date": "26-10-2026",
-            "change": null,
+            "change": 0,
             "position": 37,
             "reason": "Release of the ESIList"
         },
@@ -52,6 +52,12 @@
             "change": -1,
             "position": 39,
             "reason": "Placed MAYHEM at #2"
+        },
+        {
+            "date": "23-11-2026",
+            "change": 1,
+            "position": 38,
+            "reason": "AUDITORY BREAKER and TURBULENT VALLEY have been swapped, with now AUDITORY BREAKER sitting above at #38"
         }
     ],
     "records": [
