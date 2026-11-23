@@ -94,9 +94,10 @@ Changes to `data/_list.json` automatically trigger the
 `Update leaderboard snapshots` workflow. It recalculates the current day's
 player snapshot and replaces that date if one already exists, preserving
 snapshots from earlier dates. It can also be started manually from the Actions
-tab. If another commit reaches the branch during an update, the workflow
-recalculates from the latest branch and retries the snapshot push up to three
-times. The workflow needs Actions write permission for repository contents.
+tab or requested from **Site settings** in the admin page. If another commit
+reaches the branch during an update, the workflow recalculates from the latest
+branch and retries the snapshot push up to three times. The workflow needs
+Actions write permission for repository contents.
 
 Verification entries can be reordered from their position field. Listed levels
 can also be swapped directly, with `Placed [level] at #[position]` history

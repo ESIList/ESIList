@@ -315,6 +315,30 @@ export default {
             return jsonResponse({ token: await createSession(env) }, 200, corsHeaders);
         }
 
+        if (url.pathname === '/api/leaderboard-snapshots' && request.method === 'POST') {
+            if (!await hasValidSession(request, env)) {
+                return jsonResponse({ error: 'Authentication required.' }, 401, corsHeaders);
+            }
+            try {
+                if (!env.GITHUB_TOKEN) throw new Error('The records service is missing its GitHub token.');
+                const [owner, repository] = (env.GITHUB_REPOSITORY || '').split('/');
+                if (!owner || !repository) throw new Error('The GitHub repository is not configured.');
+
+                await githubRequest(
+                    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repository)}/dispatches`,
+                    env,
+                    {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ event_type: 'update-leaderboard-snapshots' }),
+                    },
+                );
+                return jsonResponse({ message: 'Snapshot update queued.' }, 202, corsHeaders);
+            } catch (error) {
+                return jsonResponse({ error: error.message }, error.status ? 502 : 500, corsHeaders);
+            }
+        }
+
         if (url.pathname === '/api/files' && request.method === 'POST') {
             if (!await hasValidSession(request, env)) {
                 return jsonResponse({ error: 'Authentication required.' }, 401, corsHeaders);

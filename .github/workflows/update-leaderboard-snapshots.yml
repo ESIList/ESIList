@@ -4,6 +4,9 @@ on:
   push:
     paths:
       - 'data/_list.json'
+  repository_dispatch:
+    types:
+      - update-leaderboard-snapshots
   workflow_dispatch:
 
 permissions:

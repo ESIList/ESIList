@@ -183,6 +183,20 @@ export default {
                                 {{ $t('Save version') }}
                             </button>
                         </form>
+                        <section class="admin-records-site-settings-action">
+                            <div>
+                                <h2>{{ $t('Leaderboard history') }}</h2>
+                                <p>{{ $t('Recalculate the current player points snapshot using the latest level order.') }}</p>
+                            </div>
+                            <button
+                                class="admin-records-button admin-records-button-secondary"
+                                type="button"
+                                @click="requestLeaderboardSnapshot"
+                                :disabled="busy"
+                            >
+                                {{ $t('Refresh leaderboard graph') }}
+                            </button>
+                        </section>
                     </section>
                     <div v-else class="admin-records-workspace">
                         <aside class="admin-records-sidebar">
@@ -700,6 +714,19 @@ export default {
                 store.version = version;
                 this.siteVersionDraft = version;
                 this.success = this.$t('Site version saved.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
+        },
+        async requestLeaderboardSnapshot() {
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                await this.request('/api/leaderboard-snapshots', { method: 'POST' });
+                this.success = this.$t('Snapshot update queued. Reload the leaderboard after the workflow finishes.');
             } catch (error) {
                 this.error = error.message;
             } finally {

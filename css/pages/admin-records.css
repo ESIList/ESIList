@@ -169,6 +169,39 @@
     font: inherit;
 }
 
+.admin-records-site-settings {
+    display: grid;
+    align-content: start;
+    gap: 0.8rem;
+}
+
+.admin-records-site-settings-action {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    width: min(34rem, 100%);
+    padding: 1.25rem;
+    border: 1px solid var(--color-background-hover);
+    border-radius: 0.75rem;
+    background: var(--color-surface);
+}
+
+.admin-records-site-settings-action > div {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.admin-records-site-settings-action h2 {
+    font-size: 1.2rem;
+}
+
+.admin-records-site-settings-action p {
+    color: var(--color-on-surface);
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
 .admin-records-changelog-form .admin-records-featured {
     display: flex;
     align-items: center;
@@ -644,6 +677,14 @@
 
     .admin-records-site-settings-form h2 {
         grid-column: auto;
+    }
+
+    .admin-records-site-settings-action {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-records-site-settings-action .admin-records-button {
+        justify-self: start;
     }
 
     .admin-records-changelog-entry {
