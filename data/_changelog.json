@@ -1,6 +1,11 @@
 [
     {
         "date": "23-11-2026",
+        "message": "• Release of ESILIST v2.0.0<br>• Leaderboard overhaul with actual Graph Updates<br>• Using Github is no longer required to add Records, to update the List Version, to add Changelog Entries and updating the Leaderboard, upgrading the Workflow to the Next Level<br>• The mobile visual bugs have been solved",
+        "featured": true
+    },
+    {
+        "date": "23-11-2026",
         "message": "• Placed PROTOFLICKER at #42, above CALLISTO and below BLOODBATH, with a list requirement of 60%. This pushes AFTERMATH out of the top 50.",
         "featured": false
     },
