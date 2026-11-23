@@ -26,13 +26,31 @@ jobs:
       - name: Recalculate today's snapshot
         run: node update-player-graphs.js
       - name: Commit snapshot changes
+        env:
+          BRANCH: ${{ github.ref_name }}
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/_point_snapshots.json
-          if git diff --cached --quiet; then
-            echo "The snapshot is already up to date."
-          else
+
+          for attempt in 1 2 3; do
+            if [ "$attempt" -gt 1 ]; then
+              echo "Refreshing from the latest branch before retry $attempt."
+              git fetch origin "+refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+              git switch --detach "refs/remotes/origin/${BRANCH}"
+              node update-player-graphs.js
+            fi
+
+            git add data/_point_snapshots.json
+            if git diff --cached --quiet; then
+              echo "The snapshot is already up to date."
+              exit 0
+            fi
+
             git commit -m "Update leaderboard snapshot"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
+            if git push origin "HEAD:${BRANCH}"; then
+              exit 0
+            fi
+          done
+
+          echo "::error::Could not push the snapshot after three attempts because the branch kept changing."
+          exit 1
