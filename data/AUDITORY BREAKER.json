@@ -19,7 +19,7 @@
     "positionHistory": [
         {
             "date": "26-10-2026",
-            "change": null,
+            "change": 0,
             "position": 37,
             "reason": "Release of the ESIList"
         },
