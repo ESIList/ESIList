@@ -522,7 +522,27 @@ main.dark .page-list .level-container .tag {
     }
 
     .page-list .level-container .level .records {
+        display: block;
         width: 100%;
+        table-layout: auto;
+    }
+
+    .page-list .level-container .level .records .record {
+        display: grid;
+        grid-template-columns: minmax(4.5rem, max-content) minmax(0, 1fr) 1.25rem max-content;
+        align-items: center;
+        gap: 0.5rem;
+        padding-block: 0.5rem;
+        border-bottom: 1px solid var(--color-background-hover);
+    }
+
+    .page-list .level-container .level .records .record td {
+        min-width: 0;
+        padding: 0;
+    }
+
+    .page-list .level-container .level .records .record td:not(:last-child) {
+        padding-right: 0;
     }
 
     .page-list .level-container .level .video {
@@ -537,6 +557,16 @@ main.dark .page-list .level-container .tag {
     .page-list .level-container .level .records .record-phrase {
         white-space: normal;
         overflow-wrap: anywhere;
+    }
+
+    .page-list .level-container .level .records .mobile img {
+        width: 1.25rem;
+        height: auto;
+    }
+
+    .page-list .level-container .level .records .video-icon {
+        width: 1.25rem;
+        height: 1.25rem;
     }
 
     .position-history-cards {
@@ -571,12 +601,13 @@ main.dark .page-list .level-container .tag {
     }
 
     .history-card {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 0.5rem;
     }
 
-    .history-card .history-reason {
-        grid-column: 1 / -1;
+    .history-card > * {
+        min-width: 0;
+        overflow-wrap: anywhere;
     }
 }
 

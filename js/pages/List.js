@@ -169,7 +169,7 @@ export default {
 
                     <h2>{{ $t('Records') }}</h2>
                     <p v-if="selected + 1 <= 75"><strong>{{ level.percentToQualify }}%</strong> {{ $t('or better to qualify') }}</p>
-                    <p v-else-if="selected +1 <= 150">{{ $t('100% or better to qualify') }}</p>
+                    <p v-else-if="selected + 1 <= 150"><strong>{{ Number(level.percentToQualify) > 0 ? level.percentToQualify : 100 }}%</strong> {{ $t('or better to qualify') }}</p>
                     <p v-else>{{ $t('This level does not accept new records.') }}</p>
                     <table class="records">
                         <tr v-for="record in level.records" class="record">
