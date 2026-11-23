@@ -239,4 +239,7 @@ async function updatePlayerGraphs() {
     console.log('\n🎉 Done!\n');
 }
 
-updatePlayerGraphs().catch(console.error);
+updatePlayerGraphs().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+});

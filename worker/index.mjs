@@ -104,10 +104,11 @@ function parseAllowedFile(file) {
     const isList = file.path === 'data/_list.json';
     const isRunsList = file.path === 'data/runs/_runs.json';
     const isChangelog = file.path === 'data/_changelog.json';
+    const isSiteConfig = file.path === 'data/_site_config.json';
     const isLevel = /^data\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
     const isRun = /^data\/runs\/[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}\.json$/.test(file.path);
-    if (!isList && !isRunsList && !isChangelog && !isLevel && !isRun) {
-        throw new Error('Only level, verification, changelog, and index JSON files can be changed.');
+    if (!isList && !isRunsList && !isChangelog && !isSiteConfig && !isLevel && !isRun) {
+        throw new Error('Only level, verification, changelog, site settings, and index JSON files can be changed.');
     }
     if (textEncoder.encode(file.content).length > maxFileSize) throw new Error('A JSON file exceeds the 180 KB limit.');
 
@@ -132,6 +133,11 @@ function parseAllowedFile(file) {
                 entry.message.length <= 4_000 &&
                 (entry.featured === undefined || typeof entry.featured === 'boolean'))) {
             throw new Error('The changelog must contain up to 200 valid dated entries.');
+        }
+    } else if (isSiteConfig) {
+        if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object' ||
+            typeof parsed.version !== 'string' || !parsed.version.trim() || parsed.version.length > 80) {
+            throw new Error('Site settings must include a version string of up to 80 characters.');
         }
     } else if (!parsed || Array.isArray(parsed) || typeof parsed !== 'object' ||
         typeof parsed.name !== 'string' || !Array.isArray(parsed.records) ||

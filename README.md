@@ -75,10 +75,11 @@ a unique, randomly generated password before making the editor available.
 
 The login has an approximate limit of five attempts per IP per minute per
 Cloudflare location; it is not a substitute for a strong password. The editor
-has three sections: **Verifications** manages runs and progress for levels not
+has four sections: **Verifications** manages runs and progress for levels not
 yet on the list, while **Records** shows every listed level, including levels
 without records, and manages its completions and progress. **Changelog** adds
-and removes dated updates displayed on the Changelog page.
+and removes dated updates displayed on the Changelog page. **Site settings**
+updates the version label shown in the header, stored in `data/_site_config.json`.
 
 Creating, moving, or deleting a listed level updates `data/_list.json` and
 adds position-history entries for every level whose rank changes. Deleting a
@@ -88,6 +89,12 @@ verification can also be deleted from **Verifications**; its run file and
 relevant index has not changed elsewhere before applying deletions; reload and
 retry if another update has landed. Each save is committed directly to the
 configured GitHub branch.
+
+Changes to `data/_list.json` automatically trigger the
+`Update leaderboard snapshots` workflow. It recalculates the current day's
+player snapshot and replaces that date if one already exists, preserving
+snapshots from earlier dates. It can also be started manually from the Actions
+tab. The workflow needs Actions write permission for repository contents.
 
 Verification entries can be reordered from their position field. Listed levels
 can also be swapped directly, with `Placed [level] at #[position]` history

@@ -88,6 +88,7 @@ export const store = Vue.reactive({
     theme: initialTheme,
     keepTheme,
     language: initialLanguage,
+    version: 'v2.0.0 (beta 2)',
     customHue: initialHue,
     customShade: initialShade,
     get dark() {
@@ -133,6 +134,19 @@ export const store = Vue.reactive({
         document.documentElement.lang = language;
         localStorage.setItem('language', language);
     },
+    async loadVersion() {
+        try {
+            const response = await fetch('/data/_site_config.json', { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const config = await response.json();
+            if (typeof config.version !== 'string' || !config.version.trim()) {
+                throw new Error('The site version is missing or invalid.');
+            }
+            this.version = config.version.trim();
+        } catch (error) {
+            console.error('Failed to load site version.', error);
+        }
+    },
     updateCustomTheme(property, value) {
         if (property === 'hue') {
             this.customHue = boundedNumber(value, this.customHue, 0, 360);
@@ -164,3 +178,4 @@ const router = VueRouter.createRouter({
 
 app.use(router);
 app.mount('#app');
+store.loadVersion();

@@ -1,5 +1,6 @@
 import { recordsApiUrl } from '../admin/config.js';
 import { fetchList, fetchRuns } from '../content.js';
+import { store } from '../main.js';
 
 const levelNamePattern = /^[A-Za-z0-9][A-Za-z0-9 _'-]{0,99}$/;
 
@@ -165,6 +166,23 @@ export default {
                                 </div>
                             </article>
                         </section>
+                    </section>
+                    <section v-else-if="selectedCategory === 'site-settings'" class="admin-records-site-settings">
+                        <form class="admin-records-site-settings-form" @submit.prevent="saveSiteSettings">
+                            <h2>{{ $t('Site settings') }}</h2>
+                            <label>
+                                {{ $t('Version label') }}
+                                <input
+                                    v-model.trim="siteVersionDraft"
+                                    maxlength="80"
+                                    required
+                                    :disabled="busy || !siteSettingsLoaded"
+                                >
+                            </label>
+                            <button class="admin-records-button" type="submit" :disabled="busy || !siteSettingsLoaded">
+                                {{ $t('Save version') }}
+                            </button>
+                        </form>
                     </section>
                     <div v-else class="admin-records-workspace">
                         <aside class="admin-records-sidebar">
@@ -359,7 +377,7 @@ export default {
                             </div>
                         </section>
 
-                        <section class="admin-records-records">
+                        <section v-if="selectedCategory !== 'verifications'" class="admin-records-records">
                             <h2>{{ $t('Records') }} ({{ currentRecords.length }})</h2>
                             <ul v-if="currentRecords.length">
                                 <li v-for="(record, index) in currentRecords" :key="index">
@@ -441,6 +459,7 @@ export default {
             { id: 'verifications', label: 'Verifications' },
             { id: 'records', label: 'Records' },
             { id: 'changelog', label: 'Changelog' },
+            { id: 'site-settings', label: 'Site settings' },
         ],
         selectedCategory: 'verifications',
         levels: [],
@@ -478,6 +497,8 @@ export default {
         editingChangelogIndex: null,
         editingChangelogText: '',
         editingChangelogFeatured: false,
+        siteVersionDraft: store.version,
+        siteSettingsLoaded: false,
     }),
     computed: {
         categoryItems() {
@@ -623,6 +644,7 @@ export default {
             this.error = '';
             this.success = '';
             if (category === 'changelog') await this.loadChangelog();
+            if (category === 'site-settings') await this.loadSiteSettings();
         },
         async selectItem(item) {
             this.selectedName = item.path;
@@ -632,6 +654,57 @@ export default {
             const runIndex = this.runEntries.findIndex((run) => run.path === item.path);
             this.selectedRunPosition = runIndex >= 0 ? runIndex + 1 : this.runEntries.length + 1;
             await this.loadSelected();
+        },
+        async loadSiteSettings() {
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                const response = await fetch('/data/_site_config.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const config = await response.json();
+                if (typeof config.version !== 'string' || !config.version.trim()) {
+                    throw new Error('The site version is missing or invalid.');
+                }
+                this.siteVersionDraft = config.version.trim();
+                this.siteSettingsLoaded = true;
+            } catch (error) {
+                this.siteSettingsLoaded = false;
+                this.error = this.$t('Could not load site settings.');
+                console.error('Failed to load site settings.', error);
+            } finally {
+                this.busy = false;
+            }
+        },
+        async saveSiteSettings() {
+            const version = this.siteVersionDraft.trim();
+            if (!version || version.length > 80) {
+                this.error = this.$t('Enter a site version of up to 80 characters.');
+                this.success = '';
+                return;
+            }
+
+            this.busy = true;
+            this.error = '';
+            this.success = '';
+            try {
+                await this.request('/api/files', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        files: [{
+                            path: 'data/_site_config.json',
+                            content: JSON.stringify({ version }, null, 4),
+                        }],
+                    }),
+                });
+                store.version = version;
+                this.siteVersionDraft = version;
+                this.success = this.$t('Site version saved.');
+            } catch (error) {
+                this.error = error.message;
+            } finally {
+                this.busy = false;
+            }
         },
         async loadSelected() {
             if (!this.selectedName) return;

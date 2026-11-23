@@ -35,6 +35,24 @@ export default {
         </main>
         <main v-else class="page-leaderboard-container">
             <div class="page-leaderboard" :class="{ 'player-selected': !showingGlobalGraph }">
+                <section class="leaderboard-header">
+                    <div class="leaderboard-header-copy">
+                        <p class="leaderboard-eyebrow">{{ $t('Player leaderboard') }}</p>
+                        <h1>{{ $t('Leaderboard') }}</h1>
+                        <p>{{ $t('Track points, rankings, and player progress.') }}</p>
+                    </div>
+                    <div class="leaderboard-header-stats">
+                        <div>
+                            <span>{{ $t('Players') }}</span>
+                            <strong>{{ leaderboard.length }}</strong>
+                        </div>
+                        <div>
+                            <span>{{ $t('Top score') }}</span>
+                            <strong>{{ localize(leaderboard[0]?.total ?? 0) }}</strong>
+                        </div>
+                    </div>
+                </section>
+
                 <div class="error-container">
                     <p class="error" v-if="err.length > 0">
                         {{ $t('Leaderboard may be incorrect, as the following levels could not be loaded: {levels}', { levels: err.join(', ') }) }}
@@ -60,7 +78,7 @@ export default {
 
                         <!-- Player Rows -->
                         <tr v-for="(ientry, i) in leaderboard" :key="ientry.user">
-                            <td class="rank"><p class="type-label-lg">#{{ i + 1 }}</p></td>
+                            <td class="rank"><p class="type-label-lg" :class="{ 'top-rank': i < 3 }">#{{ i + 1 }}</p></td>
                             <td class="total"><p class="type-label-lg">{{ localize(ientry.total) }}</p></td>
                             <td class="user" :class="{ 'active': selected == i && !showingGlobalGraph }">
                                 <button @click="selectPlayer(i)">
@@ -75,7 +93,13 @@ export default {
                 <div class="player-container">
                     <!-- Global Graph View -->
                     <div class="player" v-if="showingGlobalGraph">
-                        <h1>🌐 {{ $t('All Players Comparison') }}</h1>
+                        <div class="global-overview-heading">
+                            <div>
+                                <p class="leaderboard-eyebrow">{{ $t('Season overview') }}</p>
+                                <h2>🌐 {{ $t('All Players Comparison') }}</h2>
+                            </div>
+                            <p>{{ $t('Compare player points over time.') }}</p>
+                        </div>
                         <div class="global-graph-container">
                             <canvas id="globalPointsChart"></canvas>
                         </div>
@@ -86,8 +110,33 @@ export default {
                         <button class="mobile-board-button" type="button" @click="showGlobalGraph">
                             ← {{ $t('All players') }}
                         </button>
-                        <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
-                        <h3>{{ entry.total }}</h3>
+                        <section class="player-profile-card">
+                            <div class="player-avatar" aria-hidden="true">{{ entry.user.slice(0, 2).toUpperCase() }}</div>
+                            <div class="player-identity">
+                                <p class="leaderboard-eyebrow">{{ $t('Player profile') }}</p>
+                                <h1>{{ entry.user }}</h1>
+                                <span class="player-rank-badge">#{{ selected + 1 }} {{ $t('Rank') }}</span>
+                            </div>
+                            <div class="player-total-card">
+                                <span>{{ $t('Total points') }}</span>
+                                <strong>{{ localize(entry.total) }}</strong>
+                            </div>
+                        </section>
+
+                        <div class="player-stat-grid">
+                            <div>
+                                <span>{{ $t('Verified levels') }}</span>
+                                <strong>{{ entry.verified.length }}</strong>
+                            </div>
+                            <div>
+                                <span>{{ $t('Completed levels') }}</span>
+                                <strong>{{ entry.completed.length }}</strong>
+                            </div>
+                            <div>
+                                <span>{{ $t('Progress entries') }}</span>
+                                <strong>{{ entry.progressed.length }}</strong>
+                            </div>
+                        </div>
 
                         <div class="graph-container" v-if="entry.total > 0 && pointsOverTime.length > 0">
                             <canvas id="pointsChart"></canvas>
