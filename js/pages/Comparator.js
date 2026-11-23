@@ -175,8 +175,14 @@ export default {
                                         <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.progressed.length }}</td>
                                     </tr>
                                     <tr>
-                                        <th scope="row">{{ $t('Tag bonus points') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ localize(item.tagBonusPoints) }}</td>
+                                        <th scope="row">{{ $t('Hardest') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.hardestCompletedLevel }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ $t('Mastered skills') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">
+                                            {{ item.masteredSkills.length ? item.masteredSkills.join(', ') : '—' }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -195,6 +201,7 @@ export default {
         compareRightIndex: 1,
         comparisonMode: 'levels',
         profiles: [],
+        allLevels: [],
         compareLeftProfileIndex: 0,
         compareRightProfileIndex: 1,
     }),
@@ -212,9 +219,51 @@ export default {
                     const profile = this.profiles[index];
                     if (!profile) return null;
 
-                    const tagBonusPoints = (profile.tagBonuses || [])
-                        .reduce((sum, bonus) => sum + bonus.bonus, 0);
-                    return { index, rank: index + 1, profile, tagBonusPoints };
+                    const completedLevels = new Set([
+                        ...profile.completed.map((level) => level.level),
+                        ...profile.verified.map((level) => level.level),
+                    ]);
+                    const hardestCompleted = [...profile.completed, ...profile.verified]
+                        .reduce((hardest, level) =>
+                            !hardest || level.rank < hardest.rank ? level : hardest,
+                            null
+                        );
+                    const filterProgress = new Map();
+
+                    this.allLevels.forEach((level) => {
+                        const levelFilters = new Set(
+                            (Array.isArray(level.filters) ? level.filters : [])
+                                .map((filter) => resolveFilter(filter))
+                                .map((filter) => filter.id)
+                        );
+                        levelFilters.forEach((filterId) => {
+                            const filter = resolveFilter(filterId);
+                            if (!filterProgress.has(filterId)) {
+                                filterProgress.set(filterId, {
+                                    name: filter.name,
+                                    total: 0,
+                                    completed: 0,
+                                });
+                            }
+                            const progress = filterProgress.get(filterId);
+                            progress.total++;
+                            if (completedLevels.has(level.level)) progress.completed++;
+                        });
+                    });
+
+                    const masteredSkills = [...filterProgress.values()]
+                        .filter((filter) => filter.completed > filter.total / 2)
+                        .map((filter) => `${this.$t(filter.name)} (${filter.completed}/${filter.total})`);
+
+                    return {
+                        index,
+                        rank: index + 1,
+                        profile,
+                        hardestCompletedLevel: hardestCompleted
+                            ? `#${hardestCompleted.rank} ${hardestCompleted.level}`
+                            : '—',
+                        masteredSkills,
+                    };
                 })
                 .filter(Boolean);
         },
@@ -257,6 +306,9 @@ export default {
                 .filter(Boolean);
         },
     },
+    methods: {
+        localize,
+    },
     async mounted() {
         try {
             const list = await fetchList();
@@ -274,6 +326,7 @@ export default {
 
             const [profiles, , allLevels] = await fetchLeaderboard(list);
             this.profiles = applyTagBonuses(profiles, allLevels);
+            this.allLevels = allLevels;
             this.compareRightProfileIndex = this.profiles.length > 1 ? 1 : 0;
         } catch (error) {
             console.error("Failed to load comparison data.", error);
