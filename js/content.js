@@ -1,4 +1,5 @@
 import { round, score } from './score.js';
+import tags from "./components/List/Tags.js";
 
 const dir = '/data';
 
@@ -89,8 +90,8 @@ export async function fetchPlayerHistory(playerName) {
     }
 }
 
-export async function fetchLeaderboard() {
-    const list = await fetchList();
+export async function fetchLeaderboard(levelList) {
+    const list = levelList || await fetchList();
 
     const scoreMap = {};
     const errs = [];
@@ -181,4 +182,48 @@ export async function fetchLeaderboard() {
         }));
 
     return [res.sort((a, b) => b.total - a.total), errs, allLevels];
+}
+
+export function applyTagBonuses(leaderboard, allLevels) {
+    return leaderboard.map((entry) => {
+        const completedLevels = new Set([
+            ...entry.completed.map((level) => level.level),
+            ...entry.verified.map((level) => level.level),
+        ]);
+        const tagBonuses = [];
+        let totalBonus = 0;
+
+        tags.forEach((tag) => {
+            if (!tag.bonusEnabled) return;
+
+            const levelsWithTag = allLevels.filter((level) =>
+                Array.isArray(level.tags) &&
+                level.tags.some((value) =>
+                    String(value).toLowerCase() === tag.id.toLowerCase() ||
+                    String(value).toLowerCase() === tag.name.toLowerCase()
+                )
+            );
+
+            if (levelsWithTag.length === 0) return;
+
+            const totalLevelScore = levelsWithTag.reduce((sum, level) => {
+                const levelScore = score(level.rank, 100, level.percentToQualify || 50);
+                return sum + levelScore;
+            }, 0);
+
+            const bonus = round(totalLevelScore / (levelsWithTag.length * 2));
+            const completedAll = levelsWithTag.every((level) => completedLevels.has(level.level));
+
+            if (completedAll && bonus > 0) {
+                tagBonuses.push({ name: tag.name, bonus });
+                totalBonus += bonus;
+            }
+        });
+
+        return {
+            ...entry,
+            tagBonuses,
+            total: round(entry.total + totalBonus),
+        };
+    });
 }

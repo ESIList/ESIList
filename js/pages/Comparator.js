@@ -1,7 +1,8 @@
 import { score } from "../score.js";
-import { fetchList } from "../content.js";
+import { applyTagBonuses, fetchLeaderboard, fetchList } from "../content.js";
 import { resolveFilter } from "../components/List/Filters.js";
 import Spinner from "../components/Spinner.js";
+import { localize } from "../util.js";
 
 export default {
     components: { Spinner },
@@ -12,14 +13,24 @@ export default {
         <main v-else class="page-comparator">
             <section class="comparator-content">
                 <div class="comparator-heading">
-                    <h1>{{ $t('Level comparison') }}</h1>
-                    <p>{{ $t('Compare rankings, requirements, records, and gameplay filters side by side.') }}</p>
+                    <h1>{{ $t(comparisonMode === 'levels' ? 'Level comparison' : 'Profile comparison') }}</h1>
+                    <p>{{ $t('Compare levels or player profiles side by side.') }}</p>
                 </div>
 
                 <p v-if="loadError" class="comparator-message" role="alert">
-                    {{ $t('The level list could not be loaded. Please try again later.') }}
+                    {{ $t('Comparison data could not be loaded. Please try again later.') }}
                 </p>
                 <template v-else>
+                    <div class="compare-mode" role="group" :aria-label="$t('Comparison type')">
+                        <button type="button" :class="{ active: comparisonMode === 'levels' }" :aria-pressed="comparisonMode === 'levels'" @click="comparisonMode = 'levels'">
+                            {{ $t('Levels') }}
+                        </button>
+                        <button type="button" :class="{ active: comparisonMode === 'profiles' }" :aria-pressed="comparisonMode === 'profiles'" @click="comparisonMode = 'profiles'">
+                            {{ $t('Profiles') }}
+                        </button>
+                    </div>
+
+                    <template v-if="comparisonMode === 'levels'">
                     <div class="compare-selectors">
                         <label>
                             {{ $t('First level') }}
@@ -103,6 +114,75 @@ export default {
                         </table>
                     </div>
                     <p v-else class="comparator-message">{{ $t('At least two levels are needed for comparison.') }}</p>
+                    </template>
+
+                    <template v-else>
+                        <div class="compare-selectors">
+                            <label>
+                                {{ $t('First profile') }}
+                                <select v-model.number="compareLeftProfileIndex">
+                                    <option
+                                        v-for="option in profileOptions"
+                                        :key="option.index"
+                                        :value="option.index"
+                                        :disabled="option.index === compareRightProfileIndex"
+                                    >
+                                        #{{ option.rank }} – {{ option.user }}
+                                    </option>
+                                </select>
+                            </label>
+                            <label>
+                                {{ $t('Second profile') }}
+                                <select v-model.number="compareRightProfileIndex">
+                                    <option
+                                        v-for="option in profileOptions"
+                                        :key="option.index"
+                                        :value="option.index"
+                                        :disabled="option.index === compareLeftProfileIndex"
+                                    >
+                                        #{{ option.rank }} – {{ option.user }}
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div v-if="comparisonProfiles.length === 2" class="compare-table-wrapper">
+                            <table class="compare-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{{ $t('Statistic') }}</th>
+                                        <th v-for="item in comparisonProfiles" :key="item.index" scope="col">
+                                            <span class="compare-level-rank">#{{ item.rank }} {{ $t('Rank') }}</span>
+                                            {{ item.profile.user }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">{{ $t('Total points') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ localize(item.profile.total) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ $t('Verified levels') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.verified.length }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ $t('Completed levels') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.completed.length }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ $t('Progress entries') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.progressed.length }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">{{ $t('Tag bonus points') }}</th>
+                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ localize(item.tagBonusPoints) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p v-else class="comparator-message">{{ $t('At least two profiles are needed for comparison.') }}</p>
+                    </template>
                 </template>
             </section>
         </main>
@@ -113,8 +193,31 @@ export default {
         loadError: false,
         compareLeftIndex: 0,
         compareRightIndex: 1,
+        comparisonMode: 'levels',
+        profiles: [],
+        compareLeftProfileIndex: 0,
+        compareRightProfileIndex: 1,
     }),
     computed: {
+        profileOptions() {
+            return this.profiles.map((profile, index) => ({
+                index,
+                rank: index + 1,
+                user: profile.user,
+            }));
+        },
+        comparisonProfiles() {
+            return [...new Set([this.compareLeftProfileIndex, this.compareRightProfileIndex])]
+                .map((index) => {
+                    const profile = this.profiles[index];
+                    if (!profile) return null;
+
+                    const tagBonusPoints = (profile.tagBonuses || [])
+                        .reduce((sum, bonus) => sum + bonus.bonus, 0);
+                    return { index, rank: index + 1, profile, tagBonusPoints };
+                })
+                .filter(Boolean);
+        },
         comparisonOptions() {
             return this.list
                 .map(([level], index) => level ? {
@@ -168,8 +271,12 @@ export default {
                 .filter((index) => index >= 0);
             this.compareLeftIndex = validIndexes[0] ?? 0;
             this.compareRightIndex = validIndexes[1] ?? this.compareLeftIndex;
+
+            const [profiles, , allLevels] = await fetchLeaderboard(list);
+            this.profiles = applyTagBonuses(profiles, allLevels);
+            this.compareRightProfileIndex = this.profiles.length > 1 ? 1 : 0;
         } catch (error) {
-            console.error("Failed to load levels for comparison.", error);
+            console.error("Failed to load comparison data.", error);
             this.loadError = true;
         } finally {
             this.loading = false;

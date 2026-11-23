@@ -65,7 +65,7 @@ export default {
             <section class="admin-records-content">
                 <div class="admin-records-heading">
                     <div>
-                        <p class="admin-records-eyebrow">{{ $t('Records') }}</p>
+                        <p class="admin-records-eyebrow">{{ $t('Admin Panel') }}</p>
                         <h1>{{ $t('Record manager') }}</h1>
                     </div>
                     <button v-if="authorized" class="admin-records-button admin-records-button-secondary" type="button" @click="logout">
@@ -836,7 +836,7 @@ export default {
                 return;
             }
             if (this.levels.some((level) => level.toLocaleLowerCase() === name.toLocaleLowerCase())) {
-                this.error = this.$t('Listed levels must be edited in Records.');
+                this.error = this.$t('Listed levels must be edited in Admin Panel.');
                 this.success = '';
                 return;
             }

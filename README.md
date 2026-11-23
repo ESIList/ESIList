@@ -38,9 +38,9 @@ What are some common reasons for the website not loading?
   the last lines within list entries. A good way to find the error-causing lines can be found
   by using `Inspect Element` and going to the `Console` tab.
 
-### Records editor setup
+### Admin Panel setup
 
-The Records tab uses a Cloudflare Worker to authenticate editors and commit level
+The Admin Panel tab uses a Cloudflare Worker to authenticate editors and commit level
 JSON files to this repository. The username, password, session signing key, and
 GitHub token must be Cloudflare Worker secrets; do not put them in the website
 JavaScript or commit them to the repository. The provided password is weak; set

@@ -470,85 +470,6 @@
         border-bottom: 1px solid var(--color-background-hover);
     }
 
-    .page-leaderboard .player .table:not(.bonus-table) tr {
-        grid-template-columns: 2.5rem minmax(0, 1fr);
-        grid-template-areas:
-            "rank level"
-            ". score";
-    }
-
-    .page-leaderboard .player .table:not(.bonus-table) .rank {
-        grid-area: rank;
-    }
-
-    .page-leaderboard .player .table:not(.bonus-table) .level {
-        grid-area: level;
-    }
-
-    .page-leaderboard .player .table:not(.bonus-table) .score {
-        grid-area: score;
-        justify-self: end;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr,
-    .page-leaderboard .player .table.player-detail-table tr:not(.bonus-table) {
-        grid-template-columns: 2.75rem minmax(0, 1fr) 76px;
-        grid-template-areas: "rank level score";
-        align-items: start;
-        column-gap: 0.5rem;
-        width: 100%;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.rank {
-        grid-area: rank;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.level {
-        grid-area: level;
-        width: 100%;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.level a,
-    .page-leaderboard .player .table.player-detail-table tr td.level p {
-        display: block;
-        width: 100%;
-        margin-left: 0;
-        text-align: left;
-        overflow-wrap: anywhere;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.level a {
-        position: relative;
-        z-index: 2;
-        line-height: 1.15;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.level a.type-label-lg::before,
-    .page-leaderboard .player .table.player-detail-table tr td.level a.type-label-lg::after {
-        content: none;
-        display: none;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.level .level-subtitle {
-        display: block;
-        height: auto;
-        min-height: 0;
-        margin: 0.4rem 0 0;
-        padding: 0;
-        position: relative;
-        z-index: 1;
-        line-height: 1.2;
-        white-space: normal;
-    }
-
-    .page-leaderboard .player .table.player-detail-table tr td.score {
-        grid-area: score;
-        width: 76px;
-        justify-self: end;
-        text-align: end;
-    }
-
-
     .page-leaderboard .player .table td {
         min-width: 0;
         padding: 0 !important;
@@ -692,7 +613,13 @@
 .player-detail-filter-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 0.65rem;
+}
+
+.player-detail-tabs {
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-background-hover);
 }
 
 .player-detail-tabs button,
@@ -723,6 +650,20 @@
     color: var(--color-on-primary);
 }
 
+.player-detail-tabs button {
+    min-height: 2.4rem;
+    padding-inline: 1rem;
+    border-radius: 0.65rem;
+    background: var(--color-surface-hover);
+}
+
+.player-detail-tabs button.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    box-shadow: 0 2px 0 var(--color-primary);
+}
+
 .player-detail-button-grid button small,
 .player-detail-filter-grid button small {
     font-size: 0.72rem;
@@ -739,34 +680,79 @@
 }
 
 .player-detail-table {
+    display: grid;
+    gap: 0.35rem;
     width: 100%;
+    min-width: 0;
 }
 
-.page-leaderboard .player-detail-table tr.player-detail-row-completed .level a,
-.page-leaderboard .player-detail-table tr.player-detail-row-completed .rank p,
-.page-leaderboard .player-detail-table tr.player-detail-row-completed .score p {
-    color: #111111 !important;
+.player-detail-table article {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    grid-template-areas: "rank level score";
+    align-items: start;
+    column-gap: 0.75rem;
+    min-width: 0;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--color-background-hover);
 }
 
-.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .level,
-.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .rank,
-.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .score {
-    color: #8a8a8a !important;
-    opacity: 1;
+.player-detail-table .rank {
+    grid-area: rank;
+    color: var(--color-on-surface);
+    font-weight: 700;
 }
 
-.page-leaderboard .player-detail-table tr.player-detail-row-incomplete .level-subtitle {
+.player-detail-table .level {
+    grid-area: level;
+    min-width: 0;
+}
+
+.player-detail-table .level a {
+    display: block;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+}
+
+.player-detail-table .level a.type-label-lg::before,
+.player-detail-table .level a.type-label-lg::after {
     display: none;
 }
 
-.page-leaderboard .player-detail-table tr.player-detail-row-completed .level-subtitle {
+.player-detail-table .level .level-subtitle {
     display: block;
-    clear: both;
-    margin: 0.35rem 0 0;
-    padding-top: 0;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    color: var(--color-on-surface);
+    font-size: 0.86rem;
     line-height: 1.25;
-    position: relative;
-    z-index: 1;
+    min-height: 1.25em;
+    opacity: 0.8;
+    overflow-wrap: anywhere;
+}
+
+.player-detail-table .score {
+    grid-area: score;
+    color: var(--color-on-surface);
+    font-weight: 700;
+    text-align: end;
+    white-space: nowrap;
+}
+
+.player-detail-table .player-detail-row-completed .rank,
+.player-detail-table .player-detail-row-completed .level a,
+.player-detail-table .player-detail-row-completed .score {
+    color: var(--color-on-surface);
+}
+
+.player-detail-table .player-detail-row-incomplete .rank,
+.player-detail-table .player-detail-row-incomplete .level a,
+.player-detail-table .player-detail-row-incomplete .score {
+    color: color-mix(in srgb, var(--color-on-surface) 52%, transparent);
+}
+
+.player-detail-table .player-detail-row-incomplete .level-subtitle {
+    display: none;
 }
 
 .player-detail-empty {
@@ -780,6 +766,26 @@
 @media screen and (max-width: 900px), screen and (pointer: coarse) {
     .filter-progress-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .player-detail-table article {
+        grid-template-columns: 2.75rem minmax(0, 1fr);
+        grid-template-areas:
+            "rank level"
+            ". score";
+        column-gap: 0.65rem;
+        row-gap: 0.25rem;
+        padding: 0.75rem 0;
+    }
+
+    .player-detail-table .rank,
+    .player-detail-table .level,
+    .player-detail-table .score {
+        min-width: 0;
+    }
+
+    .player-detail-table .score {
+        justify-self: end;
     }
 
     .player-detail-heading {

@@ -1,9 +1,8 @@
-import { fetchLeaderboard, fetchPlayerHistory } from '../content.js';
+import { applyTagBonuses, fetchLeaderboard, fetchPlayerHistory } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
 import tags from "../components/List/Tags.js";
 import filterRegistry, { resolveFilter } from "../components/List/Filters.js";
-import { score } from '../score.js';
 import { store } from '../main.js';
 
 
@@ -27,7 +26,7 @@ export default {
         activePlayerSection: 'overview',
         activeTagId: '',
         activeFilterId: '',
-        activeBrowserGroup: 'categories',
+        activeBrowserGroup: 'position',
         playerColors: {
             'Lolencio04': '#ff0000',
             'Ninjedu': '#580072',
@@ -55,8 +54,8 @@ export default {
                             <strong>{{ leaderboard.length }}</strong>
                         </div>
                         <div>
-                            <span>{{ $t('Top score') }}</span>
-                            <strong>{{ localize(leaderboard[0]?.total ?? 0) }}</strong>
+                            <span>{{ $t('Total points') }}</span>
+                            <strong>{{ localize(totalLeaderboardPoints) }}</strong>
                         </div>
                     </div>
                 </section>
@@ -160,13 +159,13 @@ export default {
 
                             <div class="player-detail-groups">
                                 <nav class="player-detail-tabs" aria-label="Level browser groups">
-                                    <button type="button" :class="{ active: activeBrowserGroup === 'categories' }" @click="setBrowserGroup('categories')">{{ $t('Categories') }}</button>
+                                    <button type="button" :class="{ active: activeBrowserGroup === 'position' }" @click="setBrowserGroup('position')">{{ $t('Position') }}</button>
                                     <button type="button" :class="{ active: activeBrowserGroup === 'status' }" @click="setBrowserGroup('status')">{{ $t('Record status') }}</button>
                                     <button type="button" :class="{ active: activeBrowserGroup === 'filters' }" @click="setBrowserGroup('filters')">{{ $t('Filters') }}</button>
                                     <button type="button" v-if="tagButtons.length" :class="{ active: activeBrowserGroup === 'tags' }" @click="setBrowserGroup('tags')">{{ $t('Tags') }}</button>
                                 </nav>
 
-                                <div v-if="activeBrowserGroup === 'categories'" class="player-detail-button-grid">
+                                <div v-if="activeBrowserGroup === 'position'" class="player-detail-button-grid">
                                     <button type="button" :class="{ active: activePlayerSection === 'overview' }" @click="setPlayerSection('overview')">{{ $t('Overview') }}</button>
                                     <button type="button" :class="{ active: activePlayerSection === 'main' }" @click="setPlayerSection('main')">#1–75</button>
                                     <button type="button" :class="{ active: activePlayerSection === 'extended' }" @click="setPlayerSection('extended')">#76–150</button>
@@ -211,22 +210,22 @@ export default {
                                 <p class="player-detail-empty">{{ $t('Choose a category, status, filter or tag to browse levels.') }}</p>
                             </div>
 
-                            <table v-else-if="activePlayerLevels.length" class="table player-detail-table">
-                                <tr
+                            <div v-else-if="activePlayerLevels.length" class="player-detail-table">
+                                <article
                                     v-for="level in activePlayerLevels"
                                     :key="level.level"
                                     :class="level.rowTone ? 'player-detail-row-' + level.rowTone : ''"
                                 >
-                                    <td class="rank"><p>#{{ level.rank }}</p></td>
-                                    <td class="level">
+                                    <span class="rank">#{{ level.rank }}</span>
+                                    <div class="level">
                                         <a class="type-label-lg" target="_blank" :href="level.link">{{ level.displayName || level.level }}</a>
                                         <p v-if="level.showSubtitle && getSubtitle(level.level)" class="level-subtitle">
                                             – “{{ getSubtitle(level.level) }}”
                                         </p>
-                                    </td>
-                                    <td class="score"><p v-if="level.score !== null">{{ level.scorePrefix || '+' }}{{ localize(level.score) }}</p></td>
-                                </tr>
-                            </table>
+                                    </div>
+                                    <span v-if="level.score !== null" class="score">{{ level.scorePrefix || '+' }}{{ localize(level.score) }}</span>
+                                </article>
+                            </div>
                             <p v-else class="player-detail-empty">{{ $t('No levels in this section.') }}</p>
                         </section>
                     </div>
@@ -235,6 +234,10 @@ export default {
         </main>
     `,
     computed: {
+        totalLeaderboardPoints() {
+            return this.leaderboard.reduce((sum, entry) => sum + entry.total, 0);
+        },
+
         entry() {
             return this.leaderboard[this.selected];
         },
@@ -445,7 +448,7 @@ export default {
             this.activePlayerSection = 'overview';
             this.activeTagId = '';
             this.activeFilterId = '';
-            this.activeBrowserGroup = 'categories';
+            this.activeBrowserGroup = 'position';
         },
         showingGlobalGraph(newVal) {
             if (newVal) {
@@ -482,7 +485,7 @@ export default {
         this.leaderboard = leaderboard;
         this.err = err;
         this.allLevels = allLevels;
-        this.applyTagBonuses();
+        this.leaderboard = applyTagBonuses(this.leaderboard, this.allLevels);
 
         const playerFromQuery = this.$route.query.player;
         if (playerFromQuery) {
@@ -523,7 +526,7 @@ export default {
             this.activePlayerSection = 'overview';
             this.activeTagId = '';
             this.activeFilterId = '';
-            this.activeBrowserGroup = 'categories';
+            this.activeBrowserGroup = 'position';
             if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
             }
@@ -774,47 +777,5 @@ export default {
             });
         },
 
-        applyTagBonuses() {
-            this.leaderboard.forEach(entry => {
-                const completedLevels = new Set([
-                    ...entry.completed.map(l => l.level),
-                    ...entry.verified.map(l => l.level),
-                ]);
-
-                entry.tagBonuses = [];
-                let totalBonus = 0;
-
-                tags.forEach(tag => {
-                    if (!tag.bonusEnabled) return;
-
-                    const levelsWithTag = this.allLevels.filter(l =>
-                        Array.isArray(l.tags) &&
-                        l.tags.some(t =>
-                            String(t).toLowerCase() === tag.id.toLowerCase() ||
-                            String(t).toLowerCase() === tag.name.toLowerCase()
-                        )
-                    );
-
-                    if (levelsWithTag.length === 0) return;
-
-                    const totalLevelScore = levelsWithTag.reduce((sum, level) => {
-                        const lvlScore = score(level.rank, 100, level.percentToQualify || 50);
-                        return sum + lvlScore;
-                    }, 0);
-
-                    const averageLevelScore = totalLevelScore / (levelsWithTag.length * 2);
-                    const bonus = Math.round(averageLevelScore * 1000) / 1000;
-                    const completedAll = levelsWithTag.every(l => completedLevels.has(l.level));
-
-                    if (completedAll && bonus > 0) {
-                        entry.tagBonuses.push({ name: tag.name, bonus });
-                        totalBonus += bonus;
-                    }
-                });
-
-                entry.total += totalBonus;
-                entry.total = Math.round(entry.total * 1000) / 1000;
-            });
-        },
     },
 };
