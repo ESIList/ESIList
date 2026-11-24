@@ -1,6 +1,11 @@
 [
     {
         "date": "24-11-2026",
+        "message": "• THE ULTIMATE RETURN has been raised from #91 to #82, above MAKE IT DROP and below ROBOTCHIEF EXPOSAL",
+        "featured": false
+    },
+    {
+        "date": "24-11-2026",
         "message": "• Release of ESILIST v2.1.0<br>• New Points Formula. Until there are 150 levels on the list, users have a lower point count. This has been made to award those who grind more.<br>• Added Recommended Levels in User Section.<br>• Upgraded the Comparator Utility.<br>• Added Progress Points to the Levels Section",
         "featured": true
     },
