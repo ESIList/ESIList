@@ -5106,7 +5106,7 @@
       "date": "2026-11-24",
       "players": {
         "cauri": {
-          "total": 5884.455,
+          "total": 5879.708,
           "levelCount": 67,
           "levels": {
             "NOMAD": {
@@ -5306,23 +5306,23 @@
               "type": "verified"
             },
             "MAKE IT DROP": {
-              "points": 37.817,
-              "type": "verified"
-            },
-            "PROTEUS": {
               "points": 36.787,
               "type": "verified"
             },
-            "JRJRJR": {
+            "PROTEUS": {
               "points": 35.779,
               "type": "verified"
             },
-            "FINKOR": {
+            "JRJRJR": {
               "points": 34.801,
               "type": "verified"
             },
+            "FINKOR": {
+              "points": 33.86,
+              "type": "verified"
+            },
             "DARK ODYSSEY": {
-              "points": 32.119,
+              "points": 31.329,
               "type": "verified"
             },
             "FORBIDDEN ISLE": {
@@ -5380,7 +5380,7 @@
           }
         },
         "itzniw": {
-          "total": 2628.119,
+          "total": 2631.836,
           "levelCount": 51,
           "levels": {
             "FIREPOWER": {
@@ -5467,23 +5467,23 @@
               "points": 55.4,
               "type": "verified"
             },
-            "RETENTION": {
-              "points": 33.86,
+            "THE ULTIMATE RETURN": {
+              "points": 37.817,
               "type": "verified"
             },
-            "LOST LOVE": {
+            "RETENTION": {
               "points": 32.964,
               "type": "verified"
             },
-            "NAPALM": {
-              "points": 31.329,
+            "LOST LOVE": {
+              "points": 32.119,
               "type": "verified"
             },
-            "MYOCARDIA": {
+            "NAPALM": {
               "points": 30.6,
               "type": "verified"
             },
-            "THE ULTIMATE RETURN": {
+            "MYOCARDIA": {
               "points": 29.938,
               "type": "verified"
             },
@@ -5560,7 +5560,7 @@
               "type": "completed"
             },
             "MAKE IT DROP": {
-              "points": 37.817,
+              "points": 36.787,
               "type": "completed"
             },
             "FORBIDDEN ISLE": {
