@@ -1,5 +1,5 @@
 import { score } from "../score.js";
-import { applyTagBonuses, fetchLeaderboard, fetchList } from "../content.js";
+import { fetchLeaderboard, fetchList } from "../content.js";
 import { resolveFilter } from "../components/List/Filters.js";
 import Spinner from "../components/Spinner.js";
 import { localize } from "../util.js";
@@ -76,39 +76,24 @@ export default {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">{{ $t('ID') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.id ?? '—' }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Creator') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.author || '—' }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Verifier') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.verifier || '—' }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Points') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.points }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Qualification') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.qualification }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('AREDL placement') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.level.aredl || '—' }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Records') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">
-                                        {{ item.recordCount }} ({{ $t('Best') }}: {{ item.bestRecord }})
+                                <tr v-for="row in levelComparisonRows" :key="row.label">
+                                    <th scope="row">{{ $t(row.label) }}</th>
+                                    <td
+                                        v-for="(item, side) in comparisonLevels"
+                                        :key="item.index"
+                                        :class="row.direction ? comparisonCellClass(comparisonLevels, side, row.compareKey, row.direction) : ''"
+                                    >
+                                        <span class="compare-cell-content">
+                                            <span class="compare-value">{{ item[row.key] }}</span>
+                                            <small
+                                                v-if="row.direction && comparisonStatus(comparisonLevels, side, row.compareKey, row.direction)"
+                                                class="compare-outcome"
+                                                :class="comparisonOutcomeClass(comparisonLevels, side, row.compareKey, row.direction)"
+                                            >
+                                                {{ $t(comparisonStatus(comparisonLevels, side, row.compareKey, row.direction)) }}
+                                            </small>
+                                        </span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">{{ $t('Gameplay filters') }}</th>
-                                    <td v-for="item in comparisonLevels" :key="item.index">{{ item.filters }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -158,30 +143,23 @@ export default {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">{{ $t('Total points') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ localize(item.profile.total) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t('Verified levels') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.verified.length }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t('Completed levels') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.completed.length }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t('Progress entries') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.profile.progressed.length }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t('Hardest') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">{{ item.hardestCompletedLevel }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">{{ $t('Mastered skills') }}</th>
-                                        <td v-for="item in comparisonProfiles" :key="item.index">
-                                            {{ item.masteredSkills.length ? item.masteredSkills.join(', ') : '—' }}
+                                    <tr v-for="row in profileComparisonRows" :key="row.label">
+                                        <th scope="row">{{ $t(row.label) }}</th>
+                                        <td
+                                            v-for="(item, side) in comparisonProfiles"
+                                            :key="item.index"
+                                            :class="row.direction ? comparisonCellClass(comparisonProfiles, side, row.compareKey, row.direction) : ''"
+                                        >
+                                            <span class="compare-cell-content">
+                                                <span class="compare-value">{{ item[row.key] }}</span>
+                                                <small
+                                                    v-if="row.direction && comparisonStatus(comparisonProfiles, side, row.compareKey, row.direction)"
+                                                    class="compare-outcome"
+                                                    :class="comparisonOutcomeClass(comparisonProfiles, side, row.compareKey, row.direction)"
+                                                >
+                                                    {{ $t(comparisonStatus(comparisonProfiles, side, row.compareKey, row.direction)) }}
+                                                </small>
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -206,6 +184,31 @@ export default {
         compareRightProfileIndex: 1,
     }),
     computed: {
+        levelComparisonRows() {
+            return [
+                { label: 'List position', key: 'position', compareKey: 'rank', direction: 'lower' },
+                { label: 'ID', key: 'id' },
+                { label: 'Creator', key: 'creator' },
+                { label: 'Verifier', key: 'verifier' },
+                { label: 'Points', key: 'points', compareKey: 'points', direction: 'higher' },
+                { label: 'Qualification', key: 'qualification', compareKey: 'qualificationPercent', direction: 'lower' },
+                { label: 'AREDL placement', key: 'aredl', compareKey: 'aredlRank', direction: 'lower' },
+                { label: 'Records', key: 'recordCount', compareKey: 'recordCount', direction: 'higher' },
+                { label: 'Best record', key: 'bestRecord', compareKey: 'bestRecordPercent', direction: 'higher' },
+                { label: 'Gameplay filters', key: 'filters' },
+            ];
+        },
+        profileComparisonRows() {
+            return [
+                { label: 'Leaderboard rank', key: 'rank', compareKey: 'rank', direction: 'lower' },
+                { label: 'Total points', key: 'totalPoints', compareKey: 'totalPoints', direction: 'higher' },
+                { label: 'Verified levels', key: 'verifiedCount', compareKey: 'verifiedCount', direction: 'higher' },
+                { label: 'Completed levels', key: 'completedCount', compareKey: 'completedCount', direction: 'higher' },
+                { label: 'Progress entries', key: 'progressCount', compareKey: 'progressCount', direction: 'higher' },
+                { label: 'Hardest', key: 'hardestCompletedLevel', compareKey: 'hardestCompletedRank', direction: 'lower' },
+                { label: 'Mastered skills', key: 'masteredSkillsDisplay', compareKey: 'masteredSkillCount', direction: 'higher' },
+            ];
+        },
         profileOptions() {
             return this.profiles.map((profile, index) => ({
                 index,
@@ -259,8 +262,17 @@ export default {
                         index,
                         rank: index + 1,
                         profile,
+                        totalPoints: profile.total,
+                        verifiedCount: profile.verified.length,
+                        completedCount: profile.completed.length,
+                        progressCount: profile.progressed.length,
                         hardestCompletedLevel: hardestCompleted
                             ? `#${hardestCompleted.rank} ${hardestCompleted.level}`
+                            : '—',
+                        hardestCompletedRank: hardestCompleted ? hardestCompleted.rank : null,
+                        masteredSkillCount: masteredSkills.length,
+                        masteredSkillsDisplay: masteredSkills.length
+                            ? `${masteredSkills.length}: ${masteredSkills.join(', ')}`
                             : '—',
                         masteredSkills,
                     };
@@ -290,14 +302,24 @@ export default {
                         index,
                         rank,
                         level,
-                        points: score(rank, 100, Number(level.percentToQualify) || 0),
+                        position: `#${rank}`,
+                        id: level.id ?? '—',
+                        creator: level.author || '—',
+                        verifier: level.verifier || '—',
+                        points: score(rank, 100, Number(level.percentToQualify) || 0, this.list.length),
                         qualification: rank <= 75
                             ? this.$t('{percent}% or better', { percent: level.percentToQualify ?? this.$t('N/A') })
                             : rank <= 150
                                 ? this.$t('100% or better')
                                 : this.$t('Does not accept new records'),
+                        qualificationPercent: rank <= 75
+                            ? Number(level.percentToQualify)
+                            : rank <= 150 ? 100 : null,
+                        aredl: level.aredl || '—',
+                        aredlRank: Number.parseInt(String(level.aredl || '').replace(/\D/g, ''), 10),
                         recordCount: records.length,
                         bestRecord: records[0] ? `${records[0].percent}%` : '—',
+                        bestRecordPercent: records[0] ? Number.parseFloat(String(records[0].percent)) : null,
                         filters: filters.length
                             ? filters.map((filter) => this.$t(resolveFilter(filter).name)).join(', ')
                             : '—',
@@ -308,6 +330,36 @@ export default {
     },
     methods: {
         localize,
+        comparisonStatus(items, side, key, direction) {
+            if (items.length !== 2) return '';
+
+            const values = items.map((item) => item[key]);
+            if (values.some((value) => value === null || value === undefined || value === '—')) return '';
+
+            const [left, right] = values.map(Number);
+            if (!Number.isFinite(left) || !Number.isFinite(right)) return '';
+            if (left === right) return 'Tie';
+
+            const leftWins = direction === 'lower' ? left < right : left > right;
+            const winner = leftWins ? 0 : 1;
+            return side === winner ? 'Wins' : 'Loses';
+        },
+        comparisonCellClass(items, side, key, direction) {
+            const status = this.comparisonStatus(items, side, key, direction);
+            return status === 'Wins'
+                ? 'compare-cell-winner'
+                : status === 'Loses'
+                    ? 'compare-cell-loser'
+                    : status === 'Tie' ? 'compare-cell-tie' : '';
+        },
+        comparisonOutcomeClass(items, side, key, direction) {
+            const status = this.comparisonStatus(items, side, key, direction);
+            return status === 'Wins'
+                ? 'compare-outcome-winner'
+                : status === 'Loses'
+                    ? 'compare-outcome-loser'
+                    : status === 'Tie' ? 'compare-outcome-tie' : '';
+        },
     },
     async mounted() {
         try {
@@ -325,7 +377,7 @@ export default {
             this.compareRightIndex = validIndexes[1] ?? this.compareLeftIndex;
 
             const [profiles, , allLevels] = await fetchLeaderboard(list);
-            this.profiles = applyTagBonuses(profiles, allLevels);
+            this.profiles = profiles;
             this.allLevels = allLevels;
             this.compareRightProfileIndex = this.profiles.length > 1 ? 1 : 0;
         } catch (error) {

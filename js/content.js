@@ -1,5 +1,4 @@
-import { round, score } from './score.js';
-import tags from "./components/List/Tags.js";
+import { calculateLeaderboard } from './scoring.mjs';
 
 const dir = '/data';
 
@@ -82,8 +81,7 @@ export async function fetchPlayerHistory(playerName) {
             .filter(s => s.players[playerName])
             .map(s => ({
                 date: s.date,
-                total: s.players[playerName].total,
-                tagBonuses: s.players[playerName].tagBonuses || []
+                total: s.players[playerName].total
             }));
     } catch {
         return [];
@@ -93,87 +91,26 @@ export async function fetchPlayerHistory(playerName) {
 export async function fetchLeaderboard(levelList) {
     const list = levelList || await fetchList();
 
-    const scoreMap = {};
     const errs = [];
-    list.forEach(([level, err], rank) => {
+    const levels = list.map(([level, err], rank) => {
         if (err) {
             errs.push(err);
-            return;
+            return null;
         }
-
-        const verifier = Object.keys(scoreMap).find(
-            (u) => u.toLowerCase() === level.verifier.toLowerCase(),
-        ) || level.verifier;
-        scoreMap[verifier] ??= {
-            verified: [],
-            completed: [],
-            progressed: [],
-        };
-        const { verified } = scoreMap[verifier];
-        // ALWAYS calculate from current rank, ignore stored verificationPointsEarned
-        verified.push({
-            rank: rank + 1,
-            level: level.name,
-            score: score(rank + 1, 100, level.percentToQualify),
-            link: level.verification,
-            date: level.verificationDate,
-        });
-
-        level.records.forEach((record) => {
-            const user = Object.keys(scoreMap).find(
-                (u) => u.toLowerCase() === record.user.toLowerCase(),
-            ) || record.user;
-            scoreMap[user] ??= {
-                verified: [],
-                completed: [],
-                progressed: [],
-            };
-            const { completed, progressed } = scoreMap[user];
-            if (record.percent === 100) {
-                // ALWAYS calculate from current rank, ignore stored pointsEarned
-                completed.push({
-                    rank: rank + 1,
-                    level: level.name,
-                    score: score(rank + 1, 100, level.percentToQualify),
-                    link: record.link,
-                    date: record.date,
-                });
-                return;
-            }
-
-            // ALWAYS calculate from current rank, ignore stored pointsEarned
-            progressed.push({
-                rank: rank + 1,
-                level: level.name,
-                percent: record.percent,
-                score: score(rank + 1, record.percent, level.percentToQualify),
-                link: record.link,
-                date: record.date,
-            });
-        });
+        return { ...level, rank: rank + 1 };
     });
 
-    const res = Object.entries(scoreMap).map(([user, scores]) => {
-        const { verified, completed, progressed } = scores;
-        const total = [verified, completed, progressed]
-            .flat()
-            .reduce((prev, cur) => prev + cur.score, 0);
+    const res = calculateLeaderboard(levels, list.length);
 
-        return {
-            user,
-            total: round(total),
-            ...scores,
-        };
-    });
-
-    const allLevels = list
-        .filter(([level]) => level)
-        .map(([level], rank) => ({
+    const allLevels = levels
+        .filter(Boolean)
+        .map((level) => ({
+            id: level.id,
             level: level.name,
-            rank: rank + 1,
+            rank: level.rank,
             link: level.verification || '#',
             tags: level.tags || [],
-            filters: level.filters || [],   // <-- NEW
+            filters: level.filters || [],
             score: 0,
             percentToQualify: level.percentToQualify,
             skills: level.skills || [],
@@ -182,48 +119,4 @@ export async function fetchLeaderboard(levelList) {
         }));
 
     return [res.sort((a, b) => b.total - a.total), errs, allLevels];
-}
-
-export function applyTagBonuses(leaderboard, allLevels) {
-    return leaderboard.map((entry) => {
-        const completedLevels = new Set([
-            ...entry.completed.map((level) => level.level),
-            ...entry.verified.map((level) => level.level),
-        ]);
-        const tagBonuses = [];
-        let totalBonus = 0;
-
-        tags.forEach((tag) => {
-            if (!tag.bonusEnabled) return;
-
-            const levelsWithTag = allLevels.filter((level) =>
-                Array.isArray(level.tags) &&
-                level.tags.some((value) =>
-                    String(value).toLowerCase() === tag.id.toLowerCase() ||
-                    String(value).toLowerCase() === tag.name.toLowerCase()
-                )
-            );
-
-            if (levelsWithTag.length === 0) return;
-
-            const totalLevelScore = levelsWithTag.reduce((sum, level) => {
-                const levelScore = score(level.rank, 100, level.percentToQualify || 50);
-                return sum + levelScore;
-            }, 0);
-
-            const bonus = round(totalLevelScore / (levelsWithTag.length * 2));
-            const completedAll = levelsWithTag.every((level) => completedLevels.has(level.level));
-
-            if (completedAll && bonus > 0) {
-                tagBonuses.push({ name: tag.name, bonus });
-                totalBonus += bonus;
-            }
-        });
-
-        return {
-            ...entry,
-            tagBonuses,
-            total: round(entry.total + totalBonus),
-        };
-    });
 }

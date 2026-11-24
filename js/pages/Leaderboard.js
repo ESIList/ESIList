@@ -1,4 +1,4 @@
-import { applyTagBonuses, fetchLeaderboard, fetchPlayerHistory } from '../content.js';
+import { fetchLeaderboard, fetchPlayerHistory } from '../content.js';
 import { localize } from '../util.js';
 import Spinner from '../components/Spinner.js';
 import tags from "../components/List/Tags.js";
@@ -23,10 +23,10 @@ export default {
         showingGlobalGraph: true,
         err: [],
         allLevels: [],
-        activePlayerSection: 'overview',
+        activePlayerSection: 'main',
         activeTagId: '',
         activeFilterId: '',
-        activeBrowserGroup: 'position',
+        activeBrowserGroup: 'recommendations',
         playerColors: {
             'Lolencio04': '#ff0000',
             'Ninjedu': '#580072',
@@ -154,11 +154,12 @@ export default {
                                     <p class="leaderboard-eyebrow">{{ $t('Level browser') }}</p>
                                     <h2>{{ playerSectionTitle }}</h2>
                                 </div>
-                                <span v-if="activePlayerLevels.length">{{ activePlayerLevels.length }} {{ $t('levels') }}</span>
+                                <span v-if="playerSectionCount">{{ playerSectionCount }} {{ $t('levels') }}</span>
                             </div>
 
                             <div class="player-detail-groups">
                                 <nav class="player-detail-tabs" aria-label="Level browser groups">
+                                    <button type="button" :class="{ active: activeBrowserGroup === 'recommendations' }" @click="setBrowserGroup('recommendations')">{{ $t('Recommendations') }}</button>
                                     <button type="button" :class="{ active: activeBrowserGroup === 'position' }" @click="setBrowserGroup('position')">{{ $t('Position') }}</button>
                                     <button type="button" :class="{ active: activeBrowserGroup === 'status' }" @click="setBrowserGroup('status')">{{ $t('Record status') }}</button>
                                     <button type="button" :class="{ active: activeBrowserGroup === 'filters' }" @click="setBrowserGroup('filters')">{{ $t('Filters') }}</button>
@@ -166,7 +167,6 @@ export default {
                                 </nav>
 
                                 <div v-if="activeBrowserGroup === 'position'" class="player-detail-button-grid">
-                                    <button type="button" :class="{ active: activePlayerSection === 'overview' }" @click="setPlayerSection('overview')">{{ $t('Overview') }}</button>
                                     <button type="button" :class="{ active: activePlayerSection === 'main' }" @click="setPlayerSection('main')">#1–75</button>
                                     <button type="button" :class="{ active: activePlayerSection === 'extended' }" @click="setPlayerSection('extended')">#76–150</button>
                                     <button type="button" :class="{ active: activePlayerSection === 'legacy' }" @click="setPlayerSection('legacy')">#151+</button>
@@ -206,8 +206,39 @@ export default {
                                 </div>
                             </div>
 
-                            <div v-if="activePlayerSection === 'overview'" class="player-detail-overview">
-                                <p class="player-detail-empty">{{ $t('Choose a category, status, filter or tag to browse levels.') }}</p>
+                            <div v-if="activeBrowserGroup === 'recommendations'" class="player-recommendations-container">
+                                <section class="player-recommendations">
+                                    <p v-if="!masteredFilters.length" class="player-detail-empty">
+                                        {{ $t('Complete more levels to discover your mastered skills.') }}
+                                    </p>
+                                    <div v-else-if="recommendedLevels.length" class="player-recommendation-list">
+                                        <button
+                                            v-for="level in recommendedLevels"
+                                            :key="level.id"
+                                            type="button"
+                                            class="player-recommendation"
+                                            @click="selectRecommendedLevel(level)"
+                                        >
+                                            <span class="player-recommendation-rank">#{{ level.rank }}</span>
+                                            <span class="player-recommendation-content">
+                                                <strong>{{ level.level }}</strong>
+                                                <span class="player-recommendation-skills">
+                                                    <span
+                                                        v-for="skill in level.matchingSkills"
+                                                        :key="skill.id"
+                                                        class="player-recommendation-skill"
+                                                    >
+                                                        <span>{{ $t(skill.name) }}</span>
+                                                        <strong>({{ skill.completed }}/{{ skill.total }})</strong>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <p v-else class="player-detail-empty">
+                                        {{ $t('No uncompleted levels match your mastered skills.') }}
+                                    </p>
+                                </section>
                             </div>
 
                             <div v-else-if="activePlayerLevels.length" class="player-detail-table">
@@ -265,11 +296,6 @@ export default {
             });
 
             const dates = Object.keys(groupedByDate).sort((a, b) => new Date(a) - new Date(b));
-            if (dates.length > 0 && this.entry.tagBonuses && this.entry.tagBonuses.length > 0) {
-                const lastDate = dates[dates.length - 1];
-                const bonusTotal = this.entry.tagBonuses.reduce((sum, b) => sum + b.bonus, 0);
-                groupedByDate[lastDate] += bonusTotal;
-            }
 
             return Object.entries(groupedByDate).map(([date, total]) => ({
                 date,
@@ -316,8 +342,9 @@ export default {
         },
 
         playerSectionTitle() {
+            if (this.activeBrowserGroup === 'recommendations') return this.$t('Recommended levels');
+
             const titles = {
-                overview: 'Overview',
                 main: 'Main list (#1–75)',
                 extended: 'Extended list (#76–150)',
                 legacy: 'Legacy list (#151+)',
@@ -334,7 +361,13 @@ export default {
                 const tag = this.tagButtons.find((item) => item.id === this.activeTagId);
                 return tag ? this.$t(tag.name) : this.$t('Tags');
             }
-            return this.$t(titles[this.activePlayerSection] || 'Overview');
+            return this.$t(titles[this.activePlayerSection] || 'Main list (#1–75)');
+        },
+
+        playerSectionCount() {
+            return this.activeBrowserGroup === 'recommendations'
+                ? this.recommendedLevels.length
+                : this.activePlayerLevels.length;
         },
 
         activePlayerLevels() {
@@ -367,7 +400,6 @@ export default {
                 };
             };
 
-            if (this.activePlayerSection === 'overview') return [];
             if (this.activePlayerSection === 'main') {
                 return this.allLevels.filter((level) => level.rank <= 75).map((level) => buildLevel(level));
             }
@@ -409,7 +441,7 @@ export default {
         filterProgress() {
             if (!this.entry || !Array.isArray(this.allLevels)) return [];
 
-            // levels the player has completed (verified counts too, same as the bonus packs)
+            // Verified levels also count as completed.
             const done = new Set([
                 ...this.entry.verified.map((l) => l.level),
                 ...this.entry.completed.map((l) => l.level),
@@ -441,14 +473,46 @@ export default {
 
             return [...ordered, ...extras];
         },
+
+        masteredFilters() {
+            return this.filterProgress.filter((filter) => filter.completed > filter.total / 2);
+        },
+
+        recommendedLevels() {
+            if (!this.entry || this.masteredFilters.length === 0) return [];
+
+            const masteredFilters = new Map(this.masteredFilters.map((filter) => [filter.id, filter]));
+            const attempted = new Set([
+                ...this.entry.verified,
+                ...this.entry.completed,
+                ...this.entry.progressed,
+            ].map((level) => normalizeLeaderboardFilter(level.level)));
+
+            return this.allLevels
+                .filter((level) => !attempted.has(normalizeLeaderboardFilter(level.level)))
+                .map((level) => {
+                    const matchingSkills = [...new Set(
+                        (Array.isArray(level.filters) ? level.filters : [])
+                            .map((filter) => resolveFilter(filter).id)
+                            .filter((filterId) => masteredFilters.has(filterId))
+                    )].map((filterId) => masteredFilters.get(filterId));
+
+                    return matchingSkills.length ? { ...level, matchingSkills } : null;
+                })
+                .filter(Boolean)
+                .sort((a, b) =>
+                    b.matchingSkills.length - a.matchingSkills.length || a.rank - b.rank
+                )
+                .slice(0, 10);
+        },
     },
 
     watch: {
         selected() {
-            this.activePlayerSection = 'overview';
+            this.activePlayerSection = 'main';
             this.activeTagId = '';
             this.activeFilterId = '';
-            this.activeBrowserGroup = 'position';
+            this.activeBrowserGroup = 'recommendations';
         },
         showingGlobalGraph(newVal) {
             if (newVal) {
@@ -485,8 +549,6 @@ export default {
         this.leaderboard = leaderboard;
         this.err = err;
         this.allLevels = allLevels;
-        this.leaderboard = applyTagBonuses(this.leaderboard, this.allLevels);
-
         const playerFromQuery = this.$route.query.player;
         if (playerFromQuery) {
             const index = this.leaderboard.findIndex(
@@ -523,10 +585,10 @@ export default {
         selectPlayer(index) {
             this.selected = index;
             this.showingGlobalGraph = false;
-            this.activePlayerSection = 'overview';
+            this.activePlayerSection = 'main';
             this.activeTagId = '';
             this.activeFilterId = '';
-            this.activeBrowserGroup = 'position';
+            this.activeBrowserGroup = 'recommendations';
             if (window.matchMedia("(max-width: 900px), (pointer: coarse)").matches) {
                 window.scrollTo({ top: 0, behavior: "smooth" });
             }
@@ -540,6 +602,17 @@ export default {
 
         setBrowserGroup(group) {
             this.activeBrowserGroup = group;
+            if (group === 'position' && !['main', 'extended', 'legacy'].includes(this.activePlayerSection)) {
+                this.activePlayerSection = 'main';
+            } else if (group === 'status' && !['verified', 'completed', 'progressed', 'none'].includes(this.activePlayerSection)) {
+                this.activePlayerSection = 'verified';
+            } else if (group === 'filters' && this.activePlayerSection !== 'filter') {
+                this.activePlayerSection = 'filter';
+                this.activeFilterId = this.filterProgress.length ? this.filterProgress[0].id : '';
+            } else if (group === 'tags' && this.activePlayerSection !== 'tag') {
+                this.activePlayerSection = 'tag';
+                this.activeTagId = this.tagButtons.length ? this.tagButtons[0].id : '';
+            }
         },
 
         setFilterSection(filterId) {
@@ -552,6 +625,11 @@ export default {
             this.activePlayerSection = 'tag';
             this.activeTagId = tagId;
             this.activeFilterId = '';
+        },
+
+        selectRecommendedLevel(level) {
+            store.selectedLevelId = level.id;
+            this.$router.push('/');
         },
 
         showGlobalGraph() {

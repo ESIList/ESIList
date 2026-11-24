@@ -104,24 +104,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.page-tag-detail .tag-bonus {
-  margin: 0;
-  padding: 1rem 1.5rem;
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--color-on-background);
-  background-color: var(--color-background);
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.page-tag-detail .tag-score::before {
-  font-size: 1.3rem;
-}
-
 /* Levels container (scrollable) */
 .page-tag-detail .levels-container {
   background-color: var(--color-background);
@@ -234,8 +216,7 @@
     font-size: 2rem;
   }
 
-  .page-tag-detail .tag-desc,
-  .page-tag-detail .tag-score {
+  .page-tag-detail .tag-desc {
     font-size: 1rem;
     padding: 1rem;
   }

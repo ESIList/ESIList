@@ -3,7 +3,6 @@ import { fetchList } from "../content.js";
 import tags from "../components/List/Tags.js";
 import Spinner from "../components/Spinner.js";
 import LevelAuthors from "../components/List/LevelAuthors.js";
-import { score } from "../score.js";
 
 export default {
     components: { Spinner, LevelAuthors },
@@ -20,10 +19,6 @@ export default {
                 
                 <div class="tag-info-cards">
                     <p class="tag-desc">• {{ $t('Description') }}: {{ $t(tag?.description || '') }}
-                    <p v-if="tag.bonusEnabled && bonusScore > 0" class="tag-bonus">
-                        🏅 {{ $t('Bonus reward for completing all levels with this tag:') }}
-                        <strong>+{{ bonusScore.toFixed(3) }}</strong> {{ $t('points') }}
-                    </p>
                 </div>
 
                 <section class="levels-container">
@@ -48,7 +43,6 @@ export default {
         list: [],
         levelsWithTag: [],
         tag: null,
-        bonusScore: 0,
     }),
     async mounted() {
         const tagId = this.$route.params.tagId;
@@ -72,14 +66,6 @@ export default {
                     )
                 );
 
-            if (this.tag.bonusEnabled && this.levelsWithTag.length > 0) {
-                const totalLevelScore = this.levelsWithTag.reduce((sum, level) => {
-                    return sum + score(level.rank, 100, level.percentToQualify || 50);
-                }, 0);
-
-                const averageLevelScore = totalLevelScore / (this.levelsWithTag.length * 2);
-                this.bonusScore = Math.round(averageLevelScore * 1000) / 1000;
-            }
         } else {
             this.levelsWithTag = [];
         }

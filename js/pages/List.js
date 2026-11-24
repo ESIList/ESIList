@@ -126,12 +126,7 @@ export default {
                             :style="tagStyle(tagName)"
                             @click="goToTag(tagName)"
                         >
-                            <span v-if="getTag(tagName)?.bonusEnabled">
-                                🏅 {{ $t(getTagDisplayName(tagName)) }} 🏅
-                            </span>
-                            <span v-else>
-                                {{ $t(getTagDisplayName(tagName)) }}
-                            </span>
+                            {{ $t(getTagDisplayName(tagName)) }}
                         </button>
                     </div>
 
@@ -153,7 +148,11 @@ export default {
                     <ul class="stats">
                         <li>
                             <div class="type-title-sm">{{ $t('Points when completed') }}</div>
-                            <p>{{ score(selected + 1, 100, level.percentToQualify) }}</p>
+                            <p>{{ score(selected + 1, 100, level.percentToQualify, list.length) }}</p>
+                        </li>
+                        <li v-if="qualificationPoints !== null">
+                            <div class="type-title-sm">{{ $t('Points') }} ({{ qualificationPercent }}%)</div>
+                            <p>{{ qualificationPoints }}</p>
                         </li>
                         <li>
                             <div class="type-title-sm">{{ $t('ID') }}</div>
@@ -398,6 +397,24 @@ export default {
         },
         level() {
             return this.list[this.selected][0];
+        },
+        qualificationPercent() {
+            const rank = this.selected + 1;
+            if (rank > 150) return null;
+
+            const threshold = Number(this.level.percentToQualify);
+            return rank > 75 && threshold <= 0 ? 100 : threshold;
+        },
+        qualificationPoints() {
+            if (this.qualificationPercent === null) return null;
+
+            const rank = this.selected + 1;
+            return this.score(
+                rank,
+                this.qualificationPercent,
+                this.qualificationPercent,
+                this.list.length,
+            );
         },
         video() {
             if (!this.level.showcase) return embed(this.level.verification);

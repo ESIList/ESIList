@@ -21,8 +21,7 @@ export default {
                     :style="{ backgroundColor: tag.color }"
                     @click="selectTag(tag.id)"
                 >
-                    <h3 v-if="tag.bonusEnabled" class="tag-bonus">🏅{{ $t(tag.name) }}🏅</h3>
-                    <h3 v-if="!tag.bonusEnabled" class="tag-bonus">{{ $t(tag.name) }}</h3>
+                    <h3>{{ $t(tag.name) }}</h3>
                     <p>{{ $t(tag.description) }}</p>
                 </div>
             </div>

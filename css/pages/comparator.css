@@ -133,6 +133,51 @@
     font-weight: 700;
 }
 
+.page-comparator .compare-cell-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.page-comparator .compare-table td.compare-cell-winner {
+    background: color-mix(in srgb, #2e7d32 10%, var(--color-surface));
+}
+
+.page-comparator .compare-table td.compare-cell-loser {
+    background: color-mix(in srgb, #c62828 9%, var(--color-surface));
+}
+
+.page-comparator .compare-value {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.page-comparator .compare-outcome {
+    flex: 0 0 auto;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.page-comparator .compare-outcome-winner {
+    background: color-mix(in srgb, #2e7d32 16%, var(--color-surface));
+    color: color-mix(in srgb, #2e7d32 76%, var(--color-on-surface));
+}
+
+.page-comparator .compare-outcome-loser {
+    background: color-mix(in srgb, #c62828 14%, var(--color-surface));
+    color: color-mix(in srgb, #c62828 76%, var(--color-on-surface));
+}
+
+.page-comparator .compare-outcome-tie {
+    background: var(--color-background-hover);
+    color: var(--color-on-background-hover);
+}
+
 .page-comparator .compare-level-rank {
     display: block;
     margin-bottom: 0.25rem;
