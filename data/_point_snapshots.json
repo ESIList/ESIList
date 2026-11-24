@@ -5101,6 +5101,664 @@
           }
         }
       }
+    },
+    {
+      "date": "2026-11-24",
+      "players": {
+        "cauri": {
+          "total": 5884.455,
+          "levelCount": 67,
+          "levels": {
+            "NOMAD": {
+              "points": 250,
+              "type": "verified"
+            },
+            "MAYHEM": {
+              "points": 239.414,
+              "type": "verified"
+            },
+            "TARTARUS": {
+              "points": 229.427,
+              "type": "verified"
+            },
+            "ORDINARY": {
+              "points": 220.029,
+              "type": "verified"
+            },
+            "VERDANT LANDSCAPE": {
+              "points": 211.212,
+              "type": "verified"
+            },
+            "BPATA MPAKA": {
+              "points": 202.965,
+              "type": "verified"
+            },
+            "IN THIS": {
+              "points": 195.273,
+              "type": "verified"
+            },
+            "LEVIGO": {
+              "points": 188.124,
+              "type": "verified"
+            },
+            "ZODIAC": {
+              "points": 181.505,
+              "type": "verified"
+            },
+            "RUST": {
+              "points": 175.4,
+              "type": "verified"
+            },
+            "NHELV": {
+              "points": 169.731,
+              "type": "verified"
+            },
+            "SHARDSCAPES": {
+              "points": 164.405,
+              "type": "verified"
+            },
+            "SPECTRUM CYCLONE": {
+              "points": 159.388,
+              "type": "verified"
+            },
+            "CONGREGATION": {
+              "points": 154.652,
+              "type": "verified"
+            },
+            "YATAGARASU": {
+              "points": 150.17,
+              "type": "verified"
+            },
+            "LUMINA": {
+              "points": 145.917,
+              "type": "verified"
+            },
+            "XO": {
+              "points": 141.87,
+              "type": "verified"
+            },
+            "SONIC WAVE": {
+              "points": 138.01,
+              "type": "verified"
+            },
+            "SONIC WAVE REBIRTH": {
+              "points": 134.317,
+              "type": "verified"
+            },
+            "SUNSET SANDSTORM": {
+              "points": 130.774,
+              "type": "verified"
+            },
+            "KILLBOT": {
+              "points": 120.895,
+              "type": "verified"
+            },
+            "BLACK BLIZZARD": {
+              "points": 117.806,
+              "type": "verified"
+            },
+            "DELTA INTERFACE": {
+              "points": 114.8,
+              "type": "verified"
+            },
+            "ARTIFICIAL ASCENT": {
+              "points": 111.879,
+              "type": "verified"
+            },
+            "STATIC IGNITION": {
+              "points": 109.053,
+              "type": "verified"
+            },
+            "AUDITORY BREAKER": {
+              "points": 83.822,
+              "type": "verified"
+            },
+            "BLOODBATH": {
+              "points": 78.641,
+              "type": "verified"
+            },
+            "BETRAYAL OF FATE": {
+              "points": 72.515,
+              "type": "verified"
+            },
+            "SNOWFALL STORM": {
+              "points": 71.102,
+              "type": "verified"
+            },
+            "OVERTIME": {
+              "points": 69.734,
+              "type": "verified"
+            },
+            "AFTERMATH": {
+              "points": 64.676,
+              "type": "verified"
+            },
+            "IDOLS": {
+              "points": 63.509,
+              "type": "verified"
+            },
+            "MAYBE POSSIBLY THING": {
+              "points": 60.224,
+              "type": "verified"
+            },
+            "GLIDE": {
+              "points": 58.201,
+              "type": "verified"
+            },
+            "THE ULTIMATE PHASE": {
+              "points": 56.304,
+              "type": "verified"
+            },
+            "BROKEN SIGNAL": {
+              "points": 50.292,
+              "type": "verified"
+            },
+            "DISMAL DUSTSTORM": {
+              "points": 49.648,
+              "type": "verified"
+            },
+            "BREAKOUT": {
+              "points": 48.345,
+              "type": "verified"
+            },
+            "REANIMATE": {
+              "points": 47.672,
+              "type": "verified"
+            },
+            "TROLLMACHINE": {
+              "points": 46.977,
+              "type": "verified"
+            },
+            "I NEVER DREAM": {
+              "points": 46.253,
+              "type": "verified"
+            },
+            "VOIDED": {
+              "points": 45.496,
+              "type": "verified"
+            },
+            "THE FLAWLESS": {
+              "points": 44.7,
+              "type": "verified"
+            },
+            "ALLEGIANCE": {
+              "points": 43.845,
+              "type": "verified"
+            },
+            "HYPERSONIC": {
+              "points": 42.922,
+              "type": "verified"
+            },
+            "HYDRATIC": {
+              "points": 41.948,
+              "type": "verified"
+            },
+            "MELTDOWN": {
+              "points": 40.937,
+              "type": "verified"
+            },
+            "HELIOS": {
+              "points": 39.903,
+              "type": "verified"
+            },
+            "ROBOTCHIEF EXPOSAL": {
+              "points": 38.86,
+              "type": "verified"
+            },
+            "MAKE IT DROP": {
+              "points": 37.817,
+              "type": "verified"
+            },
+            "PROTEUS": {
+              "points": 36.787,
+              "type": "verified"
+            },
+            "JRJRJR": {
+              "points": 35.779,
+              "type": "verified"
+            },
+            "FINKOR": {
+              "points": 34.801,
+              "type": "verified"
+            },
+            "DARK ODYSSEY": {
+              "points": 32.119,
+              "type": "verified"
+            },
+            "FORBIDDEN ISLE": {
+              "points": 27.714,
+              "type": "verified"
+            },
+            "VERISIMILITUDE": {
+              "points": 24.101,
+              "type": "verified"
+            },
+            "PHANTASMAGORIA": {
+              "points": 23.378,
+              "type": "verified"
+            },
+            "COSMIC WAR": {
+              "points": 22.633,
+              "type": "verified"
+            },
+            "CATACLYSM": {
+              "points": 21.871,
+              "type": "verified"
+            },
+            "TANTRUM": {
+              "points": 21.096,
+              "type": "verified"
+            },
+            "MISTY MOUNTAINS": {
+              "points": 19.521,
+              "type": "verified"
+            },
+            "BRIMTANIC PARADISE": {
+              "points": 18.729,
+              "type": "verified"
+            },
+            "AZURITE": {
+              "points": 17.936,
+              "type": "verified"
+            },
+            "NIWA": {
+              "points": 13.358,
+              "type": "verified"
+            },
+            "ACU": {
+              "points": 12.645,
+              "type": "verified"
+            },
+            "PRECIPITANCE": {
+              "points": 10.628,
+              "type": "verified"
+            },
+            "GLISTEN": {
+              "points": 10,
+              "type": "verified"
+            }
+          }
+        },
+        "itzniw": {
+          "total": 2628.119,
+          "levelCount": 51,
+          "levels": {
+            "FIREPOWER": {
+              "points": 127.366,
+              "type": "verified"
+            },
+            "APOLLO 11": {
+              "points": 124.077,
+              "type": "verified"
+            },
+            "ANOXYSM": {
+              "points": 103.679,
+              "type": "verified"
+            },
+            "COOLIE MAZIE PALOOZI": {
+              "points": 98.668,
+              "type": "verified"
+            },
+            "BOOGIE": {
+              "points": 96.295,
+              "type": "verified"
+            },
+            "CARCANO": {
+              "points": 94.009,
+              "type": "verified"
+            },
+            "ASMODEUS": {
+              "points": 89.689,
+              "type": "verified"
+            },
+            "MOMENT": {
+              "points": 87.654,
+              "type": "verified"
+            },
+            "GRAVITY": {
+              "points": 85.698,
+              "type": "verified"
+            },
+            "TURBULENT VALLEY": {
+              "points": 82.023,
+              "type": "verified"
+            },
+            "PRISMATIC HAZE": {
+              "points": 80.3,
+              "type": "verified"
+            },
+            "PROTOFLICKER": {
+              "points": 77.035,
+              "type": "verified"
+            },
+            "CALLISTO": {
+              "points": 75.48,
+              "type": "verified"
+            },
+            "EVIL INSIDE": {
+              "points": 68.408,
+              "type": "verified"
+            },
+            "GALAXY GAS": {
+              "points": 67.124,
+              "type": "verified"
+            },
+            "CHOPSTEP": {
+              "points": 65.881,
+              "type": "verified"
+            },
+            "TORSION": {
+              "points": 62.379,
+              "type": "verified"
+            },
+            "STARBREAKER": {
+              "points": 61.284,
+              "type": "verified"
+            },
+            "MASMECRESCENT": {
+              "points": 59.196,
+              "type": "verified"
+            },
+            "SUBVERSIVE": {
+              "points": 57.238,
+              "type": "verified"
+            },
+            "ANOTHER PHASE": {
+              "points": 55.4,
+              "type": "verified"
+            },
+            "RETENTION": {
+              "points": 33.86,
+              "type": "verified"
+            },
+            "LOST LOVE": {
+              "points": 32.964,
+              "type": "verified"
+            },
+            "NAPALM": {
+              "points": 31.329,
+              "type": "verified"
+            },
+            "MYOCARDIA": {
+              "points": 30.6,
+              "type": "verified"
+            },
+            "THE ULTIMATE RETURN": {
+              "points": 29.938,
+              "type": "verified"
+            },
+            "HURRICANE": {
+              "points": 29.335,
+              "type": "verified"
+            },
+            "PSYCHO KILLER": {
+              "points": 28.774,
+              "type": "verified"
+            },
+            "SCHIZOPHRENIA": {
+              "points": 28.239,
+              "type": "verified"
+            },
+            "PLASMATIC": {
+              "points": 27.185,
+              "type": "verified"
+            },
+            "REDEMPTION": {
+              "points": 26.641,
+              "type": "verified"
+            },
+            "CYBERSONIC": {
+              "points": 26.069,
+              "type": "verified"
+            },
+            "MY WORST LEVEL": {
+              "points": 25.458,
+              "type": "verified"
+            },
+            "HEATSEEKER": {
+              "points": 24.8,
+              "type": "verified"
+            },
+            "THE WINGED SWORD": {
+              "points": 20.312,
+              "type": "verified"
+            },
+            "KISMET": {
+              "points": 17.148,
+              "type": "verified"
+            },
+            "WITHOUT U": {
+              "points": 16.367,
+              "type": "verified"
+            },
+            "BUNNIES I GUESS": {
+              "points": 15.594,
+              "type": "verified"
+            },
+            "BLOODBATH": {
+              "points": 78.641,
+              "type": "completed"
+            },
+            "REVERENCE": {
+              "points": 54.543,
+              "type": "completed"
+            },
+            "CROWD CONTROL": {
+              "points": 51.602,
+              "type": "completed"
+            },
+            "ALLEGIANCE": {
+              "points": 43.845,
+              "type": "completed"
+            },
+            "HYPERSONIC": {
+              "points": 42.922,
+              "type": "completed"
+            },
+            "HELIOS": {
+              "points": 39.903,
+              "type": "completed"
+            },
+            "MAKE IT DROP": {
+              "points": 37.817,
+              "type": "completed"
+            },
+            "FORBIDDEN ISLE": {
+              "points": 27.714,
+              "type": "completed"
+            },
+            "CATACLYSM": {
+              "points": 21.871,
+              "type": "completed"
+            },
+            "TANTRUM": {
+              "points": 21.096,
+              "type": "completed"
+            },
+            "AZURITE": {
+              "points": 17.936,
+              "type": "completed"
+            },
+            "TROLL LEVEL": {
+              "points": 14.088,
+              "type": "completed"
+            },
+            "ACU": {
+              "points": 12.645,
+              "type": "completed"
+            }
+          }
+        },
+        "ExoRK28": {
+          "total": 948.331,
+          "levelCount": 18,
+          "levels": {
+            "QUANTUM PROCESSING": {
+              "points": 106.32,
+              "type": "verified"
+            },
+            "ATHANATOS": {
+              "points": 101.129,
+              "type": "verified"
+            },
+            "BLADE OF JUSTICE": {
+              "points": 91.807,
+              "type": "verified"
+            },
+            "HEARTBEAT": {
+              "points": 73.974,
+              "type": "verified"
+            },
+            "FEXTY": {
+              "points": 53.745,
+              "type": "verified"
+            },
+            "PUMPED UP KICKS": {
+              "points": 49.001,
+              "type": "verified"
+            },
+            "RAFF X": {
+              "points": 11.952,
+              "type": "verified"
+            },
+            "AUDITORY BREAKER": {
+              "points": 83.822,
+              "type": "completed"
+            },
+            "BLOODBATH": {
+              "points": 78.641,
+              "type": "completed"
+            },
+            "AFTERMATH": {
+              "points": 64.676,
+              "type": "completed"
+            },
+            "BROKEN SIGNAL": {
+              "points": 50.292,
+              "type": "completed"
+            },
+            "THE FLAWLESS": {
+              "points": 44.7,
+              "type": "completed"
+            },
+            "CATACLYSM": {
+              "points": 21.871,
+              "type": "completed"
+            },
+            "AZURITE": {
+              "points": 17.936,
+              "type": "completed"
+            },
+            "NIWA": {
+              "points": 13.358,
+              "type": "completed"
+            },
+            "ACU": {
+              "points": 12.645,
+              "type": "completed"
+            },
+            "SONIC WAVE": {
+              "points": 51.445,
+              "type": "progressed",
+              "percent": 85
+            },
+            "SONIC WAVE REBIRTH": {
+              "points": 21.017,
+              "type": "progressed",
+              "percent": 71
+            }
+          }
+        },
+        "Ninjedu": {
+          "total": 404.145,
+          "levelCount": 13,
+          "levels": {
+            "REVERENCE": {
+              "points": 54.543,
+              "type": "verified"
+            },
+            "CROWD CONTROL": {
+              "points": 51.602,
+              "type": "verified"
+            },
+            "FISH FISH GODMODE": {
+              "points": 50.94,
+              "type": "verified"
+            },
+            "MIZURETA": {
+              "points": 14.834,
+              "type": "verified"
+            },
+            "TROLL LEVEL": {
+              "points": 14.088,
+              "type": "verified"
+            },
+            "RAUCHKAMMER": {
+              "points": 11.279,
+              "type": "verified"
+            },
+            "DORADURA": {
+              "points": 52.284,
+              "type": "completed"
+            },
+            "NIWA": {
+              "points": 13.358,
+              "type": "completed"
+            },
+            "ACU": {
+              "points": 12.645,
+              "type": "completed"
+            },
+            "GLISTEN": {
+              "points": 10,
+              "type": "completed"
+            },
+            "BLADE OF JUSTICE": {
+              "points": 63.2,
+              "type": "progressed",
+              "percent": 94
+            },
+            "MOMENT": {
+              "points": 40.999,
+              "type": "progressed",
+              "percent": 67
+            },
+            "TANTRUM": {
+              "points": 14.373,
+              "type": "progressed",
+              "percent": 96
+            }
+          }
+        },
+        "Lolencio04": {
+          "total": 117.924,
+          "levelCount": 3,
+          "levels": {
+            "FALLING UP": {
+              "points": 52.995,
+              "type": "verified"
+            },
+            "DORADURA": {
+              "points": 52.284,
+              "type": "verified"
+            },
+            "ACU": {
+              "points": 12.645,
+              "type": "completed"
+            }
+          }
+        },
+        "Quino_00": {
+          "total": 12.645,
+          "levelCount": 1,
+          "levels": {
+            "ACU": {
+              "points": 12.645,
+              "type": "completed"
+            }
+          }
+        }
+      }
     }
   ]
 }
